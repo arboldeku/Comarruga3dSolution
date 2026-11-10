@@ -1,12 +1,12 @@
 # Roadmap
 
 ## Fase 0 · Hackathon (este repo)
-Una zona de ~1 km² de Comarruga, solver 2D simple, 4 soluciones, Jev eligiendo, KPIs de acierto/latencia/coste, visor 3D y deck corto.
+Una zona de 1 km² de Comarruga (MDT real del ICGC, 5 m), solver 2D simple, 4 soluciones, Jev eligiendo, KPIs de acierto/latencia/coste, visor 3D y deck corto.
 
 ## Fase 1 · MVP real (Comarruga)
 - Cronología de eventos: lluvia medida (intensidad en 30 min, no solo total diario) frente a episodios de entrada de agua, con fotos geolocalizadas de vecinos.
 - Modelo hidráulico 2D "antes vs. después" de las obras del Riuet, con MDT de distintas épocas (ICGC).
-- Hipótesis alternativas a contrastar junto a la de las obras: drenaje o alcantarillado saturado; marea y nivel del mar (el modelo tiene frontera sur abierta sin marea); sedimentos o falta de mantenimiento del cauce; intensidad de lluvia en 30 min.
+- Hipótesis alternativas a contrastar junto a la de las obras: drenaje o alcantarillado saturado; marea y nivel del mar (el modelo usa cota fija 0 m, sin marea); sedimentos o falta de mantenimiento del cauce; intensidad de lluvia en 30 min.
 - Validación con un técnico hidráulico y un letrado antes de presentar a un ayuntamiento.
 
 ## Fase 2 · Datos a escala
@@ -27,18 +27,19 @@ Roles: jefe de gabinete, recolector de datos, hidrometeorólogo, modelador hidr�
 
 ## Recortes y pendientes del hackathon (2026-11-10)
 
-Estimación preliminar, modelo simplificado · terreno sintético. Cifras en `docs/PRIOR_ART.md` y `results/kpis_summary.json`.
+Estimación preliminar, modelo simplificado · modelo sin calibrar · terreno: MDT real del ICGC 5 m. Cifras en `results/kpis_summary.json` y `results/index.json`.
 
 Limitaciones actuales:
-- Terreno sintético. El MDT real del ICGC no está disponible.
-- Jev acierta el 16,7 % frente al solver (con H2, no fiable), por debajo del respaldo (33,3 %) y del azar (25 %). Excluyendo H2: 9,5 % frente a 33,3 % (n = 21). Con margen ≥ 1 cm: 25,0 % frente a 41,7 % (n = 12). Elige S2 en 21 de 24 casos. Los 24 casos son 8 puntos × 3 lluvias, no independientes: la diferencia no es concluyente. Sin ejemplos ni resultados del solver en el prompt.
-- Artefacto numérico en H2: el calado máximo no crece con la lluvia. Las cifras de 30 mm provienen de H2 (no fiables).
-- Calado urbano: S4 empeora el máximo urbano con las tres lluvias y S1 con 100 mm.
-- S2 (depósito) infrautilizado por el umbral de toma. S4 (barreras) aumenta el área inundada.
-- S4 eleva celdas en vez de aristas. Rama de MDT real y perfil triangular sin probar.
+- Modelo sin calibrar. Supuestos sin dato real: usos del suelo (todo el emergido tratado como urbano), ausencia de red de alcantarillado, nivel del mar fijo a 0 m sin marea, lluvia de 60 min sin hietograma, ubicación del depósito.
+- Lluvias: 100 mm (comunicado del Ayuntamiento de El Vendrell, 22/08/2026); ~60 mm (prensa, 02/11/2026, pendiente de contrastar); 30 mm de referencia. El depósito S2 usa 3 500 m³, volumen anunciado (no calibrado).
+- Jev acierta el 12,5 % frente al solver, por debajo del respaldo (16,7 %), de la clase mayoritaria (79,2 %) y del azar (25 %). Eligió S2 en los 24 casos. Sin ejemplos ni resultados del solver en el prompt.
+- S2 y S3 no cambian el máximo urbano con 30 y 60 mm; S1 y S4 empeoran el máximo urbano en varios escenarios.
 
 Pendientes:
-- Conseguir el MDT real del ICGC.
+- Meteocat: el portal apidocs.meteocat.gencat.cat devolvía 404 el 2026-11-10 y la API XEMA exige clave. Hietograma real pendiente; solicitud manual enviada o por enviar (confirmar).
+- Red de drenaje real (Aigües del Vendrell).
+- Edificios de Catastro.
+- Usos del suelo reales.
+- Marea.
+- Calibración con calados observados.
 - Jev: probar few-shot o Score; medir con márgenes > 1 cm.
-- Corregir H2.
-- Recalibrar S2 y S4.

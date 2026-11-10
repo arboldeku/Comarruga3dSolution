@@ -8,13 +8,14 @@ Caso de estudio: Comarruga (Baix Penedès, Catalunya), cuenca del Riuet.
 
 ## Estado (2026-11-10)
 
-MVP de hackathon, funcional con **terreno sintético**.
+MVP de hackathon sobre **terreno real** (MDT ICGC 5 m). Estimación preliminar, modelo simplificado, **modelo sin calibrar**.
 
-- **Terreno sintético:** no es el relieve real de Comarruga. El MDT del ICGC no está disponible todavía; ningún resultado describe la topografía real.
-- **Solver:** landlab OverlandFlow con envoltorio propio. 15 escenarios válidos, precalculados en `results/`.
+- **Terreno:** MDT de 5 m del ICGC (servicio WCS `icc_mdt`, cobertura `icc:met5`), 1 km × 1 km en Brisamar / Coma-ruga (El Vendrell), EPSG:25831, descargado el 2026-11-10. Hash en `data/raw/MANIFEST.json`.
+- **Supuestos sin dato real** (ver Limitaciones): usos del suelo (todo el terreno emergido tratado como urbano; eje de drenaje derivado del MDT), ausencia de red de alcantarillado, nivel del mar fijo a 0 m sin marea, duración de la lluvia (60 min, sin hietograma), ubicación del depósito.
+- **Solver:** landlab OverlandFlow con envoltorio propio. 15 de 15 escenarios válidos, precalculados en `results/`.
 - **Visor 3D:** three.js, sin build ni internet.
-- **Jev:** 24 de 24 decisiones respondidas en modo sombra. Su acierto frente al solver (16,7 % con H2, no fiable; 9,5 % sin H2) está por debajo del respaldo determinista (33,3 %) y del azar (25 %). Latencia y coste medidos; valor frente al respaldo no demostrado (el respaldo es local, sin coste de API, y acierta más).
-- **Calado urbano:** la mayor reducción es S3 con 60 mm (22,8 cm, 28,0 %). S4 empeora el máximo urbano con 30, 60 y 100 mm, y S1 con 100 mm.
+- **Jev:** 24 de 24 decisiones respondidas en modo sombra. Acierto frente al solver 12,5 % (3 de 24), por debajo del respaldo determinista (16,7 %), de elegir siempre la clase mayoritaria (79,2 %) y del azar (25 %). Jev eligió S2 en los 24 casos. Latencia y coste medidos; valor frente al respaldo no demostrado.
+- **Calado urbano:** la mayor reducción es S1 con 100 mm (8,0 cm, 3,6 %). S1 con 30 y 60 mm y S4 con 30 y 100 mm empeoran el máximo urbano. S2 y S3 no cambian el máximo urbano con 30 y 60 mm.
 
 ## Por qué existe
 
@@ -22,10 +23,10 @@ Las entradas de agua en viviendas de Comarruga han pasado de 1 en 27 años a 2 s
 
 ## Aviso de rigor
 
-Todos los resultados son **estimaciones preliminares** de un modelo simplificado, sobre **terreno sintético**. No sustituyen a un estudio hidráulico (Iber, HEC-RAS 2D) firmado por un técnico competente. Toda cifra lleva fuente y fecha, o dice `sin dato`.
+Todos los resultados son **estimaciones preliminares** de un modelo simplificado, **sin calibrar**, sobre el MDT real del ICGC con supuestos de usos del suelo, drenaje, marea y lluvia. No sustituyen a un estudio hidráulico (Iber, HEC-RAS 2D) firmado por un técnico competente. Toda cifra lleva fuente y fecha, o dice `sin dato`.
 
 - Que las obras del Riuet causaran inundaciones es una **hipótesis del autor**. Este repo no la demuestra ni atribuye causa a ninguna obra. Las soluciones S1–S4 son supuestos del modelo, no proyectos reales.
-- Hipótesis alternativas a contrastar, no evaluadas aquí: drenaje o alcantarillado saturado; marea y nivel del mar (el modelo tiene frontera sur abierta sin marea); sedimentos o falta de mantenimiento del cauce; intensidad de lluvia en 30 min (el modelo usa lluvia constante durante 60 min).
+- Hipótesis alternativas a contrastar, no evaluadas aquí: drenaje o alcantarillado saturado; marea y nivel del mar (el modelo usa cota fija 0 m sin marea); sedimentos o falta de mantenimiento del cauce; intensidad de lluvia en 30 min (el modelo usa lluvia constante durante 60 min).
 - Los episodios reales (1 entrada de agua en 27 años; 2 en 2026) son **testimonio del autor**, pendiente de verificar. Sin dato verificable en el repo.
 
 ## Arquitectura
@@ -56,8 +57,8 @@ MDT (ICGC) ──► engine (solver 2D) ──► results/*.json ──► web (
 
 ```bash
 pip install -r requirements.txt
-python -m engine.run_all          # recalcula los 15 escenarios (~167 s con OMP_NUM_THREADS=1 y 10 procesos: medición de la ejecución del 2026-11-10, no registrada en JSON); ya vienen precalculados en results/
-python -m jev.run_shadow          # decisiones de Jev en modo sombra: llamadas reales a OpenRouter (coste estimado a partir de tokens, 2026-11-10: 0,000822612 USD)
+python -m engine.run_all          # recalcula los 15 escenarios; ya vienen precalculados en results/ (tiempo de pared ~167 s con OMP_NUM_THREADS=1 y 10 procesos: medición de la ejecución del 2026-11-10, no registrada en JSON)
+python -m jev.run_shadow          # decisiones de Jev en modo sombra: llamadas reales a OpenRouter (coste estimado a partir de tokens, 2026-11-10: 0,000819714 USD)
 python -m http.server 8000        # después, abrir http://localhost:8000/web/
 python -m unittest discover -s jev/tests -t .
 ```
@@ -66,39 +67,80 @@ python -m unittest discover -s jev/tests -t .
 - Jev necesita `JEV_API_KEY`, `JEV_BASE_URL` y `JEV_MODEL_ID`. Ver `.env.example`.
 - Instrucciones completas para el agente de código: `AGENT_PROMPT.md`.
 
+## Terreno y lluvias
+
+| Dato | Valor | Fuente |
+|---|---|---|
+| Terreno | MDT 5 m, 200 × 200 celdas, 1 km × 1 km, EPSG:25831 | ICGC `icc:met5`, descargado 2026-11-10 (`data/raw/MANIFEST.json`) |
+| Lluvia 100 mm | Total en Coma-ruga, 22/08/2026 | Comunicado del Ayuntamiento de El Vendrell (26/08/2026) |
+| Lluvia 60 mm | Total del episodio del 02/11/2026 | Prensa (Diari de Tarragona, 03/11/2026), **pendiente de contrastar** |
+| Lluvia 30 mm | Referencia | Supuesto |
+| Duración de la lluvia | 60 min, constante | **Supuesto**; sin hietograma (Meteocat pendiente) |
+| Volumen del depósito S2 | 3 500 m³ | **Volumen anunciado** por el Ayuntamiento para Brisamar (anuncio, no volumen hidráulico calibrado) |
+
 ## KPIs principales
 
-Estimación preliminar, modelo simplificado · terreno sintético. Fuente: `results/kpis_summary.json`, 2026-11-10.
+Estimación preliminar, modelo simplificado · modelo sin calibrar · MDT real ICGC 5 m. Fuente: `results/kpis_summary.json` y `results/index.json`, 2026-11-10.
+
+### Solver
 
 | KPI | Valor |
 |---|---|
-| Escenarios del solver válidos | 15 de 15 (`n_invalid` = 0) |
-| Error de volumen máximo del solver | 1,513 % |
-| Mayor reducción de calado máximo **urbano** (frente a S0) | S3 con 60 mm: 22,8 cm (28,0 %) |
-| Soluciones que **empeoran** el calado máximo urbano | S4 con 30 mm (−6,3 cm), 60 mm (−7,9 cm) y 100 mm (−33,3 cm); S1 con 100 mm (−55,8 cm) |
-| Mayor reducción de calado máximo, dominio completo (incluye cauce) | S1 con 60 mm: 27,6 cm (25,4 %) |
-| Acierto de Jev frente al solver | 16,7 % (24 decisiones; con H2, no fiable) |
-| Acierto de Jev excluyendo H2 | 9,5 % (n = 21) |
-| Acierto del respaldo determinista | 33,3 % (24); 33,3 % excluyendo H2 (n = 21) |
-| Acierto con margen ≥ 1 cm: Jev / respaldo | 25,0 % / 41,7 % (n = 12) |
-| Distribución de elecciones de Jev (S2 / S3) | 21 / 3 de 24: casi constante |
-| Acierto de "elegir siempre la clase mayoritaria" (S3) | 83,3 % |
-| Azar | 25 % |
-| Latencia de Jev p50 / p95 / máx. | 346,4 ms / 548,5 ms / 935,2 ms (rango más cercano, n = 24) |
-| Coste estimado por decisión de Jev | 0,000034276 USD (estimado a partir de tokens) |
-| Decisiones con respaldo | 0 % |
+| Escenarios válidos | 15 de 15 (`n_invalid` = 0) |
+| Error de volumen máximo | 0,449 % |
+| Tiempo de cálculo por escenario | media 123,2 s; máx. 157,2 s; total 1 848,6 s (suma de escenarios, no tiempo de pared; el de pared no está en el JSON) |
 
-Las cifras de 30 mm provienen del punto H2: **no fiables (artefacto H2)**. Las de dominio completo incluyen el cauce.
+### Calado máximo urbano por solución (cm; base S0 entre paréntesis)
+
+Valores negativos de reducción = el calado sube. El dominio completo y la zona urbana coinciden en todos los escenarios.
+
+| Lluvia (base S0) | S1 Cauce | S2 Depósito | S3 Permeable | S4 Bordillos |
+|---|---|---|---|---|
+| 30 mm (101,5) | 107,1 (−5,6; −5,5 %) | 101,5 (0,0) | 101,5 (0,0) | 110,8 (−9,3; −9,2 %) |
+| 60 mm (153,5) | 182,5 (−29,0; −18,9 %) | 153,5 (0,0) | 153,5 (0,0) | 146,3 (+7,2; +4,7 %) |
+| 100 mm (223,8) | 215,8 (+8,0; +3,6 %) | 223,9 (−0,1; −0,0 %) | 223,8 (0,0) | 227,8 (−4,0; −1,8 %) |
+
+- Mayor reducción del calado máximo urbano en cm: **S1 con 100 mm, 8,0 cm (3,6 %)**. Mayor en porcentaje: S4 con 60 mm, 7,2 cm (4,7 %).
+- Empeoran el máximo urbano: S1 con 30 mm, 60 mm; S4 con 30 mm y 100 mm; S2 con 100 mm (−0,1 cm, despreciable).
+- S2 y S3 no cambian el máximo urbano con 30 y 60 mm. El JSON no explica la causa; pendiente de revisar.
+- Área inundada (% de reducción; negativo = aumenta): S1 +3,7 / +14,9 / +12,6; S4 −6,6 / −1,9 / +0,2; S2 y S3 0,0 (30 / 60 / 100 mm).
+
+### Jev (24 decisiones, modo sombra)
+
+| KPI | Valor |
+|---|---|
+| Decisiones respondidas | 24 de 24; respaldo usado 0 %; modelo `typesafe/jev-1.14` (snapshot 20261014) vía OpenRouter |
+| Acierto de Jev frente al solver | **12,5 %** (3 de 24) |
+| Acierto del respaldo determinista | 16,7 % (4 de 24) |
+| Acierto de elegir siempre la clase mayoritaria (S1) | 79,2 % (19 de 24) |
+| Azar | 25 % |
+| Elección de Jev | **S2 en los 24 casos**: eligió la misma opción en todos |
+| Distribución del mejor resultado del solver | S1 19, S2 3, S4 2 |
+| Acierto excluyendo empates (Jev / respaldo) | 0,0 % / 5,9 % (16 casos sin empate; empates: 7) |
+| Acierto con margen ≥ 1 cm (Jev / respaldo) | 0,0 % / 0,0 % (n = 16) |
+| Probabilidad media asignada a la opción elegida | 47,0 % frente a acierto 12,5 % (sobreconfianza; n = 24, orientativo) |
+| Coincidencia Jev / respaldo | 87,5 % |
+| Latencia p50 / p95 / máx. | 407,9 ms / 933,5 ms / 1 328,3 ms (rango más cercano, n = 24) |
+| Coste estimado | 0,000034 USD por decisión; 0,000819714 USD en total (estimado a partir de tokens a 0,042 USD por millón de tokens de entrada; la API no devuelve coste) |
+
+Notas de lectura:
+- **Clase mayoritaria:** la cifra del 79,2 % se apoya en que el solver da la misma profundidad a las dos mejores soluciones en 7 casos y el convenio elige la de id menor (S1). Ese empate favorece a S1.
+- **Jev:** no supera al respaldo, ni a la clase mayoritaria, ni al azar. Con 24 casos no independientes (8 puntos × 3 lluvias) la diferencia con el respaldo no es concluyente, pero Jev no muestra acierto aquí.
 
 ## Limitaciones
 
-- **Terreno sintético.** El MDT real del ICGC no está disponible; la rama de MDT real y el perfil triangular no están probados.
-- **Artefacto numérico en H2.** El calado máximo no crece con la lluvia; cifras poco fiables.
-- **S4 (barreras)** nunca es la mejor y aumenta el área inundada, porque impide que la escorrentía urbana entre al cauce.
-- **S2 (depósito)** está infrautilizado por el umbral de toma.
-- **Puntos someros.** Varios puntos negros tienen 12–15 cm con 100 mm.
-- **Jev sin acierto demostrado.** Acierta menos que el respaldo y que el azar en el total (16,7 % frente a 33,3 % y 25 %). Casi constante: elige S2 en 21 de 24 casos. Con margen ≥ 1 cm, 25,0 % frente a 41,7 % del respaldo (n = 12). Los 24 casos son 8 puntos × 3 lluvias, no independientes: la diferencia no es concluyente. 12 de 24 casos tienen margen < 1 cm. Jev decide sin ejemplos ni resultados del solver. Probabilidad media asignada a la opción elegida 37,9 % frente a acierto 16,7 % (sobreconfianza; orientativo, n = 24); confianza media de la API 0,171.
-- **Calado urbano:** S4 empeora el máximo urbano con las tres lluvias y S1 con 100 mm. Las cifras de dominio completo incluyen el cauce.
+- **Modelo sin calibrar.** Estimación preliminar, modelo simplificado.
+- **Supuestos (no datos reales):**
+  - Usos del suelo: todo el terreno emergido se trata como urbano; el eje de drenaje se deriva del MDT.
+  - Sin red de alcantarillado en el modelo: los calados salen altos (101,5 cm con 30 mm en S0) porque no hay drenaje subterráneo.
+  - Nivel del mar fijo a 0 m, sin marea.
+  - Duración de la lluvia: 60 min constantes; sin hietograma real.
+  - Ubicación del depósito S2: depresión urbana más honda del MDT.
+- **Lluvias:** 100 mm comunicado municipal; 60 mm de prensa pendiente de contrastar; 30 mm de referencia.
+- **Volumen de S2 (3 500 m³):** volumen anunciado por el Ayuntamiento, no calibrado.
+- **S2 y S3** sin efecto en el máximo urbano con 30 y 60 mm; causa no analizada.
+- **S1 y S4** empeoran el máximo urbano en varios escenarios.
+- **Jev sin acierto demostrado** frente al respaldo, la clase mayoritaria y el azar; elige siempre S2.
 - **Episodios reales:** sin dato verificable.
 
 Detalle y tablas completas en `docs/PRIOR_ART.md`. Pendientes en `docs/ROADMAP.md`.

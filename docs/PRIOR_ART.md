@@ -1,5 +1,7 @@
 # Prior art y decisiones (no reinventar)
 
+> **Aviso (2026-11-10, tarde):** las cifras de resultados de este documento corresponden a la primera ejecución con terreno sintético y están obsoletas. Los resultados vigentes, sobre el MDT de 5 m del ICGC, están en `README.md`, `docs/DECK.md` y `results/kpis_summary.json`. Las decisiones de librerías siguen siendo válidas.
+
 Fecha de consulta de todo lo que sigue: 2026-11-10.
 
 Todas las cifras de este documento son **estimación preliminar, modelo simplificado**, sobre **terreno sintético** (no es Comarruga real). Fuente de cifras: `results/kpis_summary.json`, 2026-11-10.
