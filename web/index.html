@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Comarruga Flood Lab — visor 3D</title>
+<title>Comarruga Flood Lab</title>
 <link rel="stylesheet" href="style.css">
 <script type="importmap">
 { "imports": { "three": "./vendor/three.module.js", "three/addons/": "./vendor/addons/" } }
@@ -11,13 +11,16 @@
 </head>
 <body>
 <header>
+  <div class="lang-tabs" id="lang-tabs" role="group" aria-label="Idioma / Language" data-i18n-aria="lang.aria">
+    <button type="button" data-lang="es" lang="es" aria-pressed="true">Español</button><button type="button" data-lang="en" lang="en" aria-pressed="false">English</button>
+  </div>
   <h1>Comarruga Flood Lab</h1>
   <div class="badges">
-    <span class="badge warn" id="label-badge">estimación preliminar, modelo simplificado</span>
-    <span class="badge" id="dem-badge">Terreno: cargando…</span>
+    <span class="badge warn" id="label-badge" data-i18n="badge.label">estimación preliminar, modelo simplificado</span>
+    <span class="badge" id="dem-badge"></span>
   </div>
 </header>
-<div id="synthetic-band">TERRENO SINTÉTICO — no es Comarruga real</div>
+<div id="synthetic-band" data-i18n="synthetic.band">TERRENO SINTÉTICO — no es Comarruga real</div>
 <div id="error-band" hidden></div>
 
 <main>
@@ -25,24 +28,24 @@
     <div id="canvas-wrap"><canvas id="c"></canvas>
       <div id="view-tag"></div>
       <div id="attrib"></div>
-      <div id="loading">Cargando…</div>
+      <div id="loading" data-i18n="loading"></div>
     </div>
     <div id="legend"></div>
     <div id="controls">
-      <div class="ctl"><span class="ctl-name">Lluvia (l/m² en 60 min)</span><div class="btns" id="rain-btns"></div></div>
-      <div class="ctl"><span class="ctl-name">Solución</span><div class="btns" id="sol-btns"></div></div>
-      <div class="ctl"><span class="ctl-name">Vista</span><div class="btns" id="mode-btns">
-        <button data-mode="before">Antes (S0)</button>
-        <button data-mode="after">Después</button>
-        <button data-mode="diff">Diferencia (cm ahorrados)</button>
+      <div class="ctl"><span class="ctl-name" data-i18n="ctl.rain"></span><div class="btns" id="rain-btns"></div></div>
+      <div class="ctl"><span class="ctl-name" data-i18n="ctl.sol"></span><div class="btns" id="sol-btns"></div></div>
+      <div class="ctl"><span class="ctl-name" data-i18n="ctl.view"></span><div class="btns" id="mode-btns">
+        <button data-mode="before" data-i18n="mode.before"></button>
+        <button data-mode="after"></button>
+        <button data-mode="diff" data-i18n="mode.diff"></button>
       </div></div>
-      <div class="ctl"><label class="ctl-name" for="exag">Exageración vertical: <b id="exag-val">×1</b></label>
+      <div class="ctl"><label class="ctl-name" for="exag"><span data-i18n="ctl.exag"></span> <b id="exag-val">×1</b></label>
         <input type="range" id="exag" min="1" max="30" step="0.5" value="1"></div>
-      <div class="ctl wide" id="layers-ctl" hidden><span class="ctl-name">Capas</span>
+      <div class="ctl wide" id="layers-ctl" hidden><span class="ctl-name" data-i18n="ctl.layers"></span>
         <div class="btns">
-          <span class="btns" id="ortho-btns" role="group" aria-label="Textura del terreno">
-            <button data-ortho="1">Ortofoto</button><button data-ortho="0">Relieve</button></span>
-          <button id="bld-btn" aria-pressed="true">Edificios</button>
+          <span class="btns" id="ortho-btns" role="group" data-i18n-aria="layers.texture.aria">
+            <button data-ortho="1" data-i18n="layers.ortho"></button><button data-ortho="0" data-i18n="layers.relief"></button></span>
+          <button id="bld-btn" aria-pressed="true" data-i18n="layers.buildings"></button>
         </div>
         <p id="bld-note" class="layer-note" hidden></p></div>
     </div>
@@ -50,26 +53,26 @@
 
   <aside>
     <section class="panel" id="kpi-panel">
-      <h2>Indicadores del escenario</h2>
-      <div id="invalid-flag" hidden>RESULTADO INVÁLIDO — error de balance de masa ≥ 5 %</div>
+      <h2 data-i18n="kpi.title"></h2>
+      <div id="invalid-flag" hidden></div>
       <div id="kpis"></div>
-      <h3>Puntos negros (calado máx. en radio de 3 celdas)</h3>
+      <h3 data-i18n="kpi.hotspots.title"></h3>
       <div id="hotspots"></div>
     </section>
     <section class="panel" id="jev-panel">
-      <h2>Decisiones de Jev</h2>
-      <p class="shadow-note">modo sombra: Jev decide y se registra, no actúa</p>
+      <h2 data-i18n="jev.title"></h2>
+      <p class="shadow-note" data-i18n="jev.shadow"></p>
       <div id="jev-warning" hidden></div>
       <div id="jev-summary"></div>
       <div id="jev-table"></div>
     </section>
     <section class="panel small">
-      <p>Todos los valores son una <b>estimación preliminar, modelo simplificado</b>. Las soluciones S1–S4 son supuestos del modelo, no proyectos reales. No comparar con estudios oficiales sin validación.</p>
+      <p data-i18n-html="disclaimer"></p>
       <p id="meta"></p>
     </section>
   </aside>
 </main>
-<noscript>Este visor necesita JavaScript.</noscript>
+<noscript>Este visor necesita JavaScript. / This viewer needs JavaScript.</noscript>
 <script type="module" src="app.js"></script>
 </body>
 </html>

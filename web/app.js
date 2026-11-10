@@ -8,8 +8,155 @@ const params = new URLSearchParams(location.search);
 const BASE = (params.get('base') || '../results').replace(/\/+$/, '');
 const WET_M = 0.01; // calado mínimo que se pinta (1 cm)
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-const nf = (v, d = 0) => (v == null || !Number.isFinite(Number(v))) ? 'sin dato'
-  : Number(v).toLocaleString('es-ES', { minimumFractionDigits: d, maximumFractionDigits: d });
+
+// ---------- idioma ----------
+// Diccionario único. La clave "$data" (solo en) traduce textos que llegan en español desde los JSON o desde npy.js.
+const I18N = {
+  es: {
+    'title': 'Comarruga Flood Lab — visor 3D', 'lang.aria': 'Idioma', 'nodata': 'sin dato', 'pct': ' %',
+    'badge.label': 'estimación preliminar, modelo simplificado',
+    'dem.loading': 'Terreno: cargando…', 'dem.none': 'Terreno: sin dato', 'dem.source': 'Fuente del terreno: {src}',
+    'synthetic.band': 'TERRENO SINTÉTICO — no es Comarruga real', 'loading': 'Cargando…',
+    'ctl.rain': 'Lluvia (l/m² en 60 min)', 'ctl.sol': 'Solución', 'ctl.view': 'Vista',
+    'mode.before': 'Antes (S0)', 'mode.after': 'Después ({sol})', 'mode.diff': 'Diferencia (cm ahorrados)',
+    'ctl.exag': 'Exageración vertical:', 'ctl.layers': 'Capas', 'layers.texture.aria': 'Textura del terreno',
+    'layers.ortho': 'Ortofoto', 'layers.relief': 'Relieve', 'layers.buildings': 'Edificios',
+    'attrib': 'Ortofoto y MDT: ICGC',
+    'bld.note': 'Edificios: Catastro INSPIRE; altura estimada por nº de plantas ({floor} m por planta{assumed}). {n} volúmenes, solo visuales: el solver NO los tiene en cuenta. Su altura no se exagera.',
+    'bld.note.assumed': '; {n} sin dato de plantas: altura supuesta {h} m',
+    'kpi.title': 'Indicadores del escenario', 'kpi.hotspots.title': 'Puntos negros (calado máx. en radio de 3 celdas)',
+    'jev.title': 'Decisiones de Jev', 'jev.shadow': 'modo sombra: Jev decide y se registra, no actúa',
+    'disclaimer': 'Todos los valores son una <b>estimación preliminar, modelo simplificado</b>. Las soluciones S1–S4 son supuestos del modelo, no proyectos reales. No comparar con estudios oficiales sin validación.',
+    'meta': 'Malla {nx} × {ny} celdas de {cell} m ({crs}) · generado: {gen} · datos: {base}/', 'crs.none': 'CRS sin dato',
+    'diff.save': 'ahorra {r}', 'diff.worse': 'empeora {r}',
+    'legend.diff.title': 'Diferencia S0 − solución (cm)', 'legend.depth.title': 'Calado máximo (cm)',
+    'legend.diff.none': '|dif.| < 1 cm: sin color', 'legend.depth.none': '< 1 cm: sin agua',
+    'legend.drain': 'eje de drenaje: más calado dentro del cauce (esperado)', 'legend.sea': 'mar',
+    'legend.building': 'edificio (solo visual{assumed})', 'legend.building.assumed': '; sin dato de plantas: altura supuesta {h} m',
+    'status.unavailable': 'no disponible', 'status.invalid': 'INVÁLIDO', 'status.valid': 'válido',
+    'kpi.invalid': 'RESULTADO INVÁLIDO ({ids}): error de balance de masa ≥ 5 %. No usar estas cifras.',
+    'kpi.reduction': 'Reducción frente a S0', 'kpi.maxvs': 'Calado máx. frente a S0 ({p})', 'kpi.maxlbl': 'Calado máx. · {sol}, {rain} l/m²',
+    'kpi.none': 'Sin resultados cargados.',
+    'th.indicator': 'Indicador', 'th.change': 'Cambio', 'th.point': 'Punto', 'th.saving': 'Ahorro',
+    'th.probs': 'Probabilidades', 'th.fallback': 'Respaldo', 'th.best': 'Mejor (solver)',
+    'row.maxdepth': 'Calado máx.', 'row.area': 'Área inundada', 'row.volume': 'Volumen total',
+    'row.masserr': 'Error balance de masa', 'row.runtime': 'Tiempo de cálculo', 'row.status': 'Estado',
+    'hs.none': 'Sin puntos negros en los resultados cargados.',
+    'jev.warn': 'Jev no ejecutado: decisiones del respaldo determinista',
+    'jev.warn.nofile': ' (no se ha encontrado jev_decisions.json).', 'jev.warn.empty': ' (jev_decisions.json está vacío).',
+    'jev.warn.noresults': ' (no hay resultados cargados).', 'jev.warn.dot': '.',
+    'jev.acc': 'Acierto de Jev frente al solver', 'jev.baseacc': 'Acierto del respaldo (línea base)',
+    'jev.random': 'Azar (referencia)', 'jev.majority': 'Clase mayoritaria (referencia)',
+    'jev.p50': 'Latencia p50', 'jev.p95': 'Latencia p95', 'jev.cost': 'Coste por decisión (estimado)',
+    'jev.fbpct': 'Decisiones con respaldo', 'jev.n': 'Decisiones registradas', 'jev.live': 'Respondidas por Jev',
+    'jev.norows': 'Sin decisiones registradas para {rain} l/m².', 'jev.conf': 'conf. {p}',
+    'jev.notrun': 'no ejecutado', 'jev.notrun2': '(se usó el respaldo)',
+    'jev.foot': '✓/✗ = coincide o no con la mejor solución según el solver para ese punto negro.',
+    'tag.diff': 'DIFERENCIA: S0 − {sol} · {rain} l/m²', 'tag.diff.na': 'Diferencia no disponible: falta S0 o la solución',
+    'tag.before': 'ANTES', 'tag.after': 'DESPUÉS', 'tag.view': '{when}: {id} — {name} · {rain} l/m²',
+    'tag.na': 'Escenario no disponible: {id}', 'tag.invalid': ' · INVÁLIDO',
+    'err.read': 'No se pudo leer {url}: {detail}', 'err.npy': '{url}: {detail}',
+    'err.scenario.missing': 'El escenario {id} no está en index.json (aún no calculado).',
+    'err.index': '{detail}\nAún no hay resultados del solver en "{base}/". Genera los resultados o abre el visor con ?base=_mock (datos falsos de desarrollo).',
+    'err.mock': 'DATOS FALSOS DE DESARROLLO (?base=_mock): no proceden del solver.',
+    'err.grid': 'index.json no trae una malla válida (grid.nx, grid.ny, grid.cell_m).',
+    'err.terrain': 'Terreno no disponible: {detail}', 'err.unexpected': 'Error inesperado: {detail}',
+  },
+  en: {
+    'title': 'Comarruga Flood Lab — 3D viewer', 'lang.aria': 'Language', 'nodata': 'no data', 'pct': '%',
+    'badge.label': 'preliminary estimate, simplified model',
+    'dem.loading': 'Terrain: loading…', 'dem.none': 'Terrain: no data', 'dem.source': 'Terrain source: {src}',
+    'dem.icgc': 'ICGC 5 m DEM (WCS icc:met5), Brisamar area, Coma-ruga; downloaded {date}',
+    'synthetic.band': 'SYNTHETIC TERRAIN — not the real Comarruga', 'loading': 'Loading…',
+    'ctl.rain': 'Rainfall (l/m² in 60 min)', 'ctl.sol': 'Solution', 'ctl.view': 'View',
+    'mode.before': 'Before (S0)', 'mode.after': 'After ({sol})', 'mode.diff': 'Difference (cm saved)',
+    'ctl.exag': 'Vertical exaggeration:', 'ctl.layers': 'Layers', 'layers.texture.aria': 'Terrain texture',
+    'layers.ortho': 'Orthophoto', 'layers.relief': 'Relief', 'layers.buildings': 'Buildings',
+    'attrib': 'Orthophoto and DEM: ICGC',
+    'bld.note': 'Buildings: Spanish Cadastre (INSPIRE); height estimated from the number of storeys ({floor} m per storey{assumed}). {n} volumes, visual only: the solver does NOT take them into account. Their height is not exaggerated.',
+    'bld.note.assumed': '; {n} with no storey data: assumed height {h} m',
+    'kpi.title': 'Scenario indicators', 'kpi.hotspots.title': 'Hotspots (max. depth within a 3-cell radius)',
+    'jev.title': 'Jev decisions', 'jev.shadow': 'shadow mode: Jev decides and is logged, it does not act',
+    'disclaimer': 'All values are a <b>preliminary estimate, simplified model</b>. Solutions S1–S4 are model assumptions, not real projects. Do not compare with official studies without validation.',
+    'meta': 'Grid {nx} × {ny} cells of {cell} m ({crs}) · generated: {gen} · data: {base}/', 'crs.none': 'CRS: no data',
+    'diff.save': 'saves {r}', 'diff.worse': 'worse by {r}',
+    'legend.diff.title': 'Difference S0 − solution (cm)', 'legend.depth.title': 'Maximum depth (cm)',
+    'legend.diff.none': '|diff.| < 1 cm: no colour', 'legend.depth.none': '< 1 cm: no water',
+    'legend.drain': 'drainage line: deeper water inside the channel (expected)', 'legend.sea': 'sea',
+    'legend.building': 'building (visual only{assumed})', 'legend.building.assumed': '; no storey data: assumed height {h} m',
+    'status.unavailable': 'not available', 'status.invalid': 'INVALID', 'status.valid': 'valid',
+    'kpi.invalid': 'INVALID RESULT ({ids}): mass balance error ≥ 5%. Do not use these figures.',
+    'kpi.reduction': 'Reduction vs S0', 'kpi.maxvs': 'Max. depth vs S0 ({p})', 'kpi.maxlbl': 'Max. depth · {sol}, {rain} l/m²',
+    'kpi.none': 'No results loaded.',
+    'th.indicator': 'Indicator', 'th.change': 'Change', 'th.point': 'Hotspot', 'th.saving': 'Saving',
+    'th.probs': 'Probabilities', 'th.fallback': 'Fallback', 'th.best': 'Best (solver)',
+    'row.maxdepth': 'Max. depth', 'row.area': 'Flooded area', 'row.volume': 'Total volume',
+    'row.masserr': 'Mass balance error', 'row.runtime': 'Computation time', 'row.status': 'Status',
+    'hs.none': 'No hotspots in the loaded results.',
+    'jev.warn': 'Jev not run: decisions come from the deterministic fallback',
+    'jev.warn.nofile': ' (jev_decisions.json was not found).', 'jev.warn.empty': ' (jev_decisions.json is empty).',
+    'jev.warn.noresults': ' (no results loaded).', 'jev.warn.dot': '.',
+    'jev.acc': 'Jev accuracy vs the solver', 'jev.baseacc': 'Fallback accuracy (baseline)',
+    'jev.random': 'Random chance (reference)', 'jev.majority': 'Majority class (reference)',
+    'jev.p50': 'p50 latency', 'jev.p95': 'p95 latency', 'jev.cost': 'Cost per decision (estimated)',
+    'jev.fbpct': 'Decisions using the fallback', 'jev.n': 'Decisions logged', 'jev.live': 'Answered by Jev',
+    'jev.norows': 'No decisions logged for {rain} l/m².', 'jev.conf': 'conf. {p}',
+    'jev.notrun': 'not run', 'jev.notrun2': '(the fallback was used)',
+    'jev.foot': '✓/✗ = matches or not the best solution according to the solver for that hotspot.',
+    'tag.diff': 'DIFFERENCE: S0 − {sol} · {rain} l/m²', 'tag.diff.na': 'Difference not available: S0 or the solution is missing',
+    'tag.before': 'BEFORE', 'tag.after': 'AFTER', 'tag.view': '{when}: {id} — {name} · {rain} l/m²',
+    'tag.na': 'Scenario not available: {id}', 'tag.invalid': ' · INVALID',
+    'err.read': 'Could not read {url}: {detail}', 'err.npy': '{url}: {detail}',
+    'err.scenario.missing': 'Scenario {id} is not in index.json (not computed yet).',
+    'err.index': '{detail}\nThere are no solver results in "{base}/" yet. Generate the results or open the viewer with ?base=_mock (fake development data).',
+    'err.mock': 'FAKE DEVELOPMENT DATA (?base=_mock): not produced by the solver.',
+    'err.grid': 'index.json does not contain a valid grid (grid.nx, grid.ny, grid.cell_m).',
+    'err.terrain': 'Terrain not available: {detail}', 'err.unexpected': 'Unexpected error: {detail}',
+    // nombres de soluciones por id (los JSON los traen en español)
+    'sol.S0': 'Current situation (baseline)', 'sol.S1': 'Widen the channel section', 'sol.S2': 'Retention tank',
+    'sol.S3': 'Permeable pavement (SUDS)', 'sol.S4': 'Raise kerbs / divert',
+    // textos de datos: [patrón en español, traducción]; lo que no coincide se muestra tal cual
+    '$data': [
+      [/^estimación preliminar, modelo simplificado$/i, 'preliminary estimate, simplified model'],
+      [/sint[eé]tico/gi, 'synthetic'],
+      [/depósito de retención/gi, 'retention tank'], [/pavimento permeable/gi, 'permeable pavement'],
+      [/bordillos \/ desvío/gi, 'kerbs / diversion'], [/ y lluvia /g, ' and rainfall '], [/ y (?=[a-z_0-9]+ [<>=])/g, ' and '],
+      [/no es un archivo \.npy \(cabecera mágica incorrecta\)/, 'not a .npy file (wrong magic header)'],
+      [/versión \.npy no soportada/, 'unsupported .npy version'], [/cabecera \.npy truncada/, 'truncated .npy header'],
+      [/cabecera \.npy ilegible/, 'unreadable .npy header'], [/se esperaba float32 little-endian/, 'expected little-endian float32'],
+      [/orden Fortran: se esperaba orden C/, 'Fortran order: C order expected'], [/forma (\([^)]*\)): se esperaba/, 'shape $1: expected'],
+      [/forma (\([^)]*\)) distinta de la malla de index\.json/, 'shape $1 differs from the index.json grid'],
+      [/datos \.npy truncados/, 'truncated .npy data'],
+    ],
+  },
+};
+const LANGS = ['es', 'en'], LOCALE = { es: 'es-ES', en: 'en-GB' }, LANG_KEY = 'cfl.lang';
+let lang = (() => {
+  const q = params.get('lang'); if (LANGS.includes(q)) return q;
+  try { const s = localStorage.getItem(LANG_KEY); if (LANGS.includes(s)) return s; } catch { /* almacenamiento no disponible */ }
+  return 'es';
+})();
+function t(key, p) {
+  const s = I18N[lang][key] ?? I18N.es[key] ?? key;
+  return p ? String(s).replace(/\{(\w+)\}/g, (m, k) => (k in p ? String(p[k]) : m)) : s;
+}
+// Texto que llega de los datos (JSON, npy.js): en español se deja tal cual; en otro idioma, traducción por patrón conocido
+function trData(s) {
+  let out = String(s ?? '');
+  for (const [re, to] of I18N[lang].$data || []) out = out.replace(re, to);
+  return out;
+}
+// Errores traducibles: se guarda clave + parámetros y el texto se compone al pintar
+const mkErr = (key, p) => Object.assign(new Error(t(key, p)), { key, params: p });
+function msgOf(e) {
+  if (e == null) return '';
+  if (typeof e !== 'object') return String(e);
+  if (!e.key) return trData(e.message);
+  const p = {}; for (const [k, v] of Object.entries(e.params || {})) p[k] = (v && typeof v === 'object') ? msgOf(v) : v;
+  return t(e.key, p);
+}
+const nf = (v, d = 0) => (v == null || !Number.isFinite(Number(v))) ? t('nodata')
+  : Number(v).toLocaleString(LOCALE[lang], { minimumFractionDigits: d, maximumFractionDigits: d, useGrouping: 'always' });
 const urlOf = path => `${BASE}/${String(path).split('/').pop()}`; // los contratos dan rutas "results/x": usamos el nombre
 
 // Clases de calado (cm) y de diferencia (cm ahorrados)
@@ -18,11 +165,11 @@ const DEPTH_CLASSES = [
   { max: 50, color: '#1f6fff', label: '30 – 50' }, { max: 100, color: '#5b2be0', label: '50 – 100' },
   { max: Infinity, color: '#e01fd0', label: '> 100' }];
 const DIFF_CLASSES = [
-  { min: 15, color: '#00e676', label: 'ahorra > 15' }, { min: 5, color: '#7dffb0', label: 'ahorra 5 – 15' },
-  { min: 1, color: '#d6ffe6', label: 'ahorra 1 – 5' }, { min: -5, color: '#ffc7a3', label: 'empeora 1 – 5' },
-  { min: -Infinity, color: '#ff4b2b', label: 'empeora > 5' }];
+  { min: 15, color: '#00e676', key: 'diff.save', r: '> 15' }, { min: 5, color: '#7dffb0', key: 'diff.save', r: '5 – 15' },
+  { min: 1, color: '#d6ffe6', key: 'diff.save', r: '1 – 5' }, { min: -5, color: '#ffc7a3', key: 'diff.worse', r: '1 – 5' },
+  { min: -Infinity, color: '#ff4b2b', key: 'diff.worse', r: '> 5' }];
 
-const state = { index: null, rain: null, sol: null, mode: 'after', exag: 1, decisions: null, summary: null, hotspotsFile: null };
+const state = { index: null, rain: null, sol: null, mode: 'after', exag: 1, decisions: null, summary: null, hotspotsFile: null, indexFailed: false };
 const cache = new Map(); // scenario_id -> Promise<{result, depth}|{error}>
 let dem = null, landuse = null, grid = null, stride = 1, gnx = 0, gny = 0, demMin = 0;
 let renderer, scene, camera, controls, world, terrainMesh, waterMesh, markerGroup, updateToken = 0;
@@ -30,21 +177,23 @@ let renderer, scene, camera, controls, world, terrainMesh, waterMesh, markerGrou
 const SEA_COLOR = '#0b2a5c', DRAIN_DIFF_COLOR = '#8fa3b8', BUILDING_COLOR = '#e8e4da';
 const FLOOR_M = 3, DEFAULT_BUILDING_M = 6;
 const layers = { ortho: false, buildings: true, orthoTex: null, reliefCol: null, orthoCol: null, reliefMat: null, orthoMat: null,
-  bMesh: null, bBase: null, bOff: null, bCount: 0, bAssumed: 0 };
+  bMesh: null, bBase: null, bOff: null, bCount: 0, bAssumed: 0, hasOrtho: false, ready: false };
 const luAt = k => landuse ? Math.round(landuse[k]) : 0;
 
-function showError(msg) { const b = $('error-band'); b.hidden = false; b.textContent = (b.textContent ? b.textContent + '\n' : '') + msg; }
+const errors = []; // { key, params }: se repintan al cambiar de idioma
+function renderErrors() { const b = $('error-band'); b.hidden = !errors.length; b.textContent = errors.map(msgOf).join('\n'); }
+function showError(key, p) { errors.push({ key, params: p }); renderErrors(); }
 async function fetchJson(url, optional = false) {
   try {
     const r = await fetch(url, { cache: 'no-store' });
     if (!r.ok) { if (optional) return null; throw new Error(`HTTP ${r.status}`); }
     return await r.json();
-  } catch (e) { if (optional) return null; throw new Error(`No se pudo leer ${url}: ${e.message}`); }
+  } catch (e) { if (optional) return null; throw mkErr('err.read', { url, detail: e.message }); }
 }
 async function fetchNpy(url, expected) {
   const r = await fetch(url, { cache: 'no-store' });
-  if (!r.ok) throw new Error(`No se pudo leer ${url}: HTTP ${r.status}`);
-  try { return parseNpy(await r.arrayBuffer(), expected); } catch (e) { throw new Error(`${url}: ${e.message}`); }
+  if (!r.ok) throw mkErr('err.read', { url, detail: `HTTP ${r.status}` });
+  try { return parseNpy(await r.arrayBuffer(), expected); } catch (e) { throw mkErr('err.npy', { url, detail: e }); }
 }
 
 // ---------- escena ----------
@@ -194,14 +343,19 @@ function buildBuildings(list) {
   applyExag();
 }
 
+function renderLayerNotes() {
+  if (!layers.ready) return;
+  $('attrib').textContent = layers.hasOrtho ? t('attrib') : '';
+  $('bld-note').hidden = !layers.bMesh;
+  if (layers.bMesh) $('bld-note').textContent = t('bld.note', { floor: FLOOR_M, n: nf(layers.bCount),
+    assumed: layers.bAssumed ? t('bld.note.assumed', { n: nf(layers.bAssumed), h: DEFAULT_BUILDING_M }) : '' });
+}
+
 function initLayerControls(hasOrtho) {
   $('ortho-btns').hidden = !hasOrtho; $('bld-btn').hidden = !layers.bMesh;
   $('layers-ctl').hidden = !hasOrtho && !layers.bMesh;
-  $('attrib').textContent = hasOrtho ? 'Ortofoto y MDT: ICGC' : '';
-  $('bld-note').hidden = !layers.bMesh;
-  if (layers.bMesh) $('bld-note').textContent = `Edificios: Catastro INSPIRE; altura estimada por nº de plantas (${FLOOR_M} m por planta` +
-    (layers.bAssumed ? `; ${nf(layers.bAssumed)} sin dato de plantas: altura supuesta ${DEFAULT_BUILDING_M} m` : '') +
-    `). ${nf(layers.bCount)} volúmenes, solo visuales: el solver NO los tiene en cuenta. Su altura no se exagera.`;
+  layers.hasOrtho = hasOrtho; layers.ready = true;
+  renderLayerNotes();
   $('ortho-btns').onclick = e => { const b = e.target.closest('button'); if (b) { layers.ortho = b.dataset.ortho === '1'; applyOrtho(); } };
   $('bld-btn').onclick = () => {
     layers.buildings = !layers.buildings; layers.bMesh.visible = layers.buildings;
@@ -295,12 +449,12 @@ function scenarioEntry(rain, sol) {
 function loadScenario(rain, sol) {
   const entry = scenarioEntry(rain, sol), id = entry?.scenario_id || `rain${rain}_${sol}`;
   if (!cache.has(id)) cache.set(id, (async () => {
-    if (!entry) return { id, error: `El escenario ${id} no está en index.json (aún no calculado).` };
+    if (!entry) return { id, error: { key: 'err.scenario.missing', params: { id } } };
     try {
       const result = await fetchJson(urlOf(entry.result_file || `${id}.json`));
       const depth = (await fetchNpy(urlOf(result.depth_file || `${id}_depth.npy`), { ny: grid.ny, nx: grid.nx })).data;
       return { id, result, depth, status: result.status || entry.status };
-    } catch (e) { return { id, error: e.message }; }
+    } catch (e) { return { id, error: e }; }
   })());
   return cache.get(id);
 }
@@ -309,18 +463,22 @@ function loadScenario(rain, sol) {
 function press(container, attr, value) {
   for (const b of container.querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset[attr] === String(value)));
 }
-function solName(id) { return state.index.solutions?.find(s => s.id === id)?.name || id; }
+function solName(id) { return I18N[lang][`sol.${id}`] || state.index?.solutions?.find(s => s.id === id)?.name || id; }
+function renderSolButtons() {
+  $('sol-btns').innerHTML = (state.index?.solutions || []).map(s => `<button data-sol="${esc(s.id)}">${esc(s.id)}<small>${esc(solName(s.id))}</small></button>`).join('');
+  press($('sol-btns'), 'sol', state.sol);
+}
 
 function buildControls() {
   const rains = state.index.rains_mm?.length ? state.index.rains_mm : [...new Set((state.index.scenarios || []).map(s => s.rain_mm))].sort((a, b) => a - b);
   const sols = state.index.solutions?.length ? state.index.solutions : [...new Set((state.index.scenarios || []).map(s => s.solution_id))].sort().map(id => ({ id, name: id }));
   state.index.solutions = sols;
   $('rain-btns').innerHTML = rains.map(r => `<button data-rain="${esc(r)}">${esc(r)} l/m²</button>`).join('');
-  $('sol-btns').innerHTML = sols.map(s => `<button data-sol="${esc(s.id)}">${esc(s.id)}<small>${esc(s.name)}</small></button>`).join('');
   const qr = Number(params.get('rain')), qs = params.get('sol');
   state.rain = rains.includes(qr) ? qr : (rains.includes(60) ? 60 : rains[0]);
   state.sol = sols.some(s => s.id === qs) ? qs : (sols.find(s => s.id !== 'S0')?.id || sols[0]?.id);
   if (['before', 'after', 'diff'].includes(params.get('mode'))) state.mode = params.get('mode');
+  renderSolButtons();
   $('rain-btns').onclick = e => { const b = e.target.closest('button'); if (b) { state.rain = Number(b.dataset.rain); update(); } };
   $('sol-btns').onclick = e => { const b = e.target.closest('button'); if (b) { state.sol = b.dataset.sol; if (state.mode === 'before') state.mode = 'after'; update(); } };
   $('mode-btns').onclick = e => { const b = e.target.closest('button'); if (b) { state.mode = b.dataset.mode; update(); } };
@@ -329,64 +487,65 @@ function buildControls() {
 
 function renderLegend(diff) {
   const cls = diff ? DIFF_CLASSES : DEPTH_CLASSES;
-  $('legend').innerHTML = `<div class="t">${diff ? 'Diferencia S0 − solución (cm)' : 'Calado máximo (cm)'}</div>` +
-    cls.map(k => `<div class="row"><i style="background:${k.color}"></i>${esc(k.label)}</div>`).join('') +
-    `<div class="row muted">${diff ? '|dif.| &lt; 1 cm: sin color' : '&lt; 1 cm: sin agua'}</div>` +
-    (diff && landuse ? `<div class="row"><i style="background:${DRAIN_DIFF_COLOR}"></i>eje de drenaje: más calado dentro del cauce (esperado)</div>` : '') +
-    (landuse ? `<div class="row"><i style="background:${SEA_COLOR}"></i>mar</div>` : '') +
-    (layers.bMesh && layers.buildings ? `<div class="row"><i style="background:${BUILDING_COLOR}"></i>edificio (solo visual${layers.bAssumed ? `; sin dato de plantas: altura supuesta ${DEFAULT_BUILDING_M} m` : ''})</div>` : '');
+  $('legend').innerHTML = `<div class="t">${esc(t(diff ? 'legend.diff.title' : 'legend.depth.title'))}</div>` +
+    cls.map(k => `<div class="row"><i style="background:${k.color}"></i>${esc(k.key ? t(k.key, { r: k.r }) : k.label)}</div>`).join('') +
+    `<div class="row muted">${esc(t(diff ? 'legend.diff.none' : 'legend.depth.none'))}</div>` +
+    (diff && landuse ? `<div class="row"><i style="background:${DRAIN_DIFF_COLOR}"></i>${esc(t('legend.drain'))}</div>` : '') +
+    (landuse ? `<div class="row"><i style="background:${SEA_COLOR}"></i>${esc(t('legend.sea'))}</div>` : '') +
+    (layers.bMesh && layers.buildings ? `<div class="row"><i style="background:${BUILDING_COLOR}"></i>${esc(t('legend.building',
+      { assumed: layers.bAssumed ? t('legend.building.assumed', { h: DEFAULT_BUILDING_M }) : '' }))}</div>` : '');
 }
 
 function statusCell(s) {
-  if (!s) return '<span class="muted">sin dato</span>';
-  if (s.error) return '<span class="bad">no disponible</span>';
-  return s.status === 'invalid' ? '<span class="tag-invalid">INVÁLIDO</span>' : '<span class="ok">válido</span>';
+  if (!s) return `<span class="muted">${esc(t('nodata'))}</span>`;
+  if (s.error) return `<span class="bad">${esc(t('status.unavailable'))}</span>`;
+  return s.status === 'invalid' ? `<span class="tag-invalid">${esc(t('status.invalid'))}</span>` : `<span class="ok">${esc(t('status.valid'))}</span>`;
 }
 
 function renderKpis(s0, s1) {
   const k0 = s0?.result?.kpis, k1 = s1?.result?.kpis, same = state.sol === 'S0';
   const invalid = [s0, s1].filter(s => s?.status === 'invalid').map(s => s.id);
   $('invalid-flag').hidden = !invalid.length;
-  if (invalid.length) $('invalid-flag').textContent = `RESULTADO INVÁLIDO (${[...new Set(invalid)].join(', ')}): error de balance de masa ≥ 5 %. No usar estas cifras.`;
+  if (invalid.length) $('invalid-flag').textContent = t('kpi.invalid', { ids: [...new Set(invalid)].join(', ') });
   let hero = '';
   if (k1) {
-    let red = '<div class="big muted">—</div><div class="lbl">Reducción frente a S0</div>';
+    let red = `<div class="big muted">—</div><div class="lbl">${esc(t('kpi.reduction'))}</div>`;
     if (k0 && !same && Number.isFinite(k0.max_depth_cm) && Number.isFinite(k1.max_depth_cm)) {
       const d = k0.max_depth_cm - k1.max_depth_cm, p = k0.max_depth_cm > 0 ? d / k0.max_depth_cm * 100 : null;
       red = `<div class="big ${d >= 0 ? 'ok' : 'bad'}">${d >= 0 ? '−' : '+'}${nf(Math.abs(d), 1)} cm</div>
-        <div class="lbl">Calado máx. frente a S0 (${p == null ? 'sin dato' : (d >= 0 ? '−' : '+') + nf(Math.abs(p), 1) + ' %'})</div>`;
+        <div class="lbl">${esc(t('kpi.maxvs', { p: p == null ? t('nodata') : (d >= 0 ? '−' : '+') + nf(Math.abs(p), 1) + t('pct') }))}</div>`;
     }
-    hero = `<div class="kpi-hero"><div><div class="big">${nf(k1.max_depth_cm, 1)} cm</div><div class="lbl">Calado máx. · ${esc(state.sol)}, ${esc(state.rain)} l/m²</div></div><div>${red}</div></div>`;
+    hero = `<div class="kpi-hero"><div><div class="big">${nf(k1.max_depth_cm, 1)} cm</div><div class="lbl">${esc(t('kpi.maxlbl', { sol: state.sol, rain: state.rain }))}</div></div><div>${red}</div></div>`;
   }
   const row = (lbl, key, d, unit) => {
     const a = k0?.[key], b = k1?.[key];
     let delta = '—';
     if (!same && Number.isFinite(a) && Number.isFinite(b) && key !== 'volume_error_pct' && key !== 'runtime_s') {
-      const dd = b - a; delta = `<span class="${dd <= 0 ? 'ok' : 'bad'}">${dd > 0 ? '+' : dd < 0 ? '−' : ''}${nf(Math.abs(dd), d)}${a > 0 && key !== 'flooded_area_pct' ? ` (${dd > 0 ? '+' : dd < 0 ? '−' : ''}${nf(Math.abs(dd / a * 100), 1)} %)` : ''}</span>`;
+      const dd = b - a; delta = `<span class="${dd <= 0 ? 'ok' : 'bad'}">${dd > 0 ? '+' : dd < 0 ? '−' : ''}${nf(Math.abs(dd), d)}${a > 0 && key !== 'flooded_area_pct' ? ` (${dd > 0 ? '+' : dd < 0 ? '−' : ''}${nf(Math.abs(dd / a * 100), 1)}${t('pct')})` : ''}</span>`;
     }
     const errBad = key === 'volume_error_pct';
     const cell = v => `<td${errBad && Number.isFinite(v) && Math.abs(v) >= 5 ? ' class="bad"' : ''}>${nf(v, d)}</td>`;
-    return `<tr><td>${lbl} <span class="muted">${unit}</span></td>${cell(a)}${cell(b)}<td>${delta}</td></tr>`;
+    return `<tr><td>${esc(t(lbl))} <span class="muted">${unit}</span></td>${cell(a)}${cell(b)}<td>${delta}</td></tr>`;
   };
-  $('kpis').innerHTML = hero + `<table><thead><tr><th>Indicador</th><th>S0</th><th>${esc(state.sol)}</th><th>Cambio</th></tr></thead><tbody>
-    ${row('Calado máx.', 'max_depth_cm', 1, 'cm')}
-    ${row('Área inundada', 'flooded_area_m2', 0, 'm²')}
-    ${row('Área inundada', 'flooded_area_pct', 2, '%')}
-    ${row('Volumen total', 'volume_m3_total', 0, 'm³')}
-    ${row('Error balance de masa', 'volume_error_pct', 2, '%')}
-    ${row('Tiempo de cálculo', 'runtime_s', 2, 's')}
-    <tr><td>Estado</td><td>${statusCell(s0)}</td><td>${statusCell(s1)}</td><td></td></tr></tbody></table>` +
-    [s0, s1].filter((s, i) => s?.error && !(i === 1 && same)).map(s => `<p class="bad">${esc(s.error)}</p>`).join('');
+  $('kpis').innerHTML = hero + `<table><thead><tr><th>${esc(t('th.indicator'))}</th><th>S0</th><th>${esc(state.sol)}</th><th>${esc(t('th.change'))}</th></tr></thead><tbody>
+    ${row('row.maxdepth', 'max_depth_cm', 1, 'cm')}
+    ${row('row.area', 'flooded_area_m2', 0, 'm²')}
+    ${row('row.area', 'flooded_area_pct', 2, '%')}
+    ${row('row.volume', 'volume_m3_total', 0, 'm³')}
+    ${row('row.masserr', 'volume_error_pct', 2, '%')}
+    ${row('row.runtime', 'runtime_s', 2, 's')}
+    <tr><td>${esc(t('row.status'))}</td><td>${statusCell(s0)}</td><td>${statusCell(s1)}</td><td></td></tr></tbody></table>` +
+    [s0, s1].filter((s, i) => s?.error && !(i === 1 && same)).map(s => `<p class="bad">${esc(msgOf(s.error))}</p>`).join('');
 
   const h0 = s0?.result?.hotspots || [], h1 = s1?.result?.hotspots || [];
   const ids = [...new Set([...h0, ...h1].map(h => h.id))];
-  $('hotspots').innerHTML = ids.length ? `<table><thead><tr><th>Punto</th><th>S0 (cm)</th><th>${esc(state.sol)} (cm)</th><th>Ahorro</th></tr></thead><tbody>` +
+  $('hotspots').innerHTML = ids.length ? `<table><thead><tr><th>${esc(t('th.point'))}</th><th>S0 (cm)</th><th>${esc(state.sol)} (cm)</th><th>${esc(t('th.saving'))}</th></tr></thead><tbody>` +
     ids.map(id => {
       const a = h0.find(h => h.id === id)?.max_depth_cm, b = h1.find(h => h.id === id)?.max_depth_cm;
       const ok = Number.isFinite(a) && Number.isFinite(b), d = ok ? a - b : null;
       return `<tr><td><b>${esc(id)}</b></td><td>${nf(a, 1)}</td><td>${nf(b, 1)}</td><td>${!ok || same ? '—' :
-        `<span class="${d >= 0 ? 'ok' : 'bad'}">${d >= 0 ? '−' : '+'}${nf(Math.abs(d), 1)} cm${a > 0 ? ` (${nf(Math.abs(d / a * 100), 0)} %)` : ''}</span>`}</td></tr>`;
-    }).join('') + '</tbody></table>' : '<p class="muted">Sin puntos negros en los resultados cargados.</p>';
+        `<span class="${d >= 0 ? 'ok' : 'bad'}">${d >= 0 ? '−' : '+'}${nf(Math.abs(d), 1)} cm${a > 0 ? ` (${nf(Math.abs(d / a * 100), 0)}${t('pct')})` : ''}</span>`}</td></tr>`;
+    }).join('') + '</tbody></table>' : `<p class="muted">${esc(t('hs.none'))}</p>`;
 }
 
 function renderJev() {
@@ -394,41 +553,42 @@ function renderJev() {
   const live = (all || []).filter(d => d.jev_output && !d.fallback_used);
   const noJev = !all || !all.length || !live.length;
   warn.hidden = !noJev;
-  if (noJev) warn.textContent = 'Jev no ejecutado: decisiones del respaldo determinista' +
-    (!all ? ' (no se ha encontrado jev_decisions.json).' : !all.length ? ' (jev_decisions.json está vacío).' : '.');
+  if (noJev) warn.textContent = t('jev.warn') +
+    t(state.indexFailed ? 'jev.warn.noresults' : !all ? 'jev.warn.nofile' : !all.length ? 'jev.warn.empty' : 'jev.warn.dot');
   const j = state.summary?.jev, st = [];
   if (j) {
-    const add = (k, lbl, d, u) => { if (j[k] != null) st.push(`<div>${lbl}<br><b>${nf(j[k], d)}${u}</b></div>`); };
-    add('accuracy_vs_solver_pct', 'Acierto de Jev frente al solver', 1, ' %');
-    add('baseline_accuracy_vs_solver_pct', 'Acierto del respaldo (línea base)', 1, ' %');
-    add('random_baseline_pct', 'Azar (referencia)', 0, ' %');
-    add('majority_class_baseline_pct', 'Clase mayoritaria (referencia)', 1, ' %');
-    add('latency_p50_ms', 'Latencia p50', 0, ' ms'); add('latency_p95_ms', 'Latencia p95', 0, ' ms');
-    add('cost_per_decision_usd', 'Coste por decisión (estimado)', 5, ' USD'); add('fallback_pct', 'Decisiones con respaldo', 1, ' %');
-    add('n_decisions', 'Decisiones registradas', 0, ''); add('n_jev_live', 'Respondidas por Jev', 0, '');
+    const add = (k, lbl, d, u) => { if (j[k] != null) st.push(`<div>${esc(t(lbl))}<br><b>${nf(j[k], d)}${u}</b></div>`); };
+    const pc = t('pct');
+    add('accuracy_vs_solver_pct', 'jev.acc', 1, pc);
+    add('baseline_accuracy_vs_solver_pct', 'jev.baseacc', 1, pc);
+    add('random_baseline_pct', 'jev.random', 0, pc);
+    add('majority_class_baseline_pct', 'jev.majority', 1, pc);
+    add('latency_p50_ms', 'jev.p50', 0, ' ms'); add('latency_p95_ms', 'jev.p95', 0, ' ms');
+    add('cost_per_decision_usd', 'jev.cost', 5, ' USD'); add('fallback_pct', 'jev.fbpct', 1, pc);
+    add('n_decisions', 'jev.n', 0, ''); add('n_jev_live', 'jev.live', 0, '');
   }
   $('jev-summary').innerHTML = st.length ? `<div class="jev-stats">${st.join('')}</div>` : '';
   if (!all || !all.length) { $('jev-table').innerHTML = ''; return; }
   const rows = all.filter(d => Number(d.rain_mm) === Number(state.rain));
-  if (!rows.length) { $('jev-table').innerHTML = `<p class="muted">Sin decisiones registradas para ${esc(state.rain)} l/m².</p>`; return; }
+  if (!rows.length) { $('jev-table').innerHTML = `<p class="muted">${esc(t('jev.norows', { rain: state.rain }))}</p>`; return; }
   const mark = v => v === true ? '<span class="ok">✓</span>' : v === false ? '<span class="bad">✗</span>' : '<span class="muted">—</span>';
-  $('jev-table').innerHTML = `<table><thead><tr><th>Punto</th><th>Jev</th><th>Probabilidades</th><th>Respaldo</th><th>Mejor (solver)</th></tr></thead><tbody>` +
+  $('jev-table').innerHTML = `<table><thead><tr><th>${esc(t('th.point'))}</th><th>Jev</th><th>${esc(t('th.probs'))}</th><th>${esc(t('th.fallback'))}</th><th>${esc(t('th.best'))}</th></tr></thead><tbody>` +
     rows.map(d => {
       const jo = d.fallback_used ? null : d.jev_output;
       const probs = jo?.probabilities ? Object.entries(jo.probabilities).map(([k, p]) =>
-        `<div class="prob${k === jo.choice ? ' sel' : ''}"><span>${esc(k)}</span><span class="bar"><i style="width:${Math.max(0, Math.min(1, Number(p) || 0)) * 100}%"></i></span><span>${nf((Number(p) || 0) * 100, 0)} %</span></div>`).join('') : '<span class="muted">—</span>';
-      const jevCell = jo ? `<b>${esc(jo.choice)}</b> ${mark(jo.choice != null && d.solver_best != null ? jo.choice === d.solver_best : d.agree)}${jo.confidence != null ? `<br><span class="muted">conf. ${nf(jo.confidence * 100, 0)} %</span>` : ''}${d.latency_ms != null ? `<br><span class="muted">${nf(d.latency_ms, 0)} ms</span>` : ''}`
-        : '<span class="muted">no ejecutado<br>(se usó el respaldo)</span>';
+        `<div class="prob${k === jo.choice ? ' sel' : ''}"><span>${esc(k)}</span><span class="bar"><i style="width:${Math.max(0, Math.min(1, Number(p) || 0)) * 100}%"></i></span><span>${nf((Number(p) || 0) * 100, 0)}${t('pct')}</span></div>`).join('') : '<span class="muted">—</span>';
+      const jevCell = jo ? `<b>${esc(jo.choice)}</b> ${mark(jo.choice != null && d.solver_best != null ? jo.choice === d.solver_best : d.agree)}${jo.confidence != null ? `<br><span class="muted">${esc(t('jev.conf', { p: nf(jo.confidence * 100, 0) + t('pct') }))}</span>` : ''}${d.latency_ms != null ? `<br><span class="muted">${nf(d.latency_ms, 0)} ms</span>` : ''}`
+        : `<span class="muted">${esc(t('jev.notrun'))}<br>${esc(t('jev.notrun2'))}</span>`;
       const fo = d.fallback_output;
-      const fbCell = fo ? `<b title="${esc(fo.rule)}">${esc(fo.choice)}</b> ${mark(d.fallback_agree ?? (d.solver_best != null ? fo.choice === d.solver_best : null))}${fo.rule ? `<br><span class="muted">${esc(fo.rule)}</span>` : ''}` : '<span class="muted">sin dato</span>';
-      return `<tr><td><b>${esc(d.hotspot_id)}</b></td><td>${jevCell}</td><td class="probs">${probs}</td><td>${fbCell}</td><td><b>${esc(d.solver_best ?? 'sin dato')}</b></td></tr>`;
-    }).join('') + '</tbody></table><p class="muted">✓/✗ = coincide o no con la mejor solución según el solver para ese punto negro.</p>';
+      const fbCell = fo ? `<b title="${esc(trData(fo.rule))}">${esc(fo.choice)}</b> ${mark(d.fallback_agree ?? (d.solver_best != null ? fo.choice === d.solver_best : null))}${fo.rule ? `<br><span class="muted">${esc(trData(fo.rule))}</span>` : ''}` : `<span class="muted">${esc(t('nodata'))}</span>`;
+      return `<tr><td><b>${esc(d.hotspot_id)}</b></td><td>${jevCell}</td><td class="probs">${probs}</td><td>${fbCell}</td><td><b>${esc(d.solver_best ?? t('nodata'))}</b></td></tr>`;
+    }).join('') + `</tbody></table><p class="muted">${esc(t('jev.foot'))}</p>`;
 }
 
 async function update() {
   const token = ++updateToken;
   press($('rain-btns'), 'rain', state.rain); press($('sol-btns'), 'sol', state.sol); press($('mode-btns'), 'mode', state.mode);
-  $('mode-btns').querySelector('[data-mode="after"]').textContent = `Después (${state.sol})`;
+  $('mode-btns').querySelector('[data-mode="after"]').textContent = t('mode.after', { sol: state.sol });
   $('loading').hidden = false;
   const [s0, s1] = await Promise.all([loadScenario(state.rain, 'S0'), loadScenario(state.rain, state.sol)]);
   if (token !== updateToken) return;
@@ -436,13 +596,14 @@ async function update() {
   const mode = state.mode, shown = mode === 'before' ? s0 : s1;
   let tag;
   if (mode === 'diff') {
-    if (s0.depth && s1.depth) { buildWater(s0.depth, s1.depth); tag = `DIFERENCIA: S0 − ${state.sol} · ${state.rain} l/m²`; }
-    else { buildWater(null); tag = 'Diferencia no disponible: falta S0 o la solución'; }
+    if (s0.depth && s1.depth) { buildWater(s0.depth, s1.depth); tag = t('tag.diff', { sol: state.sol, rain: state.rain }); }
+    else { buildWater(null); tag = t('tag.diff.na'); }
   } else {
     buildWater(shown.depth || null);
-    tag = shown.depth ? `${mode === 'before' ? 'ANTES' : 'DESPUÉS'}: ${shown === s0 ? 'S0' : state.sol} — ${solName(shown === s0 ? 'S0' : state.sol)} · ${state.rain} l/m²`
-      : `Escenario no disponible: ${shown.id}`;
-    if (shown.status === 'invalid') tag += ' · INVÁLIDO';
+    const sid = shown === s0 ? 'S0' : state.sol;
+    tag = shown.depth ? t('tag.view', { when: t(mode === 'before' ? 'tag.before' : 'tag.after'), id: sid, name: solName(sid), rain: state.rain })
+      : t('tag.na', { id: shown.id });
+    if (shown.status === 'invalid') tag += t('tag.invalid');
   }
   $('view-tag').textContent = tag;
   renderLegend(mode === 'diff');
@@ -456,26 +617,58 @@ async function update() {
   renderKpis(s0, s1); renderJev();
 }
 
+// ---------- cabecera, textos estáticos y cambio de idioma ----------
+function renderHeader() {
+  const index = state.index, lb = $('label-badge'), db = $('dem-badge');
+  lb.textContent = index?.label ? trData(index.label) : t('badge.label');
+  if (!index) { db.textContent = t(state.indexFailed ? 'dem.none' : 'dem.loading'); return; }
+  const raw = index.dem_source, synthetic = /sint[eé]tico/i.test(raw || '');
+  let src = raw ? trData(raw) : t('nodata');
+  if (raw && /ICGC/i.test(raw) && I18N[lang]['dem.icgc']) // origen conocido: texto traducido completo (conserva la fecha del JSON)
+    src = t('dem.icgc', { date: /\d{4}-\d{2}-\d{2}/.exec(raw)?.[0] || '2026-11-10' });
+  db.textContent = t('dem.source', { src });
+  $('synthetic-band').hidden = !synthetic;  // visible por defecto en index.html; se oculta si el terreno no es sintético
+  db.classList.toggle('warn', synthetic);
+  $('meta').textContent = t('meta', { nx: grid?.nx, ny: grid?.ny, cell: nf(grid?.cell_m, 1), crs: grid?.crs || t('crs.none'),
+    gen: index.generated_at || t('nodata'), base: BASE });
+}
+
+// Repinta todos los textos en el idioma activo. No recarga datos (los escenarios están en caché) ni toca cámara ni estado.
+function applyLang() {
+  document.documentElement.lang = lang; document.title = t('title');
+  for (const el of document.querySelectorAll('[data-i18n]')) el.textContent = t(el.dataset.i18n);
+  for (const el of document.querySelectorAll('[data-i18n-html]')) el.innerHTML = t(el.dataset.i18nHtml);
+  for (const el of document.querySelectorAll('[data-i18n-aria]')) el.setAttribute('aria-label', t(el.dataset.i18nAria));
+  press($('lang-tabs'), 'lang', lang);
+  $('mode-btns').querySelector('[data-mode="after"]').textContent = t('mode.after', { sol: state.sol || 'S1' });
+  renderHeader(); renderErrors();
+  if (state.indexFailed) { $('kpis').innerHTML = `<p class="muted">${esc(t('kpi.none'))}</p>`; renderJev(); return; }
+  if (!state.index) return;
+  renderSolButtons(); renderLayerNotes();
+  if (terrainMesh) { applyExag(); update(); } else renderJev();
+}
+function setLang(l) {
+  if (!LANGS.includes(l) || l === lang) return;
+  lang = l;
+  try { localStorage.setItem(LANG_KEY, l); } catch { /* almacenamiento no disponible */ }
+  try { const u = new URL(location.href); u.searchParams.set('lang', l); history.replaceState(history.state, '', u); } catch { /* p. ej. file:// restringido */ }
+  applyLang();
+}
+$('lang-tabs').onclick = e => { const b = e.target.closest('button'); if (b) setLang(b.dataset.lang); };
+
 async function main() {
   initScene();
   let index;
   try { index = await fetchJson(`${BASE}/index.json`); }
   catch (e) {
-    $('loading').hidden = true; $('dem-badge').textContent = 'Terreno: sin dato';
-    showError(`${e.message}\nAún no hay resultados del solver en "${BASE}/". Genera los resultados o abre el visor con ?base=_mock (datos falsos de desarrollo).`);
-    $('kpis').innerHTML = '<p class="muted">Sin resultados cargados.</p>';
-    state.decisions = null; $('jev-warning').hidden = false; $('jev-warning').textContent = 'Jev no ejecutado: decisiones del respaldo determinista (no hay resultados cargados).';
+    $('loading').hidden = true; state.indexFailed = true; state.decisions = null;
+    showError('err.index', { detail: e, base: BASE });
+    applyLang();
     return;
   }
   state.index = index; grid = index.grid;
-  if (index.label) $('label-badge').textContent = index.label;
-  const src = index.dem_source || 'sin dato';
-  $('dem-badge').textContent = `Fuente del terreno: ${src}`;
-  const synthetic = /sint[eé]tico/i.test(src);
-  $('synthetic-band').hidden = !synthetic;  // visible por defecto en index.html; se oculta si el terreno no es sintético
-  if (synthetic) $('dem-badge').classList.add('warn');
-  $('meta').textContent = `Malla ${grid?.nx} × ${grid?.ny} celdas de ${nf(grid?.cell_m, 1)} m (${grid?.crs || 'CRS sin dato'}) · generado: ${index.generated_at || 'sin dato'} · datos: ${BASE}/`;
-  if (BASE.includes('_mock')) showError('DATOS FALSOS DE DESARROLLO (?base=_mock): no proceden del solver.');
+  renderHeader();
+  if (BASE.includes('_mock')) showError('err.mock');
   buildControls();
 
   const [dec, sum, hsf] = await Promise.all([fetchJson(`${BASE}/jev_decisions.json`, true), fetchJson(`${BASE}/kpis_summary.json`, true), fetchJson(`${BASE}/hotspots.json`, true)]);
@@ -483,9 +676,9 @@ async function main() {
   state.summary = sum; state.hotspotsFile = hsf;
 
   try {
-    if (!grid || !(grid.nx > 0) || !(grid.ny > 0) || !(grid.cell_m > 0)) throw new Error('index.json no trae una malla válida (grid.nx, grid.ny, grid.cell_m).');
+    if (!grid || !(grid.nx > 0) || !(grid.ny > 0) || !(grid.cell_m > 0)) throw mkErr('err.grid');
     dem = (await fetchNpy(urlOf(index.dem_file || 'dem.npy'), { ny: grid.ny, nx: grid.nx })).data;
-  } catch (e) { $('loading').hidden = true; showError(`Terreno no disponible: ${e.message}`); renderJev(); return; }
+  } catch (e) { $('loading').hidden = true; showError('err.terrain', { detail: e }); renderJev(); return; }
   if (index.landuse_file !== null) {
     try { landuse = (await fetchNpy(urlOf(index.landuse_file || 'landuse.npy'), { ny: grid.ny, nx: grid.nx })).data; }
     catch (e) { console.info('Uso del suelo no disponible (opcional):', e.message); }
@@ -498,4 +691,5 @@ async function main() {
   window.__viewerReady = true;
 }
 
-main().catch(e => { $('loading').hidden = true; showError(`Error inesperado: ${e.message}`); console.error(e); });
+applyLang();
+main().catch(e => { $('loading').hidden = true; showError('err.unexpected', { detail: e }); console.error(e); });
