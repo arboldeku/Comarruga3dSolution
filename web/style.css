@@ -101,3 +101,8 @@ body { overflow-x: hidden; }
 .layer-note { margin: 8px 0 0; font-size: .9rem; color: var(--fg); }
 #legend { max-width: min(60%, 340px); }
 @media (max-width: 900px) { #attrib { font-size: .7rem; right: 6px; bottom: 6px; } }
+
+/* Leyenda fuera del mapa: en flujo normal, debajo de la vista 3D */
+#legend { position: static; max-width: none; margin: 8px 0 0; display: flex; flex-wrap: wrap; gap: 4px 18px; align-items: center; }
+#legend .t { flex-basis: 100%; }
+#legend { background: var(--panel, #15202b); border-radius: 8px; padding: 8px 12px; }
