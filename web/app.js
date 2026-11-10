@@ -26,6 +26,12 @@ const state = { index: null, rain: null, sol: null, mode: 'after', exag: 1, deci
 const cache = new Map(); // scenario_id -> Promise<{result, depth}|{error}>
 let dem = null, landuse = null, grid = null, stride = 1, gnx = 0, gny = 0, demMin = 0;
 let renderer, scene, camera, controls, world, terrainMesh, waterMesh, markerGroup, updateToken = 0;
+// capas visuales opcionales: ortofoto (results/orto.jpg) y edificios (results/buildings.json)
+const SEA_COLOR = '#0b2a5c', DRAIN_DIFF_COLOR = '#8fa3b8', BUILDING_COLOR = '#e8e4da';
+const FLOOR_M = 3, DEFAULT_BUILDING_M = 6;
+const layers = { ortho: false, buildings: true, orthoTex: null, reliefCol: null, orthoCol: null, reliefMat: null, orthoMat: null,
+  bMesh: null, bBase: null, bOff: null, bCount: 0, bAssumed: 0 };
+const luAt = k => landuse ? Math.round(landuse[k]) : 0;
 
 function showError(msg) { const b = $('error-band'); b.hidden = false; b.textContent = (b.textContent ? b.textContent + '\n' : '') + msg; }
 async function fetchJson(url, optional = false) {
@@ -79,7 +85,8 @@ function buildIndex(keepQuad) {
 
 function terrainColor(z01, lu, out) {
   // no urbano: verde-ocre por elevación; urbano: gris; cauce: marrón oscuro. Apagado para que el agua destaque.
-  if (lu === 2) out.setRGB(0.36, 0.27, 0.20);
+  if (lu === 3) out.set(SEA_COLOR);
+  else if (lu === 2) out.setRGB(0.36, 0.27, 0.20);
   else if (lu === 1) out.setRGB(0.42 + 0.2 * z01, 0.42 + 0.2 * z01, 0.45 + 0.2 * z01);
   else out.setRGB(0.30 + 0.38 * z01, 0.42 + 0.22 * z01, 0.22 + 0.18 * z01);
 }
@@ -92,17 +99,25 @@ function buildTerrain() {
   if (!Number.isFinite(mn)) { mn = 0; mx = 1; }
   demMin = mn; const range = Math.max(mx - mn, 1e-6);
   const pos = new Float32Array(gnx * gny * 3), col = new Float32Array(gnx * gny * 3), c3 = new THREE.Color();
+  const uv = new Float32Array(gnx * gny * 2), tint = new Float32Array(gnx * gny * 3), sea = new THREE.Color(SEA_COLOR);
   for (let r = 0; r < gny; r++) for (let c = 0; c < gnx; c++) {
     const i = vIdx(r, c), k = cellAt(r, c), z = Number.isFinite(dem[k]) ? dem[k] : mn;
     pos[i * 3] = c * stride * grid.cell_m; pos[i * 3 + 1] = z - mn; pos[i * 3 + 2] = r * stride * grid.cell_m; // fila 0 = norte = -Z
     terrainColor((z - mn) / range, landuse ? Math.round(landuse[k]) : 0, c3);
     col[i * 3] = c3.r; col[i * 3 + 1] = c3.g; col[i * 3 + 2] = c3.b;
+    // UV de la ortofoto: la imagen cubre el bbox de la malla, norte arriba; el vértice es el centro de celda
+    uv[i * 2] = (c * stride + 0.5) / grid.nx; uv[i * 2 + 1] = 1 - (r * stride + 0.5) / grid.ny;
+    const isSea = luAt(k) === 3; // con ortofoto el mar también se pinta de azul oscuro
+    tint[i * 3] = isSea ? sea.r : 1; tint[i * 3 + 1] = isSea ? sea.g : 1; tint[i * 3 + 2] = isSea ? sea.b : 1;
   }
   const g = new THREE.BufferGeometry();
   g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-  g.setAttribute('color', new THREE.BufferAttribute(col, 3));
+  layers.reliefCol = new THREE.BufferAttribute(col, 3); layers.orthoCol = new THREE.BufferAttribute(tint, 3);
+  g.setAttribute('color', layers.reliefCol);
+  g.setAttribute('uv', new THREE.BufferAttribute(uv, 2));
   g.setIndex(buildIndex()); g.computeVertexNormals();
-  terrainMesh = new THREE.Mesh(g, new THREE.MeshLambertMaterial({ vertexColors: true, side: THREE.DoubleSide }));
+  layers.reliefMat = new THREE.MeshLambertMaterial({ vertexColors: true, side: THREE.DoubleSide });
+  terrainMesh = new THREE.Mesh(g, layers.reliefMat);
   world.add(terrainMesh);
 
   const W = (grid.nx - 1) * grid.cell_m, H = (grid.ny - 1) * grid.cell_m, ext = Math.max(W, H);
@@ -120,6 +135,80 @@ function applyExag() {
   world.scale.y = state.exag;
   $('exag-val').textContent = `×${nf(state.exag, state.exag % 1 ? 1 : 0)}`;
   for (const m of markerGroup.children) m.position.y = m.userData.h * state.exag + m.userData.lift;
+  if (layers.bMesh) { // edificios: la base sigue al terreno exagerado, la altura del edificio no se exagera
+    const p = layers.bMesh.geometry.attributes.position, a = p.array, base = layers.bBase, off = layers.bOff;
+    for (let i = 0; i < base.length; i++) a[i * 3 + 1] = base[i] * state.exag + off[i];
+    p.needsUpdate = true;
+  }
+}
+
+// ---------- capas visuales: ortofoto y edificios ----------
+function applyOrtho() {
+  if (!terrainMesh) return;
+  const on = layers.ortho && !!layers.orthoTex;
+  if (on && !layers.orthoMat) layers.orthoMat = new THREE.MeshBasicMaterial({ map: layers.orthoTex, vertexColors: true, side: THREE.DoubleSide });
+  terrainMesh.geometry.setAttribute('color', on ? layers.orthoCol : layers.reliefCol);
+  terrainMesh.material = on ? layers.orthoMat : layers.reliefMat;
+  press($('ortho-btns'), 'ortho', on ? '1' : '0');
+}
+function loadOrtho() {
+  return new Promise(res => new THREE.TextureLoader().load(`${BASE}/orto.jpg`, tex => {
+    tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+    layers.orthoTex = tex; layers.ortho = params.get('orto') !== '0'; res(true);
+  }, undefined, () => res(false)));
+}
+
+// Prismas de edificios (solo visual, el solver no los usa). Coordenadas EPSG:25831 -> escena con grid.origin = [xmin, ymin].
+function buildBuildings(list) {
+  if (!Array.isArray(list) || !list.length || !Array.isArray(grid.origin)) return;
+  const xmin = grid.origin[0], ymax = grid.origin[1] + grid.ny * grid.cell_m, half = grid.cell_m / 2;
+  const P = [], B = [], O = [];
+  const push = (x, z, base, off) => { P.push(x, 0, z); B.push(base); O.push(off); };
+  for (const b of list) {
+    let ring = Array.isArray(b?.ring) ? b.ring.filter(p => Array.isArray(p) && Number.isFinite(p[0]) && Number.isFinite(p[1])) : [];
+    if (ring.length > 1 && ring[0][0] === ring[ring.length - 1][0] && ring[0][1] === ring[ring.length - 1][1]) ring = ring.slice(0, -1);
+    if (ring.length < 3) continue;
+    let sx = 0, sy = 0; for (const p of ring) { sx += p[0]; sy += p[1]; }
+    const cxm = sx / ring.length, cym = sy / ring.length;
+    const col = Math.floor((cxm - xmin) / grid.cell_m), row = Math.floor((ymax - cym) / grid.cell_m);
+    if (col < 0 || row < 0 || col >= grid.nx || row >= grid.ny) continue; // centroide fuera de la malla
+    const z = dem[row * grid.nx + col], base = (Number.isFinite(z) ? z : demMin) - demMin;
+    const known = Number.isFinite(b.floors) && b.floors > 0, h = known ? b.floors * FLOOR_M : DEFAULT_BUILDING_M;
+    if (!known) layers.bAssumed++;
+    const pts = ring.map(p => new THREE.Vector2(p[0] - xmin - half, ymax - p[1] - half)); // (X este, Z sur)
+    for (let i = 0; i < pts.length; i++) { // paredes (bajan 0,5 m para no dejar hueco en pendiente)
+      const a = pts[i], c = pts[(i + 1) % pts.length];
+      push(a.x, a.y, base, -0.5); push(c.x, c.y, base, -0.5); push(c.x, c.y, base, h);
+      push(a.x, a.y, base, -0.5); push(c.x, c.y, base, h); push(a.x, a.y, base, h);
+    }
+    for (const t of THREE.ShapeUtils.triangulateShape(pts, [])) for (const j of t) push(pts[j].x, pts[j].y, base, h); // cubierta
+    layers.bCount++;
+  }
+  if (!layers.bCount) return;
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(P), 3));
+  layers.bBase = new Float32Array(B); layers.bOff = new Float32Array(O);
+  layers.bMesh = new THREE.Mesh(g, new THREE.MeshLambertMaterial({ color: BUILDING_COLOR, side: THREE.DoubleSide, flatShading: true }));
+  layers.bMesh.frustumCulled = false; layers.bMesh.visible = layers.buildings;
+  scene.add(layers.bMesh);
+  applyExag();
+}
+
+function initLayerControls(hasOrtho) {
+  $('ortho-btns').hidden = !hasOrtho; $('bld-btn').hidden = !layers.bMesh;
+  $('layers-ctl').hidden = !hasOrtho && !layers.bMesh;
+  $('attrib').textContent = hasOrtho ? 'Ortofoto y MDT: ICGC' : '';
+  $('bld-note').hidden = !layers.bMesh;
+  if (layers.bMesh) $('bld-note').textContent = `Edificios: Catastro INSPIRE; altura estimada por nº de plantas (${FLOOR_M} m por planta` +
+    (layers.bAssumed ? `; ${nf(layers.bAssumed)} sin dato de plantas: altura supuesta ${DEFAULT_BUILDING_M} m` : '') +
+    `). ${nf(layers.bCount)} volúmenes, solo visuales: el solver NO los tiene en cuenta. Su altura no se exagera.`;
+  $('ortho-btns').onclick = e => { const b = e.target.closest('button'); if (b) { layers.ortho = b.dataset.ortho === '1'; applyOrtho(); } };
+  $('bld-btn').onclick = () => {
+    layers.buildings = !layers.buildings; layers.bMesh.visible = layers.buildings;
+    $('bld-btn').setAttribute('aria-pressed', String(layers.buildings)); renderLegend(state.mode === 'diff');
+  };
+  $('bld-btn').setAttribute('aria-pressed', String(layers.buildings));
+  applyOrtho();
 }
 
 // Calado en un vértice: máximo del bloque si la malla está diezmada (no perder charcos pequeños)
@@ -142,14 +231,16 @@ function buildWater(depthA, depthB) {
   const diff = !!depthB;
   for (let r = 0; r < gny; r++) for (let c = 0; c < gnx; c++) {
     const i = vIdx(r, c), a = sampleDepth(depthA, r, c), b = diff ? sampleDepth(depthB, r, c) : 0;
-    const h = diff ? Math.max(a, b) : a;
+    const h = diff ? Math.max(a, b) : a, lu = luAt(cellAt(r, c));
     let vis, hex;
     if (diff) {
       const saved = (a - b) * 100; vis = Math.abs(saved) >= 1;
-      hex = (DIFF_CLASSES.find(k => saved >= k.min) || DIFF_CLASSES[DIFF_CLASSES.length - 1]).color;
+      // eje de drenaje: color neutro propio (más calado dentro del cauce es lo esperado, no "empeora")
+      hex = lu === 2 ? DRAIN_DIFF_COLOR : (DIFF_CLASSES.find(k => saved >= k.min) || DIFF_CLASSES[DIFF_CLASSES.length - 1]).color;
     } else {
       vis = a > WET_M; hex = DEPTH_CLASSES.find(k => a * 100 <= k.max).color;
     }
+    if (lu === 3) vis = false; // mar: siempre azul oscuro (color del terreno), sin capa de calado
     pos[i * 3] = tp[i * 3]; pos[i * 3 + 1] = tp[i * 3 + 1] + (vis ? h : 0) + 0.02; pos[i * 3 + 2] = tp[i * 3 + 2];
     c3.set(hex); col[i * 4] = c3.r; col[i * 4 + 1] = c3.g; col[i * 4 + 2] = c3.b; col[i * 4 + 3] = vis ? 0.9 : 0;
     show[i] = vis ? 1 : 0;
@@ -240,7 +331,10 @@ function renderLegend(diff) {
   const cls = diff ? DIFF_CLASSES : DEPTH_CLASSES;
   $('legend').innerHTML = `<div class="t">${diff ? 'Diferencia S0 − solución (cm)' : 'Calado máximo (cm)'}</div>` +
     cls.map(k => `<div class="row"><i style="background:${k.color}"></i>${esc(k.label)}</div>`).join('') +
-    `<div class="row muted">${diff ? '|dif.| &lt; 1 cm: sin color' : '&lt; 1 cm: sin agua'}</div>`;
+    `<div class="row muted">${diff ? '|dif.| &lt; 1 cm: sin color' : '&lt; 1 cm: sin agua'}</div>` +
+    (diff && landuse ? `<div class="row"><i style="background:${DRAIN_DIFF_COLOR}"></i>eje de drenaje: más calado dentro del cauce (esperado)</div>` : '') +
+    (landuse ? `<div class="row"><i style="background:${SEA_COLOR}"></i>mar</div>` : '') +
+    (layers.bMesh && layers.buildings ? `<div class="row"><i style="background:${BUILDING_COLOR}"></i>edificio (solo visual${layers.bAssumed ? `; sin dato de plantas: altura supuesta ${DEFAULT_BUILDING_M} m` : ''})</div>` : '');
 }
 
 function statusCell(s) {
@@ -397,6 +491,9 @@ async function main() {
     catch (e) { console.info('Uso del suelo no disponible (opcional):', e.message); }
   }
   buildTerrain();
+  const [hasOrtho, bld] = await Promise.all([loadOrtho(), fetchJson(`${BASE}/buildings.json`, true)]);
+  try { buildBuildings(bld); } catch (e) { console.info('Edificios no disponibles (opcional):', e.message); }
+  initLayerControls(hasOrtho);
   await update();
   window.__viewerReady = true;
 }

@@ -91,3 +91,13 @@ body { overflow-x: hidden; }
   .badge { font-size: .9rem; }
   .big { font-size: 1.5rem; }
 }
+
+/* capas visuales: ortofoto y edificios */
+#attrib { position: absolute; right: 8px; bottom: 8px; background: rgba(8, 12, 17, .88); color: #fff; border: 1px solid var(--line);
+  border-radius: 6px; padding: 3px 8px; font-size: .85rem; font-weight: 600; }
+#attrib:empty { display: none; }
+.ctl.wide { grid-column: 1 / -1; }
+.ctl[hidden], .btns[hidden], #bld-btn[hidden] { display: none; }
+.layer-note { margin: 8px 0 0; font-size: .9rem; color: var(--fg); }
+#legend { max-width: min(60%, 340px); }
+@media (max-width: 900px) { #attrib { font-size: .7rem; right: 6px; bottom: 6px; } }

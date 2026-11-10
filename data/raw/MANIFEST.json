@@ -22,6 +22,51 @@
    "downloaded_at": "2026-11-10",
    "sha256": "1d0b5b22ba7d15bb15fcca05ed8529aa68e3a306776fa2525bd1316b446512ec",
    "license": "sin dato"
+  },
+  {
+   "file": "orto_brisamar_icgc.jpg",
+   "source": "ICGC, WMS https://geoserveis.icgc.cat/servei/catalunya/orto-territorial/wms , capa ortofoto_color_vigent, GetMap 1.3.0 CRS=EPSG:25831 BBOX=375285,4559465,376285,4560465 WIDTH=2000 HEIGHT=2000 FORMAT=image/jpeg",
+   "bbox_epsg25831": [
+    375285,
+    4559465,
+    376285,
+    4560465
+   ],
+   "crs": "EPSG:25831",
+   "downloaded_at": "2026-11-10",
+   "sha256": "ba88fa4a16c135dfc4187d2323d5e95581134a9d9a88f79a87dc26327a86f3f0",
+   "license": "ICGC, CC BY 4.0 (comprobar en la ficha)",
+   "note": "Ortofoto color vigente, 0,5 m/px remuestreado. Fecha de vuelo: sin dato en la respuesta."
+  },
+  {
+   "file": "catastro_bu_brisamar.gml",
+   "source": "D.G. del Catastro, WFS INSPIRE http://ovc.catastro.meh.es/INSPIRE/wfsBU.aspx?service=wfs&version=2&request=getfeature&typenames=BU.BUILDING&SRSname=EPSG::25831&bbox=375285,4559465,376285,4560465",
+   "bbox_epsg25831": [
+    375285,
+    4559465,
+    376285,
+    4560465
+   ],
+   "crs": "EPSG:25831",
+   "downloaded_at": "2026-11-10",
+   "sha256": "15e86c39ac0ad719e6b52a643722af99fa1c1fff61ac5a45619296c45b1c9809",
+   "license": "D.G. del Catastro, datos INSPIRE de libre acceso (comprobar condiciones en la sede del Catastro)",
+   "note": "504 edificios; no trae numero de plantas (nil). La consulta STOREDQUERIE_ID=GetBuildingByBBox devolvia error 'REFCAT can't be null'; se uso typenames=BU.BUILDING."
+  },
+  {
+   "file": "catastro_bupart_brisamar.gml",
+   "source": "D.G. del Catastro, WFS INSPIRE http://ovc.catastro.meh.es/INSPIRE/wfsBU.aspx?service=wfs&version=2&request=getfeature&typenames=BU.BUILDINGPART&SRSname=EPSG::25831&bbox=375285,4559465,376285,4560465",
+   "bbox_epsg25831": [
+    375285,
+    4559465,
+    376285,
+    4560465
+   ],
+   "crs": "EPSG:25831",
+   "downloaded_at": "2026-11-10",
+   "sha256": "8681f03cb6640407944de31a3535f49a3eaf66d87e96202d1d0a528642292f3d",
+   "license": "D.G. del Catastro, datos INSPIRE de libre acceso (comprobar condiciones en la sede del Catastro)",
+   "note": "2113 partes de edificio con numberOfFloorsAboveGround; origen de results/buildings.json (web/tools/buildings.py)."
   }
  ]
 }

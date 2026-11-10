@@ -25,6 +25,7 @@
     <div id="canvas-wrap"><canvas id="c"></canvas>
       <div id="legend"></div>
       <div id="view-tag"></div>
+      <div id="attrib"></div>
       <div id="loading">Cargando…</div>
     </div>
     <div id="controls">
@@ -37,6 +38,13 @@
       </div></div>
       <div class="ctl"><label class="ctl-name" for="exag">Exageración vertical: <b id="exag-val">×1</b></label>
         <input type="range" id="exag" min="1" max="30" step="0.5" value="1"></div>
+      <div class="ctl wide" id="layers-ctl" hidden><span class="ctl-name">Capas</span>
+        <div class="btns">
+          <span class="btns" id="ortho-btns" role="group" aria-label="Textura del terreno">
+            <button data-ortho="1">Ortofoto</button><button data-ortho="0">Relieve</button></span>
+          <button id="bld-btn" aria-pressed="true">Edificios</button>
+        </div>
+        <p id="bld-note" class="layer-note" hidden></p></div>
     </div>
   </section>
 

@@ -14,8 +14,8 @@ MVP de hackathon sobre **terreno real** (MDT ICGC 5 m). Estimación preliminar, 
 - **Supuestos sin dato real** (ver Limitaciones): usos del suelo (todo el terreno emergido tratado como urbano; eje de drenaje derivado del MDT), ausencia de red de alcantarillado, nivel del mar fijo a 0 m sin marea, duración de la lluvia (60 min, sin hietograma), ubicación del depósito.
 - **Solver:** landlab OverlandFlow con envoltorio propio. 15 de 15 escenarios válidos, precalculados en `results/`.
 - **Visor 3D:** three.js, sin build ni internet.
-- **Jev:** 24 de 24 decisiones respondidas en modo sombra. Acierto frente al solver 12,5 % (3 de 24), por debajo del respaldo determinista (16,7 %), de elegir siempre la clase mayoritaria (79,2 %) y del azar (25 %). Jev eligió S2 en los 24 casos. Latencia y coste medidos; valor frente al respaldo no demostrado.
-- **Calado urbano:** la mayor reducción es S1 con 100 mm (8,0 cm, 3,6 %). S1 con 30 y 60 mm y S4 con 30 y 100 mm empeoran el máximo urbano. S2 y S3 no cambian el máximo urbano con 30 y 60 mm.
+- **Jev:** 24 de 24 decisiones respondidas en modo sombra. Acierto frente al solver 0 % (0 de 24), por debajo del respaldo determinista (4,2 %), de elegir siempre la clase mayoritaria (S3, 79,2 %) y del azar (25 %). Jev eligió S2 en los 24 casos. Latencia y coste medidos; valor frente al respaldo no demostrado.
+- **Calado urbano:** la mayor reducción es S3 con 100 mm (61,0 cm, 27,3 %), ventaja inflada por el supuesto de usos del suelo. S1 con 30 y 60 mm (también sube el máximo global) y S4 con 30 y 100 mm empeoran el máximo urbano. S2 no cambia el máximo urbano en ningún escenario.
 
 ## Por qué existe
 
@@ -58,7 +58,7 @@ MDT (ICGC) ──► engine (solver 2D) ──► results/*.json ──► web (
 ```bash
 pip install -r requirements.txt
 python -m engine.run_all          # recalcula los 15 escenarios; ya vienen precalculados en results/ (tiempo de pared ~167 s con OMP_NUM_THREADS=1 y 10 procesos: medición de la ejecución del 2026-11-10, no registrada en JSON)
-python -m jev.run_shadow          # decisiones de Jev en modo sombra: llamadas reales a OpenRouter (coste estimado a partir de tokens, 2026-11-10: 0,000819714 USD)
+python -m jev.run_shadow          # decisiones de Jev en modo sombra: llamadas reales a OpenRouter (coste estimado a partir de tokens, 2026-11-10: 0,000828 USD)
 python -m http.server 8000        # después, abrir http://localhost:8000/web/
 python -m unittest discover -s jev/tests -t .
 ```
@@ -87,8 +87,8 @@ Estimación preliminar, modelo simplificado · modelo sin calibrar · MDT real I
 | KPI | Valor |
 |---|---|
 | Escenarios válidos | 15 de 15 (`n_invalid` = 0) |
-| Error de volumen máximo | 0,449 % |
-| Tiempo de cálculo por escenario | media 123,2 s; máx. 157,2 s; total 1 848,6 s (suma de escenarios, no tiempo de pared; el de pared no está en el JSON) |
+| Error de volumen máximo | 1,054 % |
+| Tiempo de cálculo por escenario | media 94,1 s; máx. 117,5 s; total 1 411,8 s (suma de escenarios, no tiempo de pared; el de pared no está en el JSON) |
 
 ### Calado máximo urbano por solución (cm; base S0 entre paréntesis)
 
@@ -96,50 +96,51 @@ Valores negativos de reducción = el calado sube. El dominio completo y la zona 
 
 | Lluvia (base S0) | S1 Cauce | S2 Depósito | S3 Permeable | S4 Bordillos |
 |---|---|---|---|---|
-| 30 mm (101,5) | 107,1 (−5,6; −5,5 %) | 101,5 (0,0) | 101,5 (0,0) | 110,8 (−9,3; −9,2 %) |
-| 60 mm (153,5) | 182,5 (−29,0; −18,9 %) | 153,5 (0,0) | 153,5 (0,0) | 146,3 (+7,2; +4,7 %) |
-| 100 mm (223,8) | 215,8 (+8,0; +3,6 %) | 223,9 (−0,1; −0,0 %) | 223,8 (0,0) | 227,8 (−4,0; −1,8 %) |
+| 30 mm (101,5) | 107,1 (−5,6; −5,5 %) | 101,5 (0,0) | 54,6 (+46,9; +46,2 %) | 110,8 (−9,3; −9,2 %) |
+| 60 mm (153,5) | 182,5 (−29,0; −18,9 %) | 153,5 (0,0) | 109,7 (+43,8; +28,5 %) | 146,3 (+7,2; +4,7 %) |
+| 100 mm (223,8) | 215,8 (+8,0; +3,6 %) | 223,8 (0,0) | 162,8 (+61,0; +27,3 %) | 227,8 (−4,0; −1,8 %) |
 
 - Mayor reducción del calado máximo urbano en cm: **S1 con 100 mm, 8,0 cm (3,6 %)**. Mayor en porcentaje: S4 con 60 mm, 7,2 cm (4,7 %).
-- Empeoran el máximo urbano: S1 con 30 mm, 60 mm; S4 con 30 mm y 100 mm; S2 con 100 mm (−0,1 cm, despreciable).
-- S2 y S3 no cambian el máximo urbano con 30 y 60 mm. El JSON no explica la causa; pendiente de revisar.
-- Área inundada (% de reducción; negativo = aumenta): S1 +3,7 / +14,9 / +12,6; S4 −6,6 / −1,9 / +0,2; S2 y S3 0,0 (30 / 60 / 100 mm).
+- Empeoran el máximo urbano: S1 con 30 mm y 60 mm; S4 con 30 mm y 100 mm. S2 no cambia el máximo urbano en ningún escenario.
+- S2 no llega a usarse en el modelo: pico del depósito de 9,3 m³ con 100 mm; sus resultados son iguales a S0 porque la ubicación supuesta apenas recibe agua. Es una limitación de la ubicación supuesta, no una conclusión sobre el depósito real.
+- S3 mejora el máximo urbano en los tres escenarios, pero su ventaja está inflada por el supuesto de usos del suelo (todo el terreno emergido tratado como urbano, con 40 % permeable).
+- Área inundada (% de reducción; negativo = aumenta): S1 +3,7 / +14,9 / +12,6; S3 +73,6 / +32,0 / +14,9; S4 −6,6 / −1,9 / +0,2; S2 0,0 (30 / 60 / 100 mm).
 
 ### Jev (24 decisiones, modo sombra)
 
 | KPI | Valor |
 |---|---|
 | Decisiones respondidas | 24 de 24; respaldo usado 0 %; modelo `typesafe/jev-1.14` (snapshot 20261014) vía OpenRouter |
-| Acierto de Jev frente al solver | **12,5 %** (3 de 24) |
-| Acierto del respaldo determinista | 16,7 % (4 de 24) |
-| Acierto de elegir siempre la clase mayoritaria (S1) | 79,2 % (19 de 24) |
+| Acierto de Jev frente al solver | **0 %** (0 de 24) |
+| Acierto del respaldo determinista | 4,2 % (1 de 24) |
+| Acierto de elegir siempre la clase mayoritaria (S3) | 79,2 % (19 de 24) |
 | Azar | 25 % |
 | Elección de Jev | **S2 en los 24 casos**: eligió la misma opción en todos |
-| Distribución del mejor resultado del solver | S1 19, S2 3, S4 2 |
-| Acierto excluyendo empates (Jev / respaldo) | 0,0 % / 5,9 % (16 casos sin empate; empates: 7) |
-| Acierto con margen ≥ 1 cm (Jev / respaldo) | 0,0 % / 0,0 % (n = 16) |
-| Probabilidad media asignada a la opción elegida | 47,0 % frente a acierto 12,5 % (sobreconfianza; n = 24, orientativo) |
+| Distribución del mejor resultado del solver | S3 19, S1 5 |
+| Acierto excluyendo empates (Jev / respaldo) | 0,0 % / 4,3 % (empates: 1) |
+| Acierto con margen ≥ 1 cm (Jev / respaldo) | 0,0 % / 4,8 % (n = 21) |
+| Probabilidad media asignada a la opción elegida | 53,1 % frente a acierto 0 % (sobreconfianza; n = 24, orientativo) |
 | Coincidencia Jev / respaldo | 87,5 % |
-| Latencia p50 / p95 / máx. | 407,9 ms / 933,5 ms / 1 328,3 ms (rango más cercano, n = 24) |
-| Coste estimado | 0,000034 USD por decisión; 0,000819714 USD en total (estimado a partir de tokens a 0,042 USD por millón de tokens de entrada; la API no devuelve coste) |
+| Latencia p50 / p95 / máx. | 392,3 ms / 681,6 ms / 683,6 ms (rango más cercano, n = 24) |
+| Coste estimado | 0,000034 USD por decisión; 0,000828 USD en total (estimado a partir de tokens a 0,042 USD por millón de tokens de entrada; la API no devuelve coste) |
 
 Notas de lectura:
-- **Clase mayoritaria:** la cifra del 79,2 % se apoya en que el solver da la misma profundidad a las dos mejores soluciones en 7 casos y el convenio elige la de id menor (S1). Ese empate favorece a S1.
+- **Clase mayoritaria:** el 79,2 % corresponde a S3 como mejor resultado del solver en 19 de 24 casos.
 - **Jev:** no supera al respaldo, ni a la clase mayoritaria, ni al azar. Con 24 casos no independientes (8 puntos × 3 lluvias) la diferencia con el respaldo no es concluyente, pero Jev no muestra acierto aquí.
 
 ## Limitaciones
 
 - **Modelo sin calibrar.** Estimación preliminar, modelo simplificado.
 - **Supuestos (no datos reales):**
-  - Usos del suelo: todo el terreno emergido se trata como urbano; el eje de drenaje se deriva del MDT.
-  - Sin red de alcantarillado en el modelo: los calados salen altos (101,5 cm con 30 mm en S0) porque no hay drenaje subterráneo.
+  - Usos del suelo: todo el terreno emergido se trata como urbano; el eje de drenaje se deriva del MDT. La ventaja de S3 está inflada por este supuesto (40 % de área permeable).
+  - Sin red de alcantarillado en el modelo: los calados salen altos (101,5 cm con 30 mm en S0) porque no hay drenaje subterráneo. Los calados de 1 a 2,2 m aparecen en hoyos cerrados del propio MDT (aspecto de pasos inferiores): son cota superior, no calados esperables.
   - Nivel del mar fijo a 0 m, sin marea.
   - Duración de la lluvia: 60 min constantes; sin hietograma real.
   - Ubicación del depósito S2: depresión urbana más honda del MDT.
 - **Lluvias:** 100 mm comunicado municipal; 60 mm de prensa pendiente de contrastar; 30 mm de referencia.
 - **Volumen de S2 (3 500 m³):** volumen anunciado por el Ayuntamiento, no calibrado.
-- **S2 y S3** sin efecto en el máximo urbano con 30 y 60 mm; causa no analizada.
-- **S1 y S4** empeoran el máximo urbano en varios escenarios.
+- **S2** no cambia nada respecto a S0: pico de 9,3 m³ con 100 mm, porque la ubicación supuesta apenas recibe agua. Es una limitación de la ubicación, no una conclusión sobre el depósito real.
+- **S1** empeora el máximo urbano con 30 y 60 mm, y **S4** con 30 y 100 mm. La ventaja de S3 está inflada por el supuesto de usos del suelo.
 - **Jev sin acierto demostrado** frente al respaldo, la clase mayoritaria y el azar; elige siempre S2.
 - **Episodios reales:** sin dato verificable.
 
