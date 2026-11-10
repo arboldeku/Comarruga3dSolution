@@ -23,3 +23,20 @@ Roles: jefe de gabinete, recolector de datos, hidrometeorólogo, modelador hidr�
 ## Reglas transversales
 - Antes de construir algo, buscar si ya existe (ver `docs/PRIOR_ART.md`).
 - Estimaciones preliminares siempre etiquetadas; revisión humana experta antes de uso oficial.
+
+## Recortes y pendientes del hackathon (2026-11-10)
+
+Estimación preliminar, modelo simplificado · terreno sintético. Cifras en `docs/PRIOR_ART.md` y `results/kpis_summary.json`.
+
+Limitaciones actuales:
+- Terreno sintético. El MDT real del ICGC no está disponible.
+- Jev acierta el 16,7 % frente al solver, por debajo del respaldo (33,3 %) y del azar (25 %). Sin ejemplos ni resultados del solver en el prompt. 12 de 24 casos tienen margen < 1 cm.
+- Artefacto numérico en H2: el calado máximo no crece con la lluvia.
+- S2 (depósito) infrautilizado por el umbral de toma. S4 (barreras) aumenta el área inundada.
+- S4 eleva celdas en vez de aristas. Rama de MDT real y perfil triangular sin probar.
+
+Pendientes:
+- Conseguir el MDT real del ICGC.
+- Jev: probar few-shot o Score; medir con márgenes > 1 cm.
+- Corregir H2.
+- Recalibrar S2 y S4.
