@@ -54,6 +54,7 @@
         "max_inflow_m3s": 6.0,
         "intake_depth_m": 0.1,
         "radius_cells": 3,
+        "release_after_rain": true,
         "location": "depresión urbana más honda (supuesto)"
       },
       "source": "capacity_m3 = 3500: volumen ANUNCIADO por el Ayuntamiento de El Vendrell el 26/08/2026 para el depósito de Brisamar; es un anuncio, no un volumen hidráulico calibrado; la ubicación exacta es un supuesto (depresión urbana más honda del MDT)",
@@ -188,5 +189,5 @@
       "status": "valid"
     }
   ],
-  "generated_at": "2026-11-10T18:56:21+00:00"
+  "generated_at": "2026-11-10T19:05:13+00:00"
 }

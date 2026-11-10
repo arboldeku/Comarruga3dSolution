@@ -27,7 +27,7 @@
       },
       "drain_min": 30.0,
       "sim_time_s": 5400.0,
-      "steps": 5551,
+      "steps": 5125,
       "flood_threshold_m": 0.05,
       "boundary": "mar (celdas -8888 del MDT) abierto a cota fija 0 m, supuesto sin marea; bordes N/E/O del recorte abiertos con salida libre; sin aportes desde fuera del recorte"
     }
@@ -52,23 +52,23 @@
     "crs": "EPSG:25831"
   },
   "kpis": {
-    "max_depth_cm": 223.8,
-    "max_depth_urban_cm": 223.8,
-    "flooded_area_m2": 197250.0,
-    "flooded_area_pct": 23.26,
-    "stored_volume_m3": 74134.0,
-    "volume_m3_total": 84813.1,
-    "volume_error_pct": 0.385,
-    "runtime_s": 77.81
+    "max_depth_cm": 162.8,
+    "max_depth_urban_cm": 162.8,
+    "flooded_area_m2": 167800.0,
+    "flooded_area_pct": 19.78,
+    "stored_volume_m3": 55913.7,
+    "volume_m3_total": 84812.9,
+    "volume_error_pct": 0.3,
+    "runtime_s": 93.06
   },
   "mass_balance_m3": {
-    "rain_m3": 84813.1,
-    "stored_m3": 64458.8,
-    "infiltrated_m3": 3475.4,
-    "outflow_m3": 16552.2,
+    "rain_m3": 84812.9,
+    "stored_m3": 46581.8,
+    "infiltrated_m3": 26232.7,
+    "outflow_m3": 11744.2,
     "tank_stored_m3": 0.0,
     "tank_peak_m3": 0.0,
-    "error_m3": 326.8
+    "error_m3": 254.2
   },
   "depth_file": "results/rain100_S3_depth.npy",
   "hotspots": [
@@ -76,49 +76,49 @@
       "id": "H1",
       "x": 87,
       "y": 17,
-      "max_depth_cm": 98.0
+      "max_depth_cm": 86.5
     },
     {
       "id": "H2",
       "x": 46,
       "y": 24,
-      "max_depth_cm": 57.3
+      "max_depth_cm": 55.6
     },
     {
       "id": "H3",
       "x": 88,
       "y": 53,
-      "max_depth_cm": 129.1
+      "max_depth_cm": 107.9
     },
     {
       "id": "H4",
       "x": 118,
       "y": 107,
-      "max_depth_cm": 65.2
+      "max_depth_cm": 56.6
     },
     {
       "id": "H5",
       "x": 102,
       "y": 110,
-      "max_depth_cm": 79.7
+      "max_depth_cm": 71.1
     },
     {
       "id": "H6",
       "x": 85,
       "y": 112,
-      "max_depth_cm": 61.5
+      "max_depth_cm": 52.9
     },
     {
       "id": "H7",
       "x": 63,
       "y": 125,
-      "max_depth_cm": 81.9
+      "max_depth_cm": 73.4
     },
     {
       "id": "H8",
       "x": 47,
       "y": 156,
-      "max_depth_cm": 91.7
+      "max_depth_cm": 83.2
     }
   ]
 }

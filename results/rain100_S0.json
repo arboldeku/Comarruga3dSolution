@@ -56,7 +56,7 @@
     "stored_volume_m3": 74134.0,
     "volume_m3_total": 84813.1,
     "volume_error_pct": 0.385,
-    "runtime_s": 78.54
+    "runtime_s": 100.76
   },
   "mass_balance_m3": {
     "rain_m3": 84813.1,

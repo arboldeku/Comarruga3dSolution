@@ -9,6 +9,7 @@
     "max_inflow_m3s": 6.0,
     "intake_depth_m": 0.1,
     "radius_cells": 3,
+    "release_after_rain": true,
     "location": "depresión urbana más honda (supuesto)"
   },
   "seed": 42,
@@ -60,10 +61,10 @@
     "max_depth_urban_cm": 153.5,
     "flooded_area_m2": 148150.0,
     "flooded_area_pct": 17.47,
-    "stored_volume_m3": 45288.3,
+    "stored_volume_m3": 45290.0,
     "volume_m3_total": 50892.4,
     "volume_error_pct": 0.379,
-    "runtime_s": 152.43
+    "runtime_s": 103.65
   },
   "mass_balance_m3": {
     "rain_m3": 50892.4,
@@ -71,7 +72,7 @@
     "infiltrated_m3": 3446.2,
     "outflow_m3": 9205.3,
     "tank_stored_m3": 0.0,
-    "tank_peak_m3": 0.0,
+    "tank_peak_m3": 3.4,
     "error_m3": 193.0
   },
   "depth_file": "results/rain60_S2_depth.npy",

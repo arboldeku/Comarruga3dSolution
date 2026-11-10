@@ -1,7 +1,7 @@
 {
  "label": "estimación preliminar, modelo simplificado",
  "dem_source": "ICGC MDT 5 m (WCS icc:met5), zona Brisamar, Coma-ruga; descargado 2026-11-10",
- "generated_at": "2026-11-10T18:59:21Z",
+ "generated_at": "2026-11-10T19:06:18Z",
  "solutions": [
   {
    "rain_mm": 30,
@@ -42,17 +42,17 @@
    "solution_id": "S3",
    "scenario_id": "rain30_S3",
    "status": "valid",
-   "max_depth_cm": 101.5,
+   "max_depth_cm": 54.6,
    "baseline_max_depth_cm": 101.5,
    "max_depth_reduction_scope": "dominio completo (incluye cauce)",
-   "max_depth_reduction_cm": 0.0,
-   "max_depth_reduction_pct": 0.0,
-   "max_depth_urban_cm": 101.5,
+   "max_depth_reduction_cm": 46.9,
+   "max_depth_reduction_pct": 46.2,
+   "max_depth_urban_cm": 54.6,
    "baseline_max_depth_urban_cm": 101.5,
-   "urban_reduction_cm": 0.0,
-   "urban_reduction_pct": 0.0,
+   "urban_reduction_cm": 46.9,
+   "urban_reduction_pct": 46.2,
    "worsens_urban": false,
-   "flooded_area_reduction_pct": 0.0
+   "flooded_area_reduction_pct": 73.6
   },
   {
    "rain_mm": 30,
@@ -110,17 +110,17 @@
    "solution_id": "S3",
    "scenario_id": "rain60_S3",
    "status": "valid",
-   "max_depth_cm": 153.5,
+   "max_depth_cm": 109.7,
    "baseline_max_depth_cm": 153.5,
    "max_depth_reduction_scope": "dominio completo (incluye cauce)",
-   "max_depth_reduction_cm": 0.0,
-   "max_depth_reduction_pct": 0.0,
-   "max_depth_urban_cm": 153.5,
+   "max_depth_reduction_cm": 43.8,
+   "max_depth_reduction_pct": 28.5,
+   "max_depth_urban_cm": 109.7,
    "baseline_max_depth_urban_cm": 153.5,
-   "urban_reduction_cm": 0.0,
-   "urban_reduction_pct": 0.0,
+   "urban_reduction_cm": 43.8,
+   "urban_reduction_pct": 28.5,
    "worsens_urban": false,
-   "flooded_area_reduction_pct": 0.0
+   "flooded_area_reduction_pct": 32.0
   },
   {
    "rain_mm": 60,
@@ -161,23 +161,6 @@
    "solution_id": "S2",
    "scenario_id": "rain100_S2",
    "status": "valid",
-   "max_depth_cm": 223.9,
-   "baseline_max_depth_cm": 223.8,
-   "max_depth_reduction_scope": "dominio completo (incluye cauce)",
-   "max_depth_reduction_cm": -0.1,
-   "max_depth_reduction_pct": -0.0,
-   "max_depth_urban_cm": 223.9,
-   "baseline_max_depth_urban_cm": 223.8,
-   "urban_reduction_cm": -0.1,
-   "urban_reduction_pct": -0.0,
-   "worsens_urban": true,
-   "flooded_area_reduction_pct": -0.0
-  },
-  {
-   "rain_mm": 100,
-   "solution_id": "S3",
-   "scenario_id": "rain100_S3",
-   "status": "valid",
    "max_depth_cm": 223.8,
    "baseline_max_depth_cm": 223.8,
    "max_depth_reduction_scope": "dominio completo (incluye cauce)",
@@ -189,6 +172,23 @@
    "urban_reduction_pct": 0.0,
    "worsens_urban": false,
    "flooded_area_reduction_pct": 0.0
+  },
+  {
+   "rain_mm": 100,
+   "solution_id": "S3",
+   "scenario_id": "rain100_S3",
+   "status": "valid",
+   "max_depth_cm": 162.8,
+   "baseline_max_depth_cm": 223.8,
+   "max_depth_reduction_scope": "dominio completo (incluye cauce)",
+   "max_depth_reduction_cm": 61.0,
+   "max_depth_reduction_pct": 27.3,
+   "max_depth_urban_cm": 162.8,
+   "baseline_max_depth_urban_cm": 223.8,
+   "urban_reduction_cm": 61.0,
+   "urban_reduction_pct": 27.3,
+   "worsens_urban": false,
+   "flooded_area_reduction_pct": 14.9
   },
   {
    "rain_mm": 100,
@@ -234,100 +234,100 @@
    }
   },
   "n_scenarios": 15,
-  "runtime_s_mean": 123.241,
-  "runtime_s_max": 157.22,
-  "runtime_s_total": 1848.62,
-  "volume_error_pct_max": 0.449,
+  "runtime_s_mean": 94.119,
+  "runtime_s_max": 117.48,
+  "runtime_s_total": 1411.78,
+  "volume_error_pct_max": 1.054,
   "n_invalid": 0,
   "wall_time_s_note": "sin dato registrado; ~167 s con 10 procesos según la ejecución del 2026-11-10 (no medido en JSON)",
   "per_scenario": [
    {
     "scenario_id": "rain100_S0",
-    "runtime_s": 78.54,
+    "runtime_s": 100.76,
     "volume_error_pct": 0.385,
     "status": "valid"
    },
    {
     "scenario_id": "rain100_S1",
-    "runtime_s": 81.01,
+    "runtime_s": 117.48,
     "volume_error_pct": 0.449,
     "status": "valid"
    },
    {
     "scenario_id": "rain100_S2",
-    "runtime_s": 78.41,
+    "runtime_s": 108.42,
     "volume_error_pct": 0.385,
     "status": "valid"
    },
    {
     "scenario_id": "rain100_S3",
-    "runtime_s": 77.81,
-    "volume_error_pct": 0.385,
+    "runtime_s": 93.06,
+    "volume_error_pct": 0.3,
     "status": "valid"
    },
    {
     "scenario_id": "rain100_S4",
-    "runtime_s": 77.04,
+    "runtime_s": 112.2,
     "volume_error_pct": 0.379,
     "status": "valid"
    },
    {
     "scenario_id": "rain30_S0",
-    "runtime_s": 136.64,
+    "runtime_s": 81.9,
     "volume_error_pct": 0.335,
     "status": "valid"
    },
    {
     "scenario_id": "rain30_S1",
-    "runtime_s": 141.14,
+    "runtime_s": 87.72,
     "volume_error_pct": 0.307,
     "status": "valid"
    },
    {
     "scenario_id": "rain30_S2",
-    "runtime_s": 137.01,
+    "runtime_s": 82.24,
     "volume_error_pct": 0.335,
     "status": "valid"
    },
    {
     "scenario_id": "rain30_S3",
-    "runtime_s": 136.81,
-    "volume_error_pct": 0.335,
+    "runtime_s": 54.18,
+    "volume_error_pct": 1.054,
     "status": "valid"
    },
    {
     "scenario_id": "rain30_S4",
-    "runtime_s": 137.82,
+    "runtime_s": 84.12,
     "volume_error_pct": 0.318,
     "status": "valid"
    },
    {
     "scenario_id": "rain60_S0",
-    "runtime_s": 152.32,
+    "runtime_s": 103.57,
     "volume_error_pct": 0.379,
     "status": "valid"
    },
    {
     "scenario_id": "rain60_S1",
-    "runtime_s": 157.22,
+    "runtime_s": 106.82,
     "volume_error_pct": 0.352,
     "status": "valid"
    },
    {
     "scenario_id": "rain60_S2",
-    "runtime_s": 152.43,
+    "runtime_s": 103.65,
     "volume_error_pct": 0.379,
     "status": "valid"
    },
    {
     "scenario_id": "rain60_S3",
-    "runtime_s": 152.43,
-    "volume_error_pct": 0.379,
+    "runtime_s": 73.48,
+    "volume_error_pct": 0.281,
     "status": "valid"
    },
    {
     "scenario_id": "rain60_S4",
-    "runtime_s": 151.99,
+    "runtime_s": 102.18,
     "volume_error_pct": 0.365,
     "status": "valid"
    }
@@ -336,64 +336,63 @@
  "jev": {
   "n_decisions": 24,
   "n_jev_live": 24,
-  "accuracy_vs_solver_pct": 12.5,
-  "baseline_accuracy_vs_solver_pct": 16.7,
+  "accuracy_vs_solver_pct": 0.0,
+  "baseline_accuracy_vs_solver_pct": 4.2,
   "n_excl_H2": 21,
-  "accuracy_vs_solver_excl_H2_pct": 14.3,
-  "baseline_accuracy_vs_solver_excl_H2_pct": 14.3,
-  "n_margin_ge_1cm": 16,
+  "accuracy_vs_solver_excl_H2_pct": 0.0,
+  "baseline_accuracy_vs_solver_excl_H2_pct": 0.0,
+  "n_margin_ge_1cm": 21,
   "accuracy_margin_ge_1cm_pct": 0.0,
-  "baseline_accuracy_margin_ge_1cm_pct": 0.0,
+  "baseline_accuracy_margin_ge_1cm_pct": 4.8,
   "jev_choice_distribution": {
    "S2": 24
   },
-  "mean_api_confidence": 0.293,
-  "mean_prob_assigned_to_choice": 47.0,
-  "effective_accuracy_vs_solver_pct": 12.5,
+  "mean_api_confidence": 0.375,
+  "mean_prob_assigned_to_choice": 53.1,
+  "effective_accuracy_vs_solver_pct": 0.0,
   "jev_vs_baseline_agreement_pct": 87.5,
   "random_baseline_pct": 25,
   "majority_class_baseline_pct": 79.2,
   "solver_best_distribution": {
-   "S2": 3,
-   "S1": 19,
-   "S4": 2
+   "S3": 19,
+   "S1": 5
   },
-  "n_solver_margin_lt_1cm": 8,
-  "n_solver_ties": 7,
+  "n_solver_margin_lt_1cm": 3,
+  "n_solver_ties": 1,
   "accuracy_excl_ties_pct": 0.0,
-  "baseline_accuracy_excl_ties_pct": 5.9,
-  "latency_p50_ms": 407.9,
-  "latency_p95_ms": 933.5,
-  "latency_max_ms": 1328.3,
+  "baseline_accuracy_excl_ties_pct": 4.3,
+  "latency_p50_ms": 392.3,
+  "latency_p95_ms": 681.6,
+  "latency_max_ms": 683.6,
   "percentile_method": "rango más cercano, n=24",
   "base_url_host": "openrouter.ai",
-  "cost_per_decision_usd": 3.4155e-05,
-  "cost_total_usd": 0.000819714,
+  "cost_per_decision_usd": 3.4491e-05,
+  "cost_total_usd": 0.000827778,
   "fallback_pct": 0.0,
   "jev_errors": {},
   "calibration": {
    "n": 24,
-   "mean_prob_chosen_pct": 47.0,
-   "accuracy_pct": 12.5,
-   "gap_pct": 34.5,
+   "mean_prob_chosen_pct": 53.1,
+   "accuracy_pct": 0.0,
+   "gap_pct": 53.1,
    "bins": [
-    {
-     "prob_range": [
-      0.0,
-      0.4
-     ],
-     "n": 4,
-     "mean_prob": 0.375,
-     "accuracy_pct": 0.0
-    },
     {
      "prob_range": [
       0.4,
       0.6
      ],
-     "n": 20,
-     "mean_prob": 0.489,
-     "accuracy_pct": 15.0
+     "n": 18,
+     "mean_prob": 0.502,
+     "accuracy_pct": 0.0
+    },
+    {
+     "prob_range": [
+      0.6,
+      0.8
+     ],
+     "n": 6,
+     "mean_prob": 0.617,
+     "accuracy_pct": 0.0
     }
    ],
    "note": "gap > 0 = Jev sobreconfiado; muestra pequeña, orientativo."
@@ -401,7 +400,7 @@
   "model_id": "typesafe/jev-1.14",
   "model_snapshot": "typesafe/jev-1.14-20261014",
   "mode": "shadow",
-  "run_id": "shadow_20261110T185908Z",
+  "run_id": "shadow_20261110T190607Z",
   "note": "Jev respondió todas las decisiones.",
   "cost_note": "coste estimado a partir de tokens: cost_usd = input_tokens × 0,042 USD / 1.000.000 (salida gratis; fuente docs.typesafe.ai/models.md, 2026-11-10). La API no devuelve coste (docs/CONTRACTS.md 6.2).",
   "cost_unit_note": "coste estimado a partir de tokens: cost_usd = input_tokens × 0,042 USD / 1.000.000 (salida gratis; fuente docs.typesafe.ai/models.md, 2026-11-10). La API no devuelve coste (docs/CONTRACTS.md 6.2).",

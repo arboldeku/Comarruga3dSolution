@@ -144,7 +144,7 @@ def apply_solution(t: Terrain, solution_id: str, params: dict[str, Any] | None, 
         urban = np.flatnonzero(lu.ravel() == 1)
         pick = rng.choice(urban, size=int(round(p["area_fraction"] * urban.size)), replace=False)
         infil.ravel()[pick] = p["infiltration_mm_h"]
-    elif solution_id == "S4":
+    elif solution_id == "S4" and not sea.any():
         r0, r1 = p["rows"]
         k = int(p["offset_cells"])
         for r in range(r0, r1):

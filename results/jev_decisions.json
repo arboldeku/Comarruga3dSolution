@@ -1,7 +1,7 @@
 [
  {
   "decision_id": "d001",
-  "run_id": "shadow_20261110T185908Z",
+  "run_id": "shadow_20261110T190607Z",
   "hotspot_id": "H1",
   "rain_mm": 30,
   "primitive": "choice",
@@ -25,11 +25,11 @@
    "choice": "S2",
    "probabilities": {
     "S1": 0.09,
-    "S2": 0.52,
-    "S3": 0.28,
-    "S4": 0.11
+    "S2": 0.6,
+    "S3": 0.22,
+    "S4": 0.09
    },
-   "confidence": 0.36
+   "confidence": 0.47
   },
   "jev_live": true,
   "jev_error": null,
@@ -39,29 +39,29 @@
   },
   "fallback_used": false,
   "effective_choice": "S2",
-  "solver_best": "S2",
+  "solver_best": "S3",
   "solver_depth_cm": {
    "S0": 58.4,
    "S1": 58.5,
    "S2": 58.4,
-   "S3": 58.4,
+   "S3": 25.7,
    "S4": 58.4
   },
-  "solver_margin_cm": 0.0,
-  "agree": true,
-  "fallback_agree": true,
-  "latency_ms": 1328.3,
-  "cost_usd": 3.4188000000000005e-05,
+  "solver_margin_cm": 32.7,
+  "agree": false,
+  "fallback_agree": false,
+  "latency_ms": 681.6,
+  "cost_usd": 3.4524000000000004e-05,
   "cost_note": "coste estimado a partir de tokens",
-  "input_tokens": 814,
+  "input_tokens": 822,
   "mode": "shadow",
   "model_id": "typesafe/jev-1.14",
   "model_snapshot": "typesafe/jev-1.14-20261014",
-  "timestamp": "2026-11-10T18:59:10Z"
+  "timestamp": "2026-11-10T19:06:08Z"
  },
  {
   "decision_id": "d002",
-  "run_id": "shadow_20261110T185908Z",
+  "run_id": "shadow_20261110T190607Z",
   "hotspot_id": "H1",
   "rain_mm": 60,
   "primitive": "choice",
@@ -85,11 +85,11 @@
    "choice": "S2",
    "probabilities": {
     "S1": 0.09,
-    "S2": 0.55,
-    "S3": 0.27,
+    "S2": 0.6,
+    "S3": 0.22,
     "S4": 0.09
    },
-   "confidence": 0.4
+   "confidence": 0.47
   },
   "jev_live": true,
   "jev_error": null,
@@ -99,29 +99,29 @@
   },
   "fallback_used": false,
   "effective_choice": "S2",
-  "solver_best": "S1",
+  "solver_best": "S3",
   "solver_depth_cm": {
    "S0": 79.3,
    "S1": 79.3,
    "S2": 79.3,
-   "S3": 79.3,
+   "S3": 61.9,
    "S4": 79.3
   },
-  "solver_margin_cm": 0.0,
+  "solver_margin_cm": 17.4,
   "agree": false,
   "fallback_agree": false,
-  "latency_ms": 437.5,
-  "cost_usd": 3.4188000000000005e-05,
+  "latency_ms": 421.2,
+  "cost_usd": 3.4524000000000004e-05,
   "cost_note": "coste estimado a partir de tokens",
-  "input_tokens": 814,
+  "input_tokens": 822,
   "mode": "shadow",
   "model_id": "typesafe/jev-1.14",
   "model_snapshot": "typesafe/jev-1.14-20261014",
-  "timestamp": "2026-11-10T18:59:10Z"
+  "timestamp": "2026-11-10T19:06:09Z"
  },
  {
   "decision_id": "d003",
-  "run_id": "shadow_20261110T185908Z",
+  "run_id": "shadow_20261110T190607Z",
   "hotspot_id": "H1",
   "rain_mm": 100,
   "primitive": "choice",
@@ -145,11 +145,11 @@
    "choice": "S2",
    "probabilities": {
     "S1": 0.1,
-    "S2": 0.55,
-    "S3": 0.24,
-    "S4": 0.11
+    "S2": 0.62,
+    "S3": 0.19,
+    "S4": 0.09
    },
-   "confidence": 0.4
+   "confidence": 0.49
   },
   "jev_live": true,
   "jev_error": null,
@@ -159,29 +159,29 @@
   },
   "fallback_used": false,
   "effective_choice": "S2",
-  "solver_best": "S1",
+  "solver_best": "S3",
   "solver_depth_cm": {
    "S0": 98.0,
    "S1": 98.0,
    "S2": 98.0,
-   "S3": 98.0,
+   "S3": 86.5,
    "S4": 98.0
   },
-  "solver_margin_cm": 0.0,
+  "solver_margin_cm": 11.5,
   "agree": false,
   "fallback_agree": false,
-  "latency_ms": 509.3,
-  "cost_usd": 3.423e-05,
+  "latency_ms": 397.1,
+  "cost_usd": 3.456600000000001e-05,
   "cost_note": "coste estimado a partir de tokens",
-  "input_tokens": 815,
+  "input_tokens": 823,
   "mode": "shadow",
   "model_id": "typesafe/jev-1.14",
   "model_snapshot": "typesafe/jev-1.14-20261014",
-  "timestamp": "2026-11-10T18:59:11Z"
+  "timestamp": "2026-11-10T19:06:09Z"
  },
  {
   "decision_id": "d004",
-  "run_id": "shadow_20261110T185908Z",
+  "run_id": "shadow_20261110T190607Z",
   "hotspot_id": "H2",
   "rain_mm": 30,
   "primitive": "choice",
@@ -204,12 +204,12 @@
   "jev_output": {
    "choice": "S2",
    "probabilities": {
-    "S1": 0.12,
-    "S2": 0.42,
-    "S3": 0.28,
+    "S1": 0.13,
+    "S2": 0.43,
+    "S3": 0.26,
     "S4": 0.18
    },
-   "confidence": 0.23
+   "confidence": 0.24
   },
   "jev_live": true,
   "jev_error": null,
@@ -219,29 +219,29 @@
   },
   "fallback_used": false,
   "effective_choice": "S2",
-  "solver_best": "S1",
+  "solver_best": "S3",
   "solver_depth_cm": {
    "S0": 51.6,
    "S1": 51.6,
    "S2": 51.6,
-   "S3": 51.6,
+   "S3": 33.1,
    "S4": 51.7
   },
-  "solver_margin_cm": 0.0,
+  "solver_margin_cm": 18.5,
   "agree": false,
-  "fallback_agree": false,
-  "latency_ms": 569.6,
-  "cost_usd": 3.4146e-05,
+  "fallback_agree": true,
+  "latency_ms": 284.1,
+  "cost_usd": 3.4482000000000006e-05,
   "cost_note": "coste estimado a partir de tokens",
-  "input_tokens": 813,
+  "input_tokens": 821,
   "mode": "shadow",
   "model_id": "typesafe/jev-1.14",
   "model_snapshot": "typesafe/jev-1.14-20261014",
-  "timestamp": "2026-11-10T18:59:11Z"
+  "timestamp": "2026-11-10T19:06:09Z"
  },
  {
   "decision_id": "d005",
-  "run_id": "shadow_20261110T185908Z",
+  "run_id": "shadow_20261110T190607Z",
   "hotspot_id": "H2",
   "rain_mm": 60,
   "primitive": "choice",
@@ -264,12 +264,12 @@
   "jev_output": {
    "choice": "S2",
    "probabilities": {
-    "S1": 0.12,
-    "S2": 0.46,
+    "S1": 0.1,
+    "S2": 0.48,
     "S3": 0.25,
     "S4": 0.17
    },
-   "confidence": 0.28
+   "confidence": 0.31
   },
   "jev_live": true,
   "jev_error": null,
@@ -279,29 +279,29 @@
   },
   "fallback_used": false,
   "effective_choice": "S2",
-  "solver_best": "S4",
+  "solver_best": "S3",
   "solver_depth_cm": {
    "S0": 54.5,
    "S1": 54.6,
    "S2": 54.5,
-   "S3": 54.5,
+   "S3": 52.3,
    "S4": 54.4
   },
-  "solver_margin_cm": 0.1,
+  "solver_margin_cm": 2.1,
   "agree": false,
-  "fallback_agree": true,
-  "latency_ms": 516.0,
-  "cost_usd": 3.4146e-05,
+  "fallback_agree": false,
+  "latency_ms": 331.4,
+  "cost_usd": 3.4482000000000006e-05,
   "cost_note": "coste estimado a partir de tokens",
-  "input_tokens": 813,
+  "input_tokens": 821,
   "mode": "shadow",
   "model_id": "typesafe/jev-1.14",
   "model_snapshot": "typesafe/jev-1.14-20261014",
-  "timestamp": "2026-11-10T18:59:12Z"
+  "timestamp": "2026-11-10T19:06:10Z"
  },
  {
   "decision_id": "d006",
-  "run_id": "shadow_20261110T185908Z",
+  "run_id": "shadow_20261110T190607Z",
   "hotspot_id": "H2",
   "rain_mm": 100,
   "primitive": "choice",
@@ -324,104 +324,104 @@
   "jev_output": {
    "choice": "S2",
    "probabilities": {
-    "S1": 0.12,
-    "S2": 0.46,
-    "S3": 0.24,
-    "S4": 0.18
-   },
-   "confidence": 0.28
-  },
-  "jev_live": true,
-  "jev_error": null,
-  "fallback_output": {
-   "choice": "S4",
-   "rule": "R4: slope >= 0.03 y catchment_m2 < 20000 -> bordillos / desvío"
-  },
-  "fallback_used": false,
-  "effective_choice": "S2",
-  "solver_best": "S1",
-  "solver_depth_cm": {
-   "S0": 57.3,
-   "S1": 57.3,
-   "S2": 57.3,
-   "S3": 57.3,
-   "S4": 57.3
-  },
-  "solver_margin_cm": 0.0,
-  "agree": false,
-  "fallback_agree": false,
-  "latency_ms": 933.5,
-  "cost_usd": 3.4188000000000005e-05,
-  "cost_note": "coste estimado a partir de tokens",
-  "input_tokens": 814,
-  "mode": "shadow",
-  "model_id": "typesafe/jev-1.14",
-  "model_snapshot": "typesafe/jev-1.14-20261014",
-  "timestamp": "2026-11-10T18:59:13Z"
- },
- {
-  "decision_id": "d007",
-  "run_id": "shadow_20261110T185908Z",
-  "hotspot_id": "H3",
-  "rain_mm": 30,
-  "primitive": "choice",
-  "input": {
-   "elevation_m": 5.18,
-   "slope": 0.0436,
-   "catchment_m2": 4575,
-   "dist_to_channel_m": 68.0,
-   "urban_fraction": 1.0,
-   "depression_depth_m": 1.37,
-   "rain_total_mm": 30,
-   "rain_duration_min": 60,
-   "options": [
-    "S1",
-    "S2",
-    "S3",
-    "S4"
-   ]
-  },
-  "jev_output": {
-   "choice": "S2",
-   "probabilities": {
-    "S1": 0.12,
+    "S1": 0.1,
     "S2": 0.5,
-    "S3": 0.25,
-    "S4": 0.13
+    "S3": 0.23,
+    "S4": 0.17
    },
    "confidence": 0.33
   },
   "jev_live": true,
   "jev_error": null,
   "fallback_output": {
+   "choice": "S4",
+   "rule": "R4: slope >= 0.03 y catchment_m2 < 20000 -> bordillos / desvío"
+  },
+  "fallback_used": false,
+  "effective_choice": "S2",
+  "solver_best": "S3",
+  "solver_depth_cm": {
+   "S0": 57.3,
+   "S1": 57.3,
+   "S2": 57.3,
+   "S3": 55.6,
+   "S4": 57.3
+  },
+  "solver_margin_cm": 1.7,
+  "agree": false,
+  "fallback_agree": false,
+  "latency_ms": 333.8,
+  "cost_usd": 3.4524000000000004e-05,
+  "cost_note": "coste estimado a partir de tokens",
+  "input_tokens": 822,
+  "mode": "shadow",
+  "model_id": "typesafe/jev-1.14",
+  "model_snapshot": "typesafe/jev-1.14-20261014",
+  "timestamp": "2026-11-10T19:06:10Z"
+ },
+ {
+  "decision_id": "d007",
+  "run_id": "shadow_20261110T190607Z",
+  "hotspot_id": "H3",
+  "rain_mm": 30,
+  "primitive": "choice",
+  "input": {
+   "elevation_m": 5.18,
+   "slope": 0.0436,
+   "catchment_m2": 4575,
+   "dist_to_channel_m": 68.0,
+   "urban_fraction": 1.0,
+   "depression_depth_m": 1.37,
+   "rain_total_mm": 30,
+   "rain_duration_min": 60,
+   "options": [
+    "S1",
+    "S2",
+    "S3",
+    "S4"
+   ]
+  },
+  "jev_output": {
+   "choice": "S2",
+   "probabilities": {
+    "S1": 0.08,
+    "S2": 0.6,
+    "S3": 0.21,
+    "S4": 0.11
+   },
+   "confidence": 0.47
+  },
+  "jev_live": true,
+  "jev_error": null,
+  "fallback_output": {
    "choice": "S2",
    "rule": "R2: depression_depth_m >= 0.3 -> depósito de retención"
   },
   "fallback_used": false,
   "effective_choice": "S2",
-  "solver_best": "S2",
+  "solver_best": "S3",
   "solver_depth_cm": {
    "S0": 50.7,
    "S1": 60.4,
    "S2": 50.7,
-   "S3": 50.7,
+   "S3": 18.6,
    "S4": 55.8
   },
-  "solver_margin_cm": 0.0,
-  "agree": true,
-  "fallback_agree": true,
-  "latency_ms": 423.7,
-  "cost_usd": 3.3978000000000006e-05,
+  "solver_margin_cm": 32.1,
+  "agree": false,
+  "fallback_agree": false,
+  "latency_ms": 440.5,
+  "cost_usd": 3.4314000000000004e-05,
   "cost_note": "coste estimado a partir de tokens",
-  "input_tokens": 809,
+  "input_tokens": 817,
   "mode": "shadow",
   "model_id": "typesafe/jev-1.14",
   "model_snapshot": "typesafe/jev-1.14-20261014",
-  "timestamp": "2026-11-10T18:59:13Z"
+  "timestamp": "2026-11-10T19:06:10Z"
  },
  {
   "decision_id": "d008",
-  "run_id": "shadow_20261110T185908Z",
+  "run_id": "shadow_20261110T190607Z",
   "hotspot_id": "H3",
   "rain_mm": 60,
   "primitive": "choice",
@@ -444,12 +444,12 @@
   "jev_output": {
    "choice": "S2",
    "probabilities": {
-    "S1": 0.09,
-    "S2": 0.57,
-    "S3": 0.23,
-    "S4": 0.11
+    "S1": 0.08,
+    "S2": 0.64,
+    "S3": 0.19,
+    "S4": 0.09
    },
-   "confidence": 0.43
+   "confidence": 0.52
   },
   "jev_live": true,
   "jev_error": null,
@@ -459,29 +459,29 @@
   },
   "fallback_used": false,
   "effective_choice": "S2",
-  "solver_best": "S2",
+  "solver_best": "S3",
   "solver_depth_cm": {
    "S0": 92.1,
    "S1": 93.1,
    "S2": 92.1,
-   "S3": 92.1,
+   "S3": 57.8,
    "S4": 99.6
   },
-  "solver_margin_cm": 0.0,
-  "agree": true,
-  "fallback_agree": true,
-  "latency_ms": 402.5,
-  "cost_usd": 3.3978000000000006e-05,
+  "solver_margin_cm": 34.3,
+  "agree": false,
+  "fallback_agree": false,
+  "latency_ms": 378.5,
+  "cost_usd": 3.4314000000000004e-05,
   "cost_note": "coste estimado a partir de tokens",
-  "input_tokens": 809,
+  "input_tokens": 817,
   "mode": "shadow",
   "model_id": "typesafe/jev-1.14",
   "model_snapshot": "typesafe/jev-1.14-20261014",
-  "timestamp": "2026-11-10T18:59:14Z"
+  "timestamp": "2026-11-10T19:06:11Z"
  },
  {
   "decision_id": "d009",
-  "run_id": "shadow_20261110T185908Z",
+  "run_id": "shadow_20261110T190607Z",
   "hotspot_id": "H3",
   "rain_mm": 100,
   "primitive": "choice",
@@ -504,12 +504,12 @@
   "jev_output": {
    "choice": "S2",
    "probabilities": {
-    "S1": 0.11,
-    "S2": 0.56,
-    "S3": 0.21,
-    "S4": 0.12
+    "S1": 0.08,
+    "S2": 0.64,
+    "S3": 0.19,
+    "S4": 0.09
    },
-   "confidence": 0.41
+   "confidence": 0.52
   },
   "jev_live": true,
   "jev_error": null,
@@ -519,29 +519,29 @@
   },
   "fallback_used": false,
   "effective_choice": "S2",
-  "solver_best": "S1",
+  "solver_best": "S3",
   "solver_depth_cm": {
    "S0": 129.1,
    "S1": 115.5,
    "S2": 129.2,
-   "S3": 129.1,
+   "S3": 107.9,
    "S4": 135.8
   },
-  "solver_margin_cm": 13.6,
+  "solver_margin_cm": 7.6,
   "agree": false,
   "fallback_agree": false,
-  "latency_ms": 394.4,
-  "cost_usd": 3.402e-05,
+  "latency_ms": 683.6,
+  "cost_usd": 3.435600000000001e-05,
   "cost_note": "coste estimado a partir de tokens",
-  "input_tokens": 810,
+  "input_tokens": 818,
   "mode": "shadow",
   "model_id": "typesafe/jev-1.14",
   "model_snapshot": "typesafe/jev-1.14-20261014",
-  "timestamp": "2026-11-10T18:59:14Z"
+  "timestamp": "2026-11-10T19:06:11Z"
  },
  {
   "decision_id": "d010",
-  "run_id": "shadow_20261110T185908Z",
+  "run_id": "shadow_20261110T190607Z",
   "hotspot_id": "H4",
   "rain_mm": 30,
   "primitive": "choice",
@@ -564,12 +564,12 @@
   "jev_output": {
    "choice": "S2",
    "probabilities": {
-    "S1": 0.09,
-    "S2": 0.35,
-    "S3": 0.3,
+    "S1": 0.1,
+    "S2": 0.4,
+    "S3": 0.24,
     "S4": 0.26
    },
-   "confidence": 0.13
+   "confidence": 0.2
   },
   "jev_live": true,
   "jev_error": null,
@@ -579,29 +579,29 @@
   },
   "fallback_used": false,
   "effective_choice": "S2",
-  "solver_best": "S1",
+  "solver_best": "S3",
   "solver_depth_cm": {
    "S0": 36.2,
    "S1": 27.2,
    "S2": 36.2,
-   "S3": 36.2,
+   "S3": 11.9,
    "S4": 34.3
   },
-  "solver_margin_cm": 7.1,
+  "solver_margin_cm": 15.3,
   "agree": false,
   "fallback_agree": false,
-  "latency_ms": 345.6,
-  "cost_usd": 3.423e-05,
+  "latency_ms": 354.6,
+  "cost_usd": 3.456600000000001e-05,
   "cost_note": "coste estimado a partir de tokens",
-  "input_tokens": 815,
+  "input_tokens": 823,
   "mode": "shadow",
   "model_id": "typesafe/jev-1.14",
   "model_snapshot": "typesafe/jev-1.14-20261014",
-  "timestamp": "2026-11-10T18:59:14Z"
+  "timestamp": "2026-11-10T19:06:12Z"
  },
  {
   "decision_id": "d011",
-  "run_id": "shadow_20261110T185908Z",
+  "run_id": "shadow_20261110T190607Z",
   "hotspot_id": "H4",
   "rain_mm": 60,
   "primitive": "choice",
@@ -624,12 +624,12 @@
   "jev_output": {
    "choice": "S2",
    "probabilities": {
-    "S1": 0.11,
-    "S2": 0.37,
-    "S3": 0.25,
-    "S4": 0.27
+    "S1": 0.08,
+    "S2": 0.48,
+    "S3": 0.19,
+    "S4": 0.25
    },
-   "confidence": 0.16
+   "confidence": 0.31
   },
   "jev_live": true,
   "jev_error": null,
@@ -644,24 +644,24 @@
    "S0": 51.3,
    "S1": 39.0,
    "S2": 51.3,
-   "S3": 51.3,
+   "S3": 39.0,
    "S4": 52.1
   },
-  "solver_margin_cm": 12.3,
+  "solver_margin_cm": 0.0,
   "agree": false,
   "fallback_agree": false,
-  "latency_ms": 358.5,
-  "cost_usd": 3.423e-05,
+  "latency_ms": 463.0,
+  "cost_usd": 3.456600000000001e-05,
   "cost_note": "coste estimado a partir de tokens",
-  "input_tokens": 815,
+  "input_tokens": 823,
   "mode": "shadow",
   "model_id": "typesafe/jev-1.14",
   "model_snapshot": "typesafe/jev-1.14-20261014",
-  "timestamp": "2026-11-10T18:59:15Z"
+  "timestamp": "2026-11-10T19:06:12Z"
  },
  {
   "decision_id": "d012",
-  "run_id": "shadow_20261110T185908Z",
+  "run_id": "shadow_20261110T190607Z",
   "hotspot_id": "H4",
   "rain_mm": 100,
   "primitive": "choice",
@@ -684,12 +684,12 @@
   "jev_output": {
    "choice": "S2",
    "probabilities": {
-    "S1": 0.1,
-    "S2": 0.39,
-    "S3": 0.21,
-    "S4": 0.3
+    "S1": 0.09,
+    "S2": 0.47,
+    "S3": 0.18,
+    "S4": 0.26
    },
-   "confidence": 0.19
+   "confidence": 0.29
   },
   "jev_live": true,
   "jev_error": null,
@@ -704,24 +704,24 @@
    "S0": 65.2,
    "S1": 52.5,
    "S2": 65.2,
-   "S3": 65.2,
+   "S3": 56.6,
    "S4": 69.8
   },
-  "solver_margin_cm": 12.7,
+  "solver_margin_cm": 4.1,
   "agree": false,
   "fallback_agree": false,
-  "latency_ms": 371.4,
-  "cost_usd": 3.427200000000001e-05,
+  "latency_ms": 409.0,
+  "cost_usd": 3.4608000000000005e-05,
   "cost_note": "coste estimado a partir de tokens",
-  "input_tokens": 816,
+  "input_tokens": 824,
   "mode": "shadow",
   "model_id": "typesafe/jev-1.14",
   "model_snapshot": "typesafe/jev-1.14-20261014",
-  "timestamp": "2026-11-10T18:59:15Z"
+  "timestamp": "2026-11-10T19:06:13Z"
  },
  {
   "decision_id": "d013",
-  "run_id": "shadow_20261110T185908Z",
+  "run_id": "shadow_20261110T190607Z",
   "hotspot_id": "H5",
   "rain_mm": 30,
   "primitive": "choice",
@@ -744,12 +744,12 @@
   "jev_output": {
    "choice": "S2",
    "probabilities": {
-    "S1": 0.12,
-    "S2": 0.49,
+    "S1": 0.11,
+    "S2": 0.51,
     "S3": 0.22,
-    "S4": 0.17
+    "S4": 0.16
    },
-   "confidence": 0.32
+   "confidence": 0.35
   },
   "jev_live": true,
   "jev_error": null,
@@ -759,29 +759,29 @@
   },
   "fallback_used": false,
   "effective_choice": "S2",
-  "solver_best": "S1",
+  "solver_best": "S3",
   "solver_depth_cm": {
    "S0": 50.7,
    "S1": 41.7,
    "S2": 50.7,
-   "S3": 50.7,
+   "S3": 19.4,
    "S4": 48.8
   },
-  "solver_margin_cm": 7.1,
+  "solver_margin_cm": 22.3,
   "agree": false,
   "fallback_agree": false,
-  "latency_ms": 668.1,
-  "cost_usd": 3.4188000000000005e-05,
+  "latency_ms": 290.0,
+  "cost_usd": 3.4524000000000004e-05,
   "cost_note": "coste estimado a partir de tokens",
-  "input_tokens": 814,
+  "input_tokens": 822,
   "mode": "shadow",
   "model_id": "typesafe/jev-1.14",
   "model_snapshot": "typesafe/jev-1.14-20261014",
-  "timestamp": "2026-11-10T18:59:16Z"
+  "timestamp": "2026-11-10T19:06:13Z"
  },
  {
   "decision_id": "d014",
-  "run_id": "shadow_20261110T185908Z",
+  "run_id": "shadow_20261110T190607Z",
   "hotspot_id": "H5",
   "rain_mm": 60,
   "primitive": "choice",
@@ -805,11 +805,11 @@
    "choice": "S2",
    "probabilities": {
     "S1": 0.12,
-    "S2": 0.42,
-    "S3": 0.26,
-    "S4": 0.2
+    "S2": 0.52,
+    "S3": 0.17,
+    "S4": 0.19
    },
-   "confidence": 0.23
+   "confidence": 0.36
   },
   "jev_live": true,
   "jev_error": null,
@@ -819,29 +819,29 @@
   },
   "fallback_used": false,
   "effective_choice": "S2",
-  "solver_best": "S1",
+  "solver_best": "S3",
   "solver_depth_cm": {
    "S0": 65.8,
    "S1": 53.7,
    "S2": 65.8,
-   "S3": 65.8,
+   "S3": 53.5,
    "S4": 66.6
   },
-  "solver_margin_cm": 12.1,
+  "solver_margin_cm": 0.2,
   "agree": false,
   "fallback_agree": false,
-  "latency_ms": 287.4,
-  "cost_usd": 3.4188000000000005e-05,
+  "latency_ms": 318.2,
+  "cost_usd": 3.4524000000000004e-05,
   "cost_note": "coste estimado a partir de tokens",
-  "input_tokens": 814,
+  "input_tokens": 822,
   "mode": "shadow",
   "model_id": "typesafe/jev-1.14",
   "model_snapshot": "typesafe/jev-1.14-20261014",
-  "timestamp": "2026-11-10T18:59:16Z"
+  "timestamp": "2026-11-10T19:06:13Z"
  },
  {
   "decision_id": "d015",
-  "run_id": "shadow_20261110T185908Z",
+  "run_id": "shadow_20261110T190607Z",
   "hotspot_id": "H5",
   "rain_mm": 100,
   "primitive": "choice",
@@ -864,12 +864,12 @@
   "jev_output": {
    "choice": "S2",
    "probabilities": {
-    "S1": 0.13,
-    "S2": 0.47,
-    "S3": 0.21,
-    "S4": 0.19
+    "S1": 0.1,
+    "S2": 0.56,
+    "S3": 0.17,
+    "S4": 0.17
    },
-   "confidence": 0.29
+   "confidence": 0.41
   },
   "jev_live": true,
   "jev_error": null,
@@ -884,24 +884,24 @@
    "S0": 79.7,
    "S1": 67.3,
    "S2": 79.7,
-   "S3": 79.7,
+   "S3": 71.1,
    "S4": 84.3
   },
-  "solver_margin_cm": 12.4,
+  "solver_margin_cm": 3.8,
   "agree": false,
   "fallback_agree": false,
-  "latency_ms": 532.0,
-  "cost_usd": 3.423e-05,
+  "latency_ms": 521.4,
+  "cost_usd": 3.456600000000001e-05,
   "cost_note": "coste estimado a partir de tokens",
-  "input_tokens": 815,
+  "input_tokens": 823,
   "mode": "shadow",
   "model_id": "typesafe/jev-1.14",
   "model_snapshot": "typesafe/jev-1.14-20261014",
-  "timestamp": "2026-11-10T18:59:17Z"
+  "timestamp": "2026-11-10T19:06:14Z"
  },
  {
   "decision_id": "d016",
-  "run_id": "shadow_20261110T185908Z",
+  "run_id": "shadow_20261110T190607Z",
   "hotspot_id": "H6",
   "rain_mm": 30,
   "primitive": "choice",
@@ -925,11 +925,11 @@
    "choice": "S2",
    "probabilities": {
     "S1": 0.08,
-    "S2": 0.4,
-    "S3": 0.26,
-    "S4": 0.26
+    "S2": 0.45,
+    "S3": 0.22,
+    "S4": 0.25
    },
-   "confidence": 0.2
+   "confidence": 0.27
   },
   "jev_live": true,
   "jev_error": null,
@@ -939,29 +939,29 @@
   },
   "fallback_used": false,
   "effective_choice": "S2",
-  "solver_best": "S1",
+  "solver_best": "S3",
   "solver_depth_cm": {
    "S0": 32.5,
    "S1": 23.5,
    "S2": 32.5,
-   "S3": 32.5,
+   "S3": 11.5,
    "S4": 30.6
   },
-  "solver_margin_cm": 7.1,
+  "solver_margin_cm": 12.0,
   "agree": false,
   "fallback_agree": false,
-  "latency_ms": 407.9,
-  "cost_usd": 3.406200000000001e-05,
+  "latency_ms": 505.2,
+  "cost_usd": 3.4398000000000005e-05,
   "cost_note": "coste estimado a partir de tokens",
-  "input_tokens": 811,
+  "input_tokens": 819,
   "mode": "shadow",
   "model_id": "typesafe/jev-1.14",
   "model_snapshot": "typesafe/jev-1.14-20261014",
-  "timestamp": "2026-11-10T18:59:17Z"
+  "timestamp": "2026-11-10T19:06:14Z"
  },
  {
   "decision_id": "d017",
-  "run_id": "shadow_20261110T185908Z",
+  "run_id": "shadow_20261110T190607Z",
   "hotspot_id": "H6",
   "rain_mm": 60,
   "primitive": "choice",
@@ -984,12 +984,12 @@
   "jev_output": {
    "choice": "S2",
    "probabilities": {
-    "S1": 0.07,
-    "S2": 0.41,
-    "S3": 0.22,
-    "S4": 0.3
+    "S1": 0.08,
+    "S2": 0.48,
+    "S3": 0.19,
+    "S4": 0.25
    },
-   "confidence": 0.21
+   "confidence": 0.31
   },
   "jev_live": true,
   "jev_error": null,
@@ -999,29 +999,29 @@
   },
   "fallback_used": false,
   "effective_choice": "S2",
-  "solver_best": "S1",
+  "solver_best": "S3",
   "solver_depth_cm": {
    "S0": 47.6,
    "S1": 36.0,
    "S2": 47.6,
-   "S3": 47.6,
+   "S3": 35.4,
    "S4": 48.4
   },
-  "solver_margin_cm": 11.6,
+  "solver_margin_cm": 0.6,
   "agree": false,
   "fallback_agree": false,
-  "latency_ms": 402.2,
-  "cost_usd": 3.406200000000001e-05,
+  "latency_ms": 308.4,
+  "cost_usd": 3.4398000000000005e-05,
   "cost_note": "coste estimado a partir de tokens",
-  "input_tokens": 811,
+  "input_tokens": 819,
   "mode": "shadow",
   "model_id": "typesafe/jev-1.14",
   "model_snapshot": "typesafe/jev-1.14-20261014",
-  "timestamp": "2026-11-10T18:59:17Z"
+  "timestamp": "2026-11-10T19:06:15Z"
  },
  {
   "decision_id": "d018",
-  "run_id": "shadow_20261110T185908Z",
+  "run_id": "shadow_20261110T190607Z",
   "hotspot_id": "H6",
   "rain_mm": 100,
   "primitive": "choice",
@@ -1045,11 +1045,11 @@
    "choice": "S2",
    "probabilities": {
     "S1": 0.08,
-    "S2": 0.39,
-    "S3": 0.2,
-    "S4": 0.33
+    "S2": 0.47,
+    "S3": 0.21,
+    "S4": 0.24
    },
-   "confidence": 0.19
+   "confidence": 0.29
   },
   "jev_live": true,
   "jev_error": null,
@@ -1064,24 +1064,24 @@
    "S0": 61.5,
    "S1": 49.8,
    "S2": 61.5,
-   "S3": 61.5,
+   "S3": 52.9,
    "S4": 66.1
   },
-  "solver_margin_cm": 11.7,
+  "solver_margin_cm": 3.1,
   "agree": false,
   "fallback_agree": false,
-  "latency_ms": 417.8,
-  "cost_usd": 3.4104000000000004e-05,
+  "latency_ms": 292.7,
+  "cost_usd": 3.444e-05,
   "cost_note": "coste estimado a partir de tokens",
-  "input_tokens": 812,
+  "input_tokens": 820,
   "mode": "shadow",
   "model_id": "typesafe/jev-1.14",
   "model_snapshot": "typesafe/jev-1.14-20261014",
-  "timestamp": "2026-11-10T18:59:18Z"
+  "timestamp": "2026-11-10T19:06:15Z"
  },
  {
   "decision_id": "d019",
-  "run_id": "shadow_20261110T185908Z",
+  "run_id": "shadow_20261110T190607Z",
   "hotspot_id": "H7",
   "rain_mm": 30,
   "primitive": "choice",
@@ -1104,12 +1104,12 @@
   "jev_output": {
    "choice": "S2",
    "probabilities": {
-    "S1": 0.11,
-    "S2": 0.48,
-    "S3": 0.22,
-    "S4": 0.19
+    "S1": 0.1,
+    "S2": 0.5,
+    "S3": 0.23,
+    "S4": 0.17
    },
-   "confidence": 0.31
+   "confidence": 0.33
   },
   "jev_live": true,
   "jev_error": null,
@@ -1119,29 +1119,29 @@
   },
   "fallback_used": false,
   "effective_choice": "S2",
-  "solver_best": "S1",
+  "solver_best": "S3",
   "solver_depth_cm": {
    "S0": 52.9,
    "S1": 38.6,
    "S2": 52.9,
-   "S3": 52.9,
+   "S3": 31.8,
    "S4": 51.0
   },
-  "solver_margin_cm": 12.4,
+  "solver_margin_cm": 6.8,
   "agree": false,
   "fallback_agree": false,
-  "latency_ms": 404.9,
-  "cost_usd": 3.4188000000000005e-05,
+  "latency_ms": 392.3,
+  "cost_usd": 3.4524000000000004e-05,
   "cost_note": "coste estimado a partir de tokens",
-  "input_tokens": 814,
+  "input_tokens": 822,
   "mode": "shadow",
   "model_id": "typesafe/jev-1.14",
   "model_snapshot": "typesafe/jev-1.14-20261014",
-  "timestamp": "2026-11-10T18:59:18Z"
+  "timestamp": "2026-11-10T19:06:15Z"
  },
  {
   "decision_id": "d020",
-  "run_id": "shadow_20261110T185908Z",
+  "run_id": "shadow_20261110T190607Z",
   "hotspot_id": "H7",
   "rain_mm": 60,
   "primitive": "choice",
@@ -1164,12 +1164,12 @@
   "jev_output": {
    "choice": "S2",
    "probabilities": {
-    "S1": 0.11,
-    "S2": 0.5,
+    "S1": 0.09,
+    "S2": 0.56,
     "S3": 0.19,
-    "S4": 0.2
+    "S4": 0.16
    },
-   "confidence": 0.33
+   "confidence": 0.41
   },
   "jev_live": true,
   "jev_error": null,
@@ -1179,29 +1179,29 @@
   },
   "fallback_used": false,
   "effective_choice": "S2",
-  "solver_best": "S1",
+  "solver_best": "S3",
   "solver_depth_cm": {
    "S0": 68.0,
    "S1": 57.2,
    "S2": 68.0,
-   "S3": 68.0,
+   "S3": 55.8,
    "S4": 68.8
   },
-  "solver_margin_cm": 10.8,
+  "solver_margin_cm": 1.4,
   "agree": false,
   "fallback_agree": false,
-  "latency_ms": 401.9,
-  "cost_usd": 3.4188000000000005e-05,
+  "latency_ms": 340.3,
+  "cost_usd": 3.4524000000000004e-05,
   "cost_note": "coste estimado a partir de tokens",
-  "input_tokens": 814,
+  "input_tokens": 822,
   "mode": "shadow",
   "model_id": "typesafe/jev-1.14",
   "model_snapshot": "typesafe/jev-1.14-20261014",
-  "timestamp": "2026-11-10T18:59:19Z"
+  "timestamp": "2026-11-10T19:06:16Z"
  },
  {
   "decision_id": "d021",
-  "run_id": "shadow_20261110T185908Z",
+  "run_id": "shadow_20261110T190607Z",
   "hotspot_id": "H7",
   "rain_mm": 100,
   "primitive": "choice",
@@ -1225,11 +1225,11 @@
    "choice": "S2",
    "probabilities": {
     "S1": 0.11,
-    "S2": 0.47,
-    "S3": 0.19,
-    "S4": 0.23
+    "S2": 0.54,
+    "S3": 0.16,
+    "S4": 0.19
    },
-   "confidence": 0.29
+   "confidence": 0.39
   },
   "jev_live": true,
   "jev_error": null,
@@ -1244,24 +1244,24 @@
    "S0": 81.9,
    "S1": 71.3,
    "S2": 81.9,
-   "S3": 81.9,
+   "S3": 73.4,
    "S4": 86.5
   },
-  "solver_margin_cm": 10.6,
+  "solver_margin_cm": 2.1,
   "agree": false,
   "fallback_agree": false,
-  "latency_ms": 367.4,
-  "cost_usd": 3.423e-05,
+  "latency_ms": 407.7,
+  "cost_usd": 3.456600000000001e-05,
   "cost_note": "coste estimado a partir de tokens",
-  "input_tokens": 815,
+  "input_tokens": 823,
   "mode": "shadow",
   "model_id": "typesafe/jev-1.14",
   "model_snapshot": "typesafe/jev-1.14-20261014",
-  "timestamp": "2026-11-10T18:59:19Z"
+  "timestamp": "2026-11-10T19:06:16Z"
  },
  {
   "decision_id": "d022",
-  "run_id": "shadow_20261110T185908Z",
+  "run_id": "shadow_20261110T190607Z",
   "hotspot_id": "H8",
   "rain_mm": 30,
   "primitive": "choice",
@@ -1284,12 +1284,12 @@
   "jev_output": {
    "choice": "S2",
    "probabilities": {
-    "S1": 0.1,
-    "S2": 0.48,
-    "S3": 0.25,
-    "S4": 0.17
+    "S1": 0.07,
+    "S2": 0.59,
+    "S3": 0.19,
+    "S4": 0.15
    },
-   "confidence": 0.31
+   "confidence": 0.45
   },
   "jev_live": true,
   "jev_error": null,
@@ -1299,29 +1299,29 @@
   },
   "fallback_used": false,
   "effective_choice": "S2",
-  "solver_best": "S4",
+  "solver_best": "S3",
   "solver_depth_cm": {
    "S0": 60.3,
    "S1": 50.0,
    "S2": 60.3,
-   "S3": 60.3,
+   "S3": 26.9,
    "S4": 47.4
   },
-  "solver_margin_cm": 2.6,
+  "solver_margin_cm": 20.5,
   "agree": false,
   "fallback_agree": false,
-  "latency_ms": 290.6,
-  "cost_usd": 3.4146e-05,
+  "latency_ms": 407.8,
+  "cost_usd": 3.4482000000000006e-05,
   "cost_note": "coste estimado a partir de tokens",
-  "input_tokens": 813,
+  "input_tokens": 821,
   "mode": "shadow",
   "model_id": "typesafe/jev-1.14",
   "model_snapshot": "typesafe/jev-1.14-20261014",
-  "timestamp": "2026-11-10T18:59:19Z"
+  "timestamp": "2026-11-10T19:06:16Z"
  },
  {
   "decision_id": "d023",
-  "run_id": "shadow_20261110T185908Z",
+  "run_id": "shadow_20261110T190607Z",
   "hotspot_id": "H8",
   "rain_mm": 60,
   "primitive": "choice",
@@ -1344,10 +1344,10 @@
   "jev_output": {
    "choice": "S2",
    "probabilities": {
-    "S1": 0.1,
+    "S1": 0.12,
     "S2": 0.54,
-    "S3": 0.2,
-    "S4": 0.16
+    "S3": 0.19,
+    "S4": 0.15
    },
    "confidence": 0.39
   },
@@ -1359,29 +1359,29 @@
   },
   "fallback_used": false,
   "effective_choice": "S2",
-  "solver_best": "S1",
+  "solver_best": "S3",
   "solver_depth_cm": {
    "S0": 77.7,
    "S1": 73.5,
    "S2": 77.7,
-   "S3": 77.7,
+   "S3": 64.4,
    "S4": 86.5
   },
-  "solver_margin_cm": 4.2,
+  "solver_margin_cm": 9.1,
   "agree": false,
   "fallback_agree": false,
-  "latency_ms": 676.4,
-  "cost_usd": 3.4146e-05,
+  "latency_ms": 298.1,
+  "cost_usd": 3.4482000000000006e-05,
   "cost_note": "coste estimado a partir de tokens",
-  "input_tokens": 813,
+  "input_tokens": 821,
   "mode": "shadow",
   "model_id": "typesafe/jev-1.14",
   "model_snapshot": "typesafe/jev-1.14-20261014",
-  "timestamp": "2026-11-10T18:59:20Z"
+  "timestamp": "2026-11-10T19:06:17Z"
  },
  {
   "decision_id": "d024",
-  "run_id": "shadow_20261110T185908Z",
+  "run_id": "shadow_20261110T190607Z",
   "hotspot_id": "H8",
   "rain_mm": 100,
   "primitive": "choice",
@@ -1404,12 +1404,12 @@
   "jev_output": {
    "choice": "S2",
    "probabilities": {
-    "S1": 0.09,
-    "S2": 0.53,
-    "S3": 0.22,
-    "S4": 0.16
+    "S1": 0.1,
+    "S2": 0.56,
+    "S3": 0.17,
+    "S4": 0.17
    },
-   "confidence": 0.37
+   "confidence": 0.41
   },
   "jev_live": true,
   "jev_error": null,
@@ -1419,24 +1419,24 @@
   },
   "fallback_used": false,
   "effective_choice": "S2",
-  "solver_best": "S1",
+  "solver_best": "S3",
   "solver_depth_cm": {
    "S0": 91.7,
    "S1": 84.4,
    "S2": 91.7,
-   "S3": 91.7,
+   "S3": 83.2,
    "S4": 97.5
   },
-  "solver_margin_cm": 7.3,
+  "solver_margin_cm": 1.2,
   "agree": false,
   "fallback_agree": false,
-  "latency_ms": 410.2,
-  "cost_usd": 3.4188000000000005e-05,
+  "latency_ms": 515.7,
+  "cost_usd": 3.4524000000000004e-05,
   "cost_note": "coste estimado a partir de tokens",
-  "input_tokens": 814,
+  "input_tokens": 822,
   "mode": "shadow",
   "model_id": "typesafe/jev-1.14",
   "model_snapshot": "typesafe/jev-1.14-20261014",
-  "timestamp": "2026-11-10T18:59:20Z"
+  "timestamp": "2026-11-10T19:06:17Z"
  }
 ]

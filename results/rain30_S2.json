@@ -9,6 +9,7 @@
     "max_inflow_m3s": 6.0,
     "intake_depth_m": 0.1,
     "radius_cells": 3,
+    "release_after_rain": true,
     "location": "depresión urbana más honda (supuesto)"
   },
   "seed": 42,
@@ -63,7 +64,7 @@
     "stored_volume_m3": 22588.8,
     "volume_m3_total": 25444.4,
     "volume_error_pct": 0.335,
-    "runtime_s": 137.01
+    "runtime_s": 82.24
   },
   "mass_balance_m3": {
     "rain_m3": 25444.4,
