@@ -24,14 +24,14 @@
       },
       "drain_min": 30.0,
       "sim_time_s": 5400.0,
-      "steps": 4551,
+      "steps": 4112,
       "flood_threshold_m": 0.05,
       "boundary": "sur abierto (mar); norte, este y oeste cerrados"
     }
   },
   "data": {
     "dem_source": "sintético",
-    "dem_sha256": "4c673a2e1131ba183402a732ef569a5a0aab8666dcb7091070ff09959b2ecee6",
+    "dem_sha256": "92867db8fd13d39443cecef432a2d73d077a4aa8714ea1a3d1fa6f075cf9cfc8",
     "resolution_m": 5.0,
     "dem_file": "results/dem.npy",
     "landuse_file": "results/landuse.npy"
@@ -47,22 +47,22 @@
     "crs": "EPSG:25831"
   },
   "kpis": {
-    "max_depth_cm": 133.2,
-    "max_depth_urban_cm": 59.3,
-    "flooded_area_m2": 28425.0,
-    "flooded_area_pct": 2.84,
-    "volume_m3_total": 60007.9,
-    "volume_error_pct": 1.53,
-    "runtime_s": 319.57
+    "max_depth_cm": 108.6,
+    "max_depth_urban_cm": 81.5,
+    "flooded_area_m2": 29550.0,
+    "flooded_area_pct": 2.96,
+    "volume_m3_total": 59991.3,
+    "volume_error_pct": 0.917,
+    "runtime_s": 95.79
   },
   "mass_balance_m3": {
-    "rain_m3": 60007.9,
-    "stored_m3": 3736.1,
-    "infiltrated_m3": 16489.4,
-    "outflow_m3": 40700.6,
+    "rain_m3": 59991.3,
+    "stored_m3": 3447.2,
+    "infiltrated_m3": 16486.1,
+    "outflow_m3": 40608.4,
     "tank_stored_m3": 0.0,
     "tank_peak_m3": 0.0,
-    "error_m3": -918.3
+    "error_m3": -550.4
   },
   "depth_file": "results/rain60_S0_depth.npy",
   "hotspots": [
@@ -76,7 +76,7 @@
       "id": "H2",
       "x": 106,
       "y": 105,
-      "max_depth_cm": 59.3
+      "max_depth_cm": 81.5
     },
     {
       "id": "H3",
@@ -106,7 +106,7 @@
       "id": "H7",
       "x": 93,
       "y": 168,
-      "max_depth_cm": 25.0
+      "max_depth_cm": 24.9
     },
     {
       "id": "H8",

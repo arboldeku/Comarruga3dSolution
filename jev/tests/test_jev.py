@@ -13,10 +13,10 @@ from unittest import mock
 from jev import client, fallback, kpis, run_shadow
 from jev.tests import make_fixture
 
-FAKE_KEY = "sk-or-TEST-clave-falsa-123456"
+FAKE_KEY = "TEST-clave-falsa-123456"
 FAKE_MODEL = "modelo/de-prueba"  # solo para tests; no es un ID real
 CRITERIA = {"S1": "a", "S2": "b", "S3": "c", "S4": "d"}
-ENV = {client.ENV_KEY: FAKE_KEY, client.ENV_MODEL: FAKE_MODEL}
+ENV = {client.ENV_KEY: FAKE_KEY, client.ENV_MODEL: FAKE_MODEL, client.ENV_BASE: ""}
 
 
 class Resp:
@@ -32,7 +32,7 @@ class Resp:
 def ok_payload(choice="S2", kind="choice"):
     return {"answers": {"q": {"type": kind, "choice": choice,
                               "probabilities": {"S1": 0.1, "S2": 0.7, "S3": 0.1, "S4": 0.1}, "confidence": 0.7}},
-            "usage": {"input_tokens": 100, "output_tokens": 5, "cost": 0.0004}, "model": "snap-2026-11-01"}
+            "usage": {"input_tokens": 100, "output_tokens": 5}, "model": "snap-2026-11-01"}
 
 
 def no_env():
@@ -50,15 +50,36 @@ class ClientTests(unittest.TestCase):
         with mock.patch.dict(os.environ, ENV):
             r = client.decide_choice({"slope": 0.01}, "elige", CRITERIA, timeout_s=3, post=post)
         url, headers, body, timeout = calls[0]
-        self.assertEqual(url, "https://openrouter.ai/api/alpha/decisions")
+        self.assertEqual(url, "https://api.typesafe.ai/v1/systemone")
         self.assertEqual(headers["Authorization"], "Bearer " + FAKE_KEY)
         self.assertEqual(body, {"model": FAKE_MODEL, "state": {"slope": 0.01},
                                 "questions": {"q": {"type": "choice", "instructions": "elige", "criteria": CRITERIA}}})
         self.assertEqual(timeout, 3)
-        self.assertEqual((r["choice"], r["confidence"], r["cost"], r["model"]), ("S2", 0.7, 0.0004, "snap-2026-11-01"))
+        self.assertEqual((r["choice"], r["confidence"], r["model"]), ("S2", 0.7, "snap-2026-11-01"))
+        self.assertAlmostEqual(r["cost"], 100 * 0.042 / 1_000_000, places=12)
+        self.assertEqual((r["input_tokens"], r["cost_note"]), (100, "coste estimado a partir de tokens"))
         self.assertEqual(r["probabilities"]["S2"], 0.7)
         self.assertGreaterEqual(r["latency_ms"], 0)
         self.assertNotIn(FAKE_KEY, json.dumps(r))
+
+    def test_base_url_override_strips_slash(self):
+        urls = []
+
+        def post(url, headers, json, timeout):
+            urls.append(url)
+            return Resp(200, ok_payload())
+
+        with mock.patch.dict(os.environ, {**ENV, client.ENV_BASE: "https://ejemplo.invalid/"}):
+            client.decide_choice({}, "i", CRITERIA, post=post)
+        self.assertEqual(urls, ["https://ejemplo.invalid/v1/systemone"])
+
+    def test_cost_none_without_tokens(self):
+        p = ok_payload()
+        del p["usage"]
+        with mock.patch.dict(os.environ, ENV):
+            r = client.decide_choice({}, "i", CRITERIA, post=lambda *a, **k: Resp(200, p))
+        self.assertIsNone(r["cost"])
+        self.assertIsNone(r["cost_note"])
 
     def test_confidence_optional(self):
         p = ok_payload()
@@ -77,8 +98,8 @@ class ClientTests(unittest.TestCase):
         self.assertIsNone(cm.exception.__cause__)
         return cm.exception
 
-    def test_refusal(self):
-        self._fails(lambda *a, **k: Resp(200, ok_payload(kind="refusal")), "refusal")
+    def test_non_choice_answer_is_failure(self):
+        self._fails(lambda *a, **k: Resp(200, ok_payload(kind="refusal")), "invalid_choice")
 
     def test_choice_outside_options(self):
         self._fails(lambda *a, **k: Resp(200, ok_payload(choice="S9")), "invalid_choice")
@@ -93,6 +114,10 @@ class ClientTests(unittest.TestCase):
         e = self._fails(lambda *a, **k: Resp(401, None, f"bad key {FAKE_KEY}"), "http_401")
         self.assertIn("***", e.detail)
 
+    def test_http_error_uses_detail_field(self):
+        e = self._fails(lambda *a, **k: Resp(422, {"detail": "campo desconocido"}, "cuerpo crudo"), "http_422")
+        self.assertEqual(e.detail, "campo desconocido")
+
     def test_bad_json(self):
         self._fails(lambda *a, **k: Resp(200, None, "<html>"), "bad_response")
 
@@ -102,10 +127,10 @@ class ClientTests(unittest.TestCase):
 
         e = self._fails(post, "missing_env", env={client.ENV_KEY: "", client.ENV_MODEL: ""})
         self.assertIn("JEV_MODEL_ID", e.detail)
-        self.assertIn("OPENROUTER_API_KEY", e.detail)
+        self.assertIn("JEV_API_KEY", e.detail)
 
     def test_single_retry_on_5xx_and_429(self):
-        for first in (503, 429):
+        for first in (503, 429, 529):
             seq = [Resp(first, None, "x"), Resp(200, ok_payload())]
             n = []
 
@@ -128,7 +153,7 @@ class ClientTests(unittest.TestCase):
     def test_dotenv_does_not_override(self):
         with tempfile.TemporaryDirectory() as d:
             p = Path(d) / ".env"
-            p.write_text("# c\nJEV_MODEL_ID=del-env-file\nOPENROUTER_API_KEY='k2'\nVACIA=\n", encoding="utf-8")
+            p.write_text("# c\nJEV_MODEL_ID=del-env-file\nJEV_API_KEY='k2'\nVACIA=\n", encoding="utf-8")
             with mock.patch.dict(os.environ, {client.ENV_MODEL: "ya-definido", client.ENV_KEY: ""}):
                 client.load_dotenv(p)
                 self.assertEqual(os.environ[client.ENV_MODEL], "ya-definido")
@@ -224,7 +249,7 @@ class ShadowAndKpiTests(unittest.TestCase):
             if state["hotspot_id"] == "H3":
                 raise client.JevError("refusal", "x")
             return {"choice": "S2", "probabilities": {"S1": 0.1, "S2": 0.8, "S3": 0.05, "S4": 0.05},
-                    "confidence": None, "cost": 0.001, "model": "snap-1", "latency_ms": 100.0 + len(seen)}
+                    "confidence": None, "cost": 0.001, "input_tokens": 250, "model": "snap-1", "latency_ms": 100.0 + len(seen)}
 
         with mock.patch.dict(os.environ, ENV):
             out = run_shadow.run(self.res, self.dec, decide=decide)
@@ -240,6 +265,8 @@ class ShadowAndKpiTests(unittest.TestCase):
         self.assertEqual(j["fallback_pct"], 33.3)
         self.assertEqual(j["cost_per_decision_usd"], 0.001)
         self.assertEqual(j["cost_total_usd"], 0.004)
+        self.assertIn("estimado a partir de tokens", j["cost_note"])
+        self.assertTrue(all(d["input_tokens"] == 250 and d["cost_note"] for d in out["decisions"] if d["jev_live"]))
         self.assertEqual(j["model_id"], FAKE_MODEL)
         self.assertEqual(j["model_snapshot"], "snap-1")
         self.assertEqual(j["jev_errors"], {"refusal": 2})

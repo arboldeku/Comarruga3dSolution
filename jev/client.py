@@ -1,10 +1,10 @@
-"""Cliente mínimo de Jev vía OpenRouter (contrato 6.2 de docs/CONTRACTS.md).
+"""Cliente mínimo de Jev, API nativa de TypeSafe (contrato 6.2 de docs/CONTRACTS.md).
 
-POST https://openrouter.ai/api/alpha/decisions
+POST {JEV_BASE_URL}/v1/systemone   (JEV_BASE_URL por defecto: https://api.typesafe.ai)
   { "model": $JEV_MODEL_ID, "state": ..., "questions": { "q": { "type": "choice",
     "instructions": "...", "criteria": { "<opción>": "<descripción>" } } } }
 
-Seguridad: la clave solo se lee de la variable de entorno OPENROUTER_API_KEY (o de un
+Seguridad: la clave solo se lee de la variable de entorno JEV_API_KEY (o de un
 `.env` en la raíz, sin sobrescribir el entorno). Nunca se imprime, registra ni guarda:
 los mensajes de error no incluyen cabeceras y cualquier texto externo se limpia.
 """
@@ -15,8 +15,13 @@ import time
 from pathlib import Path
 from typing import Any, Callable, Mapping
 
-ENDPOINT = "https://openrouter.ai/api/alpha/decisions"
-ENV_KEY = "OPENROUTER_API_KEY"
+DEFAULT_BASE_URL = "https://api.typesafe.ai"
+ENDPOINT_PATH = "/v1/systemone"
+ENV_KEY = "JEV_API_KEY"
+ENV_BASE = "JEV_BASE_URL"
+# Precio: 0,042 USD por millón de tokens de entrada, salida gratis (docs.typesafe.ai/models.md, 2026-11-10).
+USD_PER_INPUT_TOKEN = 0.042 / 1_000_000
+COST_NOTE = "coste estimado a partir de tokens"
 ENV_MODEL = "JEV_MODEL_ID"
 QUESTION = "q"
 ROOT = Path(__file__).resolve().parent.parent
@@ -59,6 +64,20 @@ def env_status() -> tuple[bool, str]:
     return True, ""
 
 
+def endpoint() -> str:
+    base = os.environ.get(ENV_BASE, "").strip() or DEFAULT_BASE_URL
+    return base.rstrip("/") + ENDPOINT_PATH
+
+
+def _error_detail(resp: Any) -> str:
+    """Campo `detail` del cuerpo JSON de error; si no hay JSON, el texto."""
+    try:
+        d = resp.json()["detail"]
+        return d if isinstance(d, str) else repr(d)
+    except Exception:
+        return str(getattr(resp, "text", ""))
+
+
 def _scrub(text: str, key: str) -> str:
     text = str(text)
     if key:
@@ -82,10 +101,12 @@ def decide_choice(
     sleep: Callable[[float], None] = time.sleep,
 ) -> dict:
     """Pregunta Choice a Jev. Devuelve
-    {choice, probabilities, confidence|None, cost, model, input_tokens, output_tokens, latency_ms}.
+    {choice, probabilities, confidence|None, cost, cost_note, model, input_tokens, output_tokens, latency_ms}.
+    `cost` (USD) se estima: input_tokens × 0,042 / 1e6 (la API no devuelve coste).
 
     Lanza JevError (reason) ante: `missing_env`, `timeout`, `network`, `http_<código>`,
-    `bad_response`, `refusal`, `invalid_choice`. Un reintento como máximo ante 429/5xx.
+    `bad_response`, `invalid_choice` (cualquier type != "choice" o choice fuera de las opciones; la forma
+    de un rechazo no está documentada). Un reintento como máximo ante 429/529/5xx.
     """
     ok, note = env_status()
     if not ok:
@@ -99,12 +120,13 @@ def decide_choice(
     }
     headers = {"Authorization": f"Bearer {key}", "Content-Type": "application/json"}
     send = post or _default_post
+    url = endpoint()
 
     t0 = time.perf_counter()
     resp = None
     for attempt in (0, 1):
         try:
-            resp = send(ENDPOINT, headers=headers, json=body, timeout=timeout_s)
+            resp = send(url, headers=headers, json=body, timeout=timeout_s)
         except Exception as exc:  # no se propaga el original: podría arrastrar la petición
             name = type(exc).__name__
             reason = "timeout" if "timeout" in name.lower() else "network"
@@ -118,25 +140,26 @@ def decide_choice(
 
     status = getattr(resp, "status_code", None)
     if status != 200:
-        raise JevError(f"http_{status}", _scrub(getattr(resp, "text", ""), key))
+        raise JevError(f"http_{status}", _scrub(_error_detail(resp), key))
     try:
         data = resp.json()
         answer = data["answers"][QUESTION]
         kind = answer["type"]
     except Exception as exc:
         raise JevError("bad_response", type(exc).__name__) from None
-    if kind == "refusal":
-        raise JevError("refusal", "Jev rechazó responder")
     choice = answer.get("choice")
     if kind != "choice" or choice not in criteria:
         raise JevError("invalid_choice", _scrub(f"type={kind!r} choice={choice!r}", key))
     usage = data.get("usage") or {}
+    tokens = usage.get("input_tokens")
+    known = isinstance(tokens, (int, float)) and not isinstance(tokens, bool)
     return {
         "choice": choice,
         "probabilities": answer.get("probabilities"),
         "confidence": answer.get("confidence"),
-        "cost": usage.get("cost"),
-        "input_tokens": usage.get("input_tokens"),
+        "cost": tokens * USD_PER_INPUT_TOKEN if known else None,
+        "cost_note": COST_NOTE if known else None,
+        "input_tokens": tokens,
         "output_tokens": usage.get("output_tokens"),
         "model": data.get("model"),
         "latency_ms": latency_ms,

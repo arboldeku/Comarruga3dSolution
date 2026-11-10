@@ -103,7 +103,7 @@ def run(results_dir: Path, decisions_dir: Path, timeout_s: float = 20.0, use_jev
     for i, (h, rain, sb) in enumerate(_pairs(hot, index), start=1):
         state = build_state(h, rain)
         fb = fallback.decide(h, rain)
-        jev_out = snapshot = latency = cost = None
+        jev_out = snapshot = latency = cost = tokens = None
         error = None if jev_ok else (f"missing_env: {jev_note}" if use_jev else jev_note)
         if jev_ok and failures < MAX_CONSECUTIVE_FAILURES:
             try:
@@ -111,6 +111,7 @@ def run(results_dir: Path, decisions_dir: Path, timeout_s: float = 20.0, use_jev
                 jev_out = {"choice": r["choice"], "probabilities": r.get("probabilities"),
                            "confidence": r.get("confidence")}
                 snapshot, latency, cost = r.get("model"), r.get("latency_ms"), r.get("cost")
+                tokens = r.get("input_tokens")
                 failures = 0
             except client.JevError as exc:
                 failures += 1
@@ -143,7 +144,9 @@ def run(results_dir: Path, decisions_dir: Path, timeout_s: float = 20.0, use_jev
             "agree": (effective == best) if best else None,
             "fallback_agree": (fb["choice"] == best) if best else None,
             "latency_ms": latency,   # null = no hubo llamada válida a Jev
-            "cost_usd": cost,        # usage.cost tal cual (unidad: ver nota en kpis_summary.json)
+            "cost_usd": cost,        # estimado: input_tokens × 0,042 USD / 1e6 (ver cost_note)
+            "cost_note": client.COST_NOTE if cost is not None else None,
+            "input_tokens": tokens,
             "mode": "shadow",
             "model_id": model_id,
             "model_snapshot": snapshot,

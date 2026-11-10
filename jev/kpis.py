@@ -16,8 +16,8 @@ from pathlib import Path
 
 LABEL = "estimación preliminar, modelo simplificado"
 SOLUTIONS = ("S1", "S2", "S3", "S4")
-COST_NOTE = ("cost_usd registra usage.cost tal cual. La referencia de la API de OpenRouter lo describe como "
-             "'créditos' y el blog como USD: discrepancia documentada (docs/CONTRACTS.md 6.2), sin resolver.")
+COST_NOTE = ("coste estimado a partir de tokens: cost_usd = input_tokens × 0,042 USD / 1.000.000 (salida gratis; "
+             "fuente docs.typesafe.ai/models.md, 2026-11-10). La API no devuelve coste (docs/CONTRACTS.md 6.2).")
 
 
 def _read_json(path: Path):
@@ -182,8 +182,8 @@ def jev_kpis(decisions: list[dict] | None) -> dict:
         "baseline_accuracy_excl_ties_pct": _pct(sum(1 for d in non_tie if d.get("fallback_agree")), len(non_tie)),
         "latency_p50_ms": _percentile(lat, 0.50),
         "latency_p95_ms": _percentile(lat, 0.95),
-        "cost_per_decision_usd": round(sum(costs) / len(costs), 6) if costs else None,
-        "cost_total_usd": round(sum(costs), 6) if costs else None,
+        "cost_per_decision_usd": round(sum(costs) / len(costs), 9) if costs else None,
+        "cost_total_usd": round(sum(costs), 9) if costs else None,
         "fallback_pct": _pct(sum(1 for d in ds if d.get("fallback_used")), n),
         "jev_errors": dict(errors),
         "calibration": _calibration(live_scored),
@@ -192,6 +192,7 @@ def jev_kpis(decisions: list[dict] | None) -> dict:
         "mode": "shadow",
         "run_id": ds[0].get("run_id") if ds else None,
         "note": note,
+        "cost_note": COST_NOTE,
         "cost_unit_note": COST_NOTE,
         "ties_note": ("n_solver_ties = casos en que el solver da el mismo calado a las dos mejores soluciones "
                       "(gana la de id menor por convenio); ahí el 'acierto' es poco informativo."),

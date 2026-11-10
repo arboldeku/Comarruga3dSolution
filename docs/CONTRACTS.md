@@ -110,19 +110,36 @@ Los nombres exactos de los campos de salida de Jev dependen de su API real. El a
   ```
   `best` = solución S1–S4 con menor calado en el punto negro (empate: la de id menor).
 
-### 6.2 Mapeo real de Jev (verificado en la documentación de OpenRouter el 2026-11-10)
-Fuentes: https://openrouter.ai/docs/api/api-reference/alphadecisions/submit-a-decisions-request.md ,
-https://openrouter.ai/docs/guides/community/jev-tutorial , https://openrouter.ai/blog/insights/what-is-jev/
-- `POST https://openrouter.ai/api/alpha/decisions`, cabeceras `Authorization: Bearer $OPENROUTER_API_KEY`, `Content-Type: application/json`.
-- Petición: `model` (= `JEV_MODEL_ID`), `state` (cadena, objeto o lista), `questions` (mapa nombre → pregunta).
-  Pregunta Choice: `{ "type": "choice", "instructions": <opcional>, "criteria": { "<opción>": "<descripción>" } }`.
-  El nombre de la pregunta no se envía al modelo; el significado va en `instructions` y `criteria`.
-- Respuesta: `answers.<pregunta>` con `type` (`choice` o `refusal`), `choice`, `probabilities` (mapa opción → número), `confidence` (opcional);
-  `usage.input_tokens`, `usage.output_tokens`, `usage.cost`; `model` (instantánea fechada).
+### 6.2 Mapeo real de Jev (API nativa de TypeSafe, verificado en su documentación el 2026-11-10)
+Fuentes: https://docs.typesafe.ai/api , https://docs.typesafe.ai/introduction/quickstart.md ,
+https://docs.typesafe.ai/models.md , https://docs.typesafe.ai/api/errors.md
+- `POST {JEV_BASE_URL}/v1/systemone` (`JEV_BASE_URL` por defecto `https://api.typesafe.ai`, sin barra final),
+  cabeceras `Authorization: Bearer $JEV_API_KEY`, `Content-Type: application/json`.
+- Variables de entorno: `JEV_API_KEY`, `JEV_BASE_URL` (opcional), `JEV_MODEL_ID` (p. ej. `jev-1.14.0` o el alias `jev-latest`).
+  Sin `JEV_API_KEY` o `JEV_MODEL_ID` no se llama a Jev y se usa el respaldo.
+- Petición: `model` (= `JEV_MODEL_ID`), `state`, `questions` (mapa nombre → pregunta).
+  Pregunta Choice: `{ "type": "choice", "instructions": "...", "criteria": { "<opción>": "<descripción>" } }`.
+- Respuesta: `model` (versión que respondió); `answers.<pregunta>` con `type` (`choice`), `choice`, `confidence`,
+  `probabilities` (mapa opción → número); `usage.input_tokens`, `usage.output_tokens`. **No hay campo de coste.**
+- Errores: cuerpo JSON con `detail`. Se reintenta una vez ante 429, 529 y 5xx. Los mensajes de error registrados
+  (`jev_error`) llevan solo el código y `detail`; nunca cabeceras ni la clave.
+- Rechazo (refusal): su forma no está documentada. Se trata como fallo (`invalid_choice`) cualquier respuesta con
+  `type` != `choice` o cuyo `choice` no sea una de las opciones enviadas.
 - Mapeo al contrato 4: `jev_output.choice` ← `answers.q.choice`; `jev_output.probabilities` ← `answers.q.probabilities`;
-  `jev_output.confidence` ← `answers.q.confidence` (o `null`); `cost_usd` ← `usage.cost`
-  (la referencia de la API dice "créditos" y el blog dice USD: discrepancia documentada, se registra el valor tal cual);
-  `model_id` ← `JEV_MODEL_ID`; se añade `model_snapshot` ← `model` de la respuesta.
-- Si `type` = `refusal`, hay error HTTP, timeout o faltan variables de entorno: `fallback_used: true` y `jev_output: null`;
-  la decisión registrada es la del respaldo determinista (`fallback_output`).
+  `jev_output.confidence` ← `answers.q.confidence` (o `null`); `input_tokens` ← `usage.input_tokens`;
+  `cost_usd` ← `input_tokens × 0,042 / 1.000.000` (0,042 USD por millón de tokens de entrada, salida gratis; fuente
+  models.md, 2026-11-10), con `cost_note: "coste estimado a partir de tokens"`;
+  `model_id` ← `JEV_MODEL_ID`; `model_snapshot` ← `model` de la respuesta.
+- Si hay respuesta no válida, error HTTP, timeout o faltan variables de entorno: `fallback_used: true` y `jev_output: null`;
+  la decisión registrada es la del respaldo determinista (`fallback_output`). Tras 3 fallos consecutivos se deja de
+  llamar a Jev en esa ejecución.
 - Cada línea añade siempre `fallback_output: { "choice": "Sx", "rule": "<regla aplicada>" }` y `fallback_agree` (línea base).
+- Campos extra que escribe `jev.run_shadow` en cada línea, además del contrato 4:
+  - `run_id`: identificador de la ejecución (`shadow_<fecha UTC>`), igual al nombre del `.jsonl`.
+  - `jev_live`: `true` si Jev dio una respuesta válida para esta decisión.
+  - `jev_error`: motivo del fallo (`<código>: <detalle>`) o `null`.
+  - `effective_choice`: elección registrada (la de Jev si `jev_live`, si no la del respaldo); `agree` la compara con `solver_best`.
+  - `solver_depth_cm`: calado por solución según el solver (`{ "S0": .., "S1": .. }`) o `null`. No se envía a Jev.
+  - `solver_margin_cm`: diferencia entre la segunda mejor y la mejor solución S1–S4 (0 = empate; gana el id menor).
+  - `input_tokens`: tokens de entrada de la llamada (`null` si no hubo respuesta válida).
+  - `cost_note`: nota del coste estimado (`null` si no hay coste).
