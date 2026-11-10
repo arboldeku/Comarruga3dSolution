@@ -9,10 +9,14 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import os
 import sys
 from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
+from urllib.parse import urlparse
+
+from jev.client import ENV_BASE, endpoint
 
 LABEL = "estimación preliminar, modelo simplificado"
 SOLUTIONS = ("S1", "S2", "S3", "S4")
@@ -36,6 +40,13 @@ def _percentile(values: list[float], q: float) -> float | None:
         return None
     v = sorted(values)
     return round(v[max(0, math.ceil(q * len(v)) - 1)], 1)  # nearest-rank
+
+
+def _base_url_host() -> str:
+    """Solo el host de JEV_BASE_URL (nunca la clave). Lee el entorno; no abre .env."""
+    if not os.environ.get(ENV_BASE, "").strip():
+        return "sin dato (JEV_BASE_URL no definido en el entorno al generar)"
+    return urlparse(endpoint()).hostname or "sin dato"
 
 
 def _load_scenarios(results_dir: Path, index: dict | None) -> dict[str, dict]:
@@ -83,12 +94,21 @@ def solutions_kpis(scen: dict[str, dict]) -> list[dict]:
             row = {"rain_mm": rain, "solution_id": sol, "scenario_id": r.get("scenario_id"),
                    "status": r.get("status"), "max_depth_cm": k.get("max_depth_cm"),
                    "baseline_max_depth_cm": bk.get("max_depth_cm"),
+                   "max_depth_reduction_scope": "dominio completo (incluye cauce)",
                    "max_depth_reduction_cm": None, "max_depth_reduction_pct": None,
+                   "max_depth_urban_cm": k.get("max_depth_urban_cm"),
+                   "baseline_max_depth_urban_cm": bk.get("max_depth_urban_cm"),
+                   "urban_reduction_cm": None, "urban_reduction_pct": None, "worsens_urban": None,
                    "flooded_area_reduction_pct": None}
             d0, d1 = bk.get("max_depth_cm"), k.get("max_depth_cm")
             if d0 is not None and d1 is not None:
                 row["max_depth_reduction_cm"] = round(d0 - d1, 2)
                 row["max_depth_reduction_pct"] = _pct(d0 - d1, d0)
+            u0, u1 = bk.get("max_depth_urban_cm"), k.get("max_depth_urban_cm")
+            if u0 is not None and u1 is not None:
+                row["urban_reduction_cm"] = round(u0 - u1, 2)
+                row["urban_reduction_pct"] = _pct(u0 - u1, u0)
+                row["worsens_urban"] = (u0 - u1) < 0
             a0, a1 = bk.get("flooded_area_m2"), k.get("flooded_area_m2")
             if a0 is not None and a1 is not None:
                 row["flooded_area_reduction_pct"] = _pct(a0 - a1, a0)
@@ -112,6 +132,7 @@ def solver_kpis(scen: dict[str, dict]) -> dict:
             "runtime_s_total": round(sum(rts), 3) if rts else None,
             "volume_error_pct_max": max(errs) if errs else None,
             "n_invalid": sum(1 for p in per if p["status"] == "invalid"),
+            "wall_time_s_note": "sin dato registrado; ~167 s con 10 procesos según la ejecución del 2026-11-10 (no medido en JSON)",
             "per_scenario": per}
 
 
@@ -163,11 +184,31 @@ def jev_kpis(decisions: list[dict] | None) -> dict:
     def hits(rows: list[dict]) -> int:
         return sum(1 for d in rows if d["jev_output"]["choice"] == d["solver_best"])
 
+    # Excluyendo H2: el punto H2 es un artefacto (ver docs/PRIOR_ART.md); se reporta aparte.
+    scored_x = [d for d in scored if d.get("hotspot_id") != "H2"]
+    live_scored_x = [d for d in live_scored if d.get("hotspot_id") != "H2"]
+    ge1 = [d for d in scored if isinstance(d.get("solver_margin_cm"), (int, float)) and d["solver_margin_cm"] >= 1]
+    ge1_live = [d for d in ge1 if d.get("jev_output")]
+    confs = [d["jev_output"]["confidence"] for d in live
+             if isinstance(d["jev_output"].get("confidence"), (int, float))]
+    cal = _calibration(live_scored)
+    lat_max = max(lat) if lat else None
+
     return {
         "n_decisions": n,
         "n_jev_live": len(live),
         "accuracy_vs_solver_pct": _pct(hits(live_scored), len(live_scored)),
         "baseline_accuracy_vs_solver_pct": _pct(sum(1 for d in scored if d.get("fallback_agree")), len(scored)),
+        "n_excl_H2": len(scored_x),
+        "accuracy_vs_solver_excl_H2_pct": _pct(hits(live_scored_x), len(live_scored_x)),
+        "baseline_accuracy_vs_solver_excl_H2_pct": _pct(
+            sum(1 for d in scored_x if d.get("fallback_agree")), len(scored_x)),
+        "n_margin_ge_1cm": len(ge1),
+        "accuracy_margin_ge_1cm_pct": _pct(hits(ge1_live), len(ge1_live)),
+        "baseline_accuracy_margin_ge_1cm_pct": _pct(sum(1 for d in ge1 if d.get("fallback_agree")), len(ge1)),
+        "jev_choice_distribution": dict(Counter(d["jev_output"]["choice"] for d in live)),
+        "mean_api_confidence": round(sum(confs) / len(confs), 3) if confs else None,
+        "mean_prob_assigned_to_choice": cal["mean_prob_chosen_pct"] if cal else None,
         "effective_accuracy_vs_solver_pct": _pct(sum(1 for d in scored if d.get("agree")), len(scored)),
         "jev_vs_baseline_agreement_pct": _pct(
             sum(1 for d in live if d["jev_output"]["choice"] == (d.get("fallback_output") or {}).get("choice")),
@@ -182,6 +223,9 @@ def jev_kpis(decisions: list[dict] | None) -> dict:
         "baseline_accuracy_excl_ties_pct": _pct(sum(1 for d in non_tie if d.get("fallback_agree")), len(non_tie)),
         "latency_p50_ms": _percentile(lat, 0.50),
         "latency_p95_ms": _percentile(lat, 0.95),
+        "latency_max_ms": round(lat_max, 1) if lat_max is not None else None,
+        "percentile_method": f"rango más cercano, n={len(lat)}",
+        "base_url_host": _base_url_host(),
         "cost_per_decision_usd": round(sum(costs) / len(costs), 9) if costs else None,
         "cost_total_usd": round(sum(costs), 9) if costs else None,
         "fallback_pct": _pct(sum(1 for d in ds if d.get("fallback_used")), n),

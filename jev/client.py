@@ -1,6 +1,9 @@
-"""Cliente mínimo de Jev, API nativa de TypeSafe (contrato 6.2 de docs/CONTRACTS.md).
+"""Cliente mínimo de Jev (contrato 6.2 de docs/CONTRACTS.md).
 
-POST {JEV_BASE_URL}/v1/systemone   (JEV_BASE_URL por defecto: https://api.typesafe.ai)
+Formato: API System One de TypeSafe. Endpoint: POST {JEV_BASE_URL}/v1/systemone
+(JEV_BASE_URL por defecto: https://api.typesafe.ai; sin cambiar el valor por defecto del código).
+Ejecución del hackathon (modo sombra, 2026-11-10): JEV_BASE_URL=https://openrouter.ai/api con
+JEV_MODEL_ID=typesafe/jev-1.14. Alternativa nativa, no probada con éxito: https://api.typesafe.ai con jev-1.14.0.
   { "model": $JEV_MODEL_ID, "state": ..., "questions": { "q": { "type": "choice",
     "instructions": "...", "criteria": { "<opción>": "<descripción>" } } } }
 

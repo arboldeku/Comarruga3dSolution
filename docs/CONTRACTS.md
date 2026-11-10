@@ -113,8 +113,11 @@ Los nombres exactos de los campos de salida de Jev dependen de su API real. El a
 ### 6.2 Mapeo real de Jev (API nativa de TypeSafe, verificado en su documentación el 2026-11-10)
 Fuentes: https://docs.typesafe.ai/api , https://docs.typesafe.ai/introduction/quickstart.md ,
 https://docs.typesafe.ai/models.md , https://docs.typesafe.ai/api/errors.md
-- `POST {JEV_BASE_URL}/v1/systemone` (`JEV_BASE_URL` por defecto `https://api.typesafe.ai`, sin barra final),
+- Formato de la API System One de TypeSafe: `POST {JEV_BASE_URL}/v1/systemone` (`JEV_BASE_URL` por defecto `https://api.typesafe.ai`, sin barra final),
   cabeceras `Authorization: Bearer $JEV_API_KEY`, `Content-Type: application/json`.
+- Ejecución del hackathon (modo sombra, 2026-11-10): `JEV_BASE_URL=https://openrouter.ai/api` con `JEV_MODEL_ID=typesafe/jev-1.14`.
+  La petición siguió el formato System One descrito arriba; el precio efectivo de ese proxy no consta (sin dato).
+- Alternativa nativa: `JEV_BASE_URL=https://api.typesafe.ai` con `JEV_MODEL_ID=jev-1.14.0`. No probada con éxito (no hubo clave nativa).
 - Variables de entorno: `JEV_API_KEY`, `JEV_BASE_URL` (opcional), `JEV_MODEL_ID` (p. ej. `jev-1.14.0` o el alias `jev-latest`).
   Sin `JEV_API_KEY` o `JEV_MODEL_ID` no se llama a Jev y se usa el respaldo.
 - Petición: `model` (= `JEV_MODEL_ID`), `state`, `questions` (mapa nombre → pregunta).

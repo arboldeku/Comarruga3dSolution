@@ -307,8 +307,10 @@ function renderJev() {
     const add = (k, lbl, d, u) => { if (j[k] != null) st.push(`<div>${lbl}<br><b>${nf(j[k], d)}${u}</b></div>`); };
     add('accuracy_vs_solver_pct', 'Acierto de Jev frente al solver', 1, ' %');
     add('baseline_accuracy_vs_solver_pct', 'Acierto del respaldo (línea base)', 1, ' %');
+    add('random_baseline_pct', 'Azar (referencia)', 0, ' %');
+    add('majority_class_baseline_pct', 'Clase mayoritaria (referencia)', 1, ' %');
     add('latency_p50_ms', 'Latencia p50', 0, ' ms'); add('latency_p95_ms', 'Latencia p95', 0, ' ms');
-    add('cost_per_decision_usd', 'Coste por decisión', 5, ' USD'); add('fallback_pct', 'Decisiones con respaldo', 1, ' %');
+    add('cost_per_decision_usd', 'Coste por decisión (estimado)', 5, ' USD'); add('fallback_pct', 'Decisiones con respaldo', 1, ' %');
     add('n_decisions', 'Decisiones registradas', 0, ''); add('n_jev_live', 'Respondidas por Jev', 0, '');
   }
   $('jev-summary').innerHTML = st.length ? `<div class="jev-stats">${st.join('')}</div>` : '';
@@ -375,7 +377,9 @@ async function main() {
   if (index.label) $('label-badge').textContent = index.label;
   const src = index.dem_source || 'sin dato';
   $('dem-badge').textContent = `Fuente del terreno: ${src}`;
-  if (/sint[eé]tico/i.test(src)) { $('synthetic-band').hidden = false; $('dem-badge').classList.add('warn'); }
+  const synthetic = /sint[eé]tico/i.test(src);
+  $('synthetic-band').hidden = !synthetic;  // visible por defecto en index.html; se oculta si el terreno no es sintético
+  if (synthetic) $('dem-badge').classList.add('warn');
   $('meta').textContent = `Malla ${grid?.nx} × ${grid?.ny} celdas de ${nf(grid?.cell_m, 1)} m (${grid?.crs || 'CRS sin dato'}) · generado: ${index.generated_at || 'sin dato'} · datos: ${BASE}/`;
   if (BASE.includes('_mock')) showError('DATOS FALSOS DE DESARROLLO (?base=_mock): no proceden del solver.');
   buildControls();

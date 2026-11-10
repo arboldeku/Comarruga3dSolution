@@ -6,6 +6,7 @@ Una zona de ~1 km² de Comarruga, solver 2D simple, 4 soluciones, Jev eligiendo,
 ## Fase 1 · MVP real (Comarruga)
 - Cronología de eventos: lluvia medida (intensidad en 30 min, no solo total diario) frente a episodios de entrada de agua, con fotos geolocalizadas de vecinos.
 - Modelo hidráulico 2D "antes vs. después" de las obras del Riuet, con MDT de distintas épocas (ICGC).
+- Hipótesis alternativas a contrastar junto a la de las obras: drenaje o alcantarillado saturado; marea y nivel del mar (el modelo tiene frontera sur abierta sin marea); sedimentos o falta de mantenimiento del cauce; intensidad de lluvia en 30 min.
 - Validación con un técnico hidráulico y un letrado antes de presentar a un ayuntamiento.
 
 ## Fase 2 · Datos a escala
@@ -30,8 +31,9 @@ Estimación preliminar, modelo simplificado · terreno sintético. Cifras en `do
 
 Limitaciones actuales:
 - Terreno sintético. El MDT real del ICGC no está disponible.
-- Jev acierta el 16,7 % frente al solver, por debajo del respaldo (33,3 %) y del azar (25 %). Sin ejemplos ni resultados del solver en el prompt. 12 de 24 casos tienen margen < 1 cm.
-- Artefacto numérico en H2: el calado máximo no crece con la lluvia.
+- Jev acierta el 16,7 % frente al solver (con H2, no fiable), por debajo del respaldo (33,3 %) y del azar (25 %). Excluyendo H2: 9,5 % frente a 33,3 % (n = 21). Con margen ≥ 1 cm: 25,0 % frente a 41,7 % (n = 12). Elige S2 en 21 de 24 casos. Los 24 casos son 8 puntos × 3 lluvias, no independientes: la diferencia no es concluyente. Sin ejemplos ni resultados del solver en el prompt.
+- Artefacto numérico en H2: el calado máximo no crece con la lluvia. Las cifras de 30 mm provienen de H2 (no fiables).
+- Calado urbano: S4 empeora el máximo urbano con las tres lluvias y S1 con 100 mm.
 - S2 (depósito) infrautilizado por el umbral de toma. S4 (barreras) aumenta el área inundada.
 - S4 eleva celdas en vez de aristas. Rama de MDT real y perfil triangular sin probar.
 
