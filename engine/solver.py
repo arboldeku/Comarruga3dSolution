@@ -45,22 +45,33 @@ def simulate(setup: Setup, cell_m: float, rain: dict[str, Any]) -> dict[str, Any
     ny, nx = setup.z.shape
     # Malla con un anillo de nodos de contorno: N/E/O cerrados, S abierto (mar).
     zp = np.pad(setup.z, 1, mode="edge")
-    zp[-1, :] = zp[-2, :] - 0.011 * cell_m          # el borde sur sigue la pendiente
+    sea = setup.sea
+    if sea is None:
+        zp[-1, :] = zp[-2, :] - 0.011 * cell_m      # el borde sur sigue la pendiente
     grid = RasterModelGrid((ny + 2, nx + 2), xy_spacing=cell_m)
     # landlab numera los nodos de sur a norte: se invierte el eje de filas
     grid.add_field("topographic__elevation", zp[::-1].ravel().copy(), at="node")
     h = grid.add_field("surface_water__depth", np.full(grid.number_of_nodes, H_INIT), at="node")
-    grid.set_closed_boundaries_at_grid_edges(True, True, True, False)
+    inner = grid.nodes[1:-1, 1:-1].ravel()
+    if sea is None:
+        grid.set_closed_boundaries_at_grid_edges(True, True, True, False)
+        land = np.ones(inner.size, bool)
+    else:
+        # MDT real: el mar es contorno abierto a cota fija 0 m (calado fijo H_INIT); los bordes
+        # N/E/O del recorte quedan abiertos con salida libre (anillo a la cota de la celda vecina).
+        land = ~sea[::-1].ravel()
+        grid.status_at_node[inner[~land]] = grid.BC_NODE_IS_FIXED_VALUE
     of = OverlandFlow(grid, h_init=H_INIT, mannings_n=MANNING_N, steep_slopes=True)
 
-    core = grid.core_nodes
-    assert core.size == ny * nx
+    core = inner[land]
+    assert np.array_equal(core, grid.core_nodes)
+    pos = np.cumsum(land) - 1                       # índice en `core` de cada celda de tierra
     area = cell_m * cell_m
 
     def to_nodes(a: np.ndarray) -> np.ndarray:      # (ny, nx) fila 0 norte -> orden de nodos core
         return a[::-1].ravel()
 
-    infil = to_nodes(setup.infil_m_s)
+    infil = to_nodes(setup.infil_m_s)[land]
     q = grid.at_link["surface_water__discharge"]
     # enlaces activos con un extremo en el contorno abierto; signo +1 si el flujo positivo sale
     tail, head = grid.node_at_link_tail, grid.node_at_link_head
@@ -72,8 +83,8 @@ def simulate(setup: Setup, cell_m: float, rain: dict[str, Any]) -> dict[str, Any
     tank_idx = rel_idx = None
     tank = setup.tank
     if setup.tank_cells is not None:
-        tank_idx = np.flatnonzero(to_nodes(setup.tank_cells))
-        rel_idx = np.flatnonzero(to_nodes(setup.tank_release))
+        tank_idx = pos[np.flatnonzero(to_nodes(setup.tank_cells) & land)]
+        rel_idx = pos[np.flatnonzero(to_nodes(setup.tank_release) & land)]
 
     duration = float(rain["duration_min"]) * 60.0
     t_end = duration + DRAIN_MIN * 60.0
@@ -81,6 +92,7 @@ def simulate(setup: Setup, cell_m: float, rain: dict[str, Any]) -> dict[str, Any
     v_rain = v_infil = v_out = v_tank = 0.0
     tank_peak = 0.0
     hmax = np.zeros(core.size)
+    h_end_rain = None
     t = 0.0
     steps = 0
     while t < t_end:
@@ -97,6 +109,8 @@ def simulate(setup: Setup, cell_m: float, rain: dict[str, Any]) -> dict[str, Any
         # 3) depósito S2: capta por encima del umbral, devuelve aguas abajo con caudal limitado
         if tank_idx is not None:
             rel_v = min(tank["max_outflow_m3s"] * dt, v_tank)
+            if tank.get("release_after_rain") and t < duration:
+                rel_v = 0.0
             v_tank -= rel_v
             hc[rel_idx] += rel_v / area / rel_idx.size
             excess = np.maximum(hc[tank_idx] - tank["intake_depth_m"], 0.0)
@@ -113,13 +127,22 @@ def simulate(setup: Setup, cell_m: float, rain: dict[str, Any]) -> dict[str, Any
         np.maximum(hmax, h[core], out=hmax)
         t += dt
         steps += 1
+        if h_end_rain is None and t >= duration:
+            h_end_rain = h[core].copy()
 
     v_stored = float(h[core].sum() * area) - v_init
     err = v_rain - (v_stored + v_infil + v_out + v_tank)
-    depth_max = hmax.reshape(ny, nx)[::-1]
-    depth_max = np.where(depth_max < 1e-3, 0.0, depth_max).astype(np.float32)
+    def to_map(v: np.ndarray) -> np.ndarray:
+        full = np.zeros(ny * nx)
+        full[land] = v
+        full = full.reshape(ny, nx)[::-1]
+        return np.where(full < 1e-3, 0.0, full).astype(np.float32)
+
+    depth_max = to_map(hmax)
     return {
         "depth_max": depth_max,
+        "depth_end_rain": to_map(h_end_rain if h_end_rain is not None else hmax),
+        "n_land_cells": int(core.size),
         "mass": {
             "rain_m3": v_rain, "stored_m3": v_stored, "infiltrated_m3": v_infil,
             "outflow_m3": v_out, "tank_stored_m3": v_tank, "tank_peak_m3": tank_peak,

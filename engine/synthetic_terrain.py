@@ -5,7 +5,11 @@ Si existe `data/raw/dem_comarruga.tif` y rasterio está instalado se usa ese MDT
 SINTÉTICO reproducible (semilla 42): no representa la topografía real de Comarruga.
 
 Convención (contrato 6.1): arrays float32, forma (ny, nx), fila 0 = norte, metros.
-landuse: 0 = no urbano, 1 = urbano, 2 = cauce.
+landuse: 0 = no urbano, 1 = urbano, 2 = cauce / eje de drenaje, 3 = mar.
+
+MDT real (rama probada): `data/raw/dem_brisamar_icgc_met5.asc` (ICGC, 5 m). Las celdas
+-8888 son mar: cota 0.0 en el array y landuse 3; el solver las trata como contorno abierto
+a nivel fijo 0 m (supuesto: nivel del mar constante, sin marea ni oleaje).
 """
 from __future__ import annotations
 
@@ -20,6 +24,11 @@ NY, NX, CELL_M = 200, 200, 5.0
 URBAN_ROWS = (85, 190)          # tramo urbano (filas)
 URBAN_COLS = (25, 175)
 REAL_DEM = Path("data/raw/dem_comarruga.tif")
+REAL_ASC = Path("data/raw/dem_brisamar_icgc_met5.asc")
+ASC_SOURCE = "ICGC MDT 5 m (WCS icc:met5), zona Brisamar, Coma-ruga; descargado 2026-11-10"
+ASC_ORIGIN = (375285, 4559465)
+AXIS_AREA_M2 = 50_000.0   # umbral de área de aportación D8 para "eje de drenaje" (supuesto: 5 ha)
+LANDUSE_SOURCE_REAL = "derivado del MDT; supuesto, sin dato de usos reales"
 
 # Depresiones urbanas sintéticas: (fila, desplazamiento en columnas respecto al
 # eje del cauce, profundidad m, radio en celdas). Supuestos del terreno sintético.
@@ -38,6 +47,9 @@ class Terrain:
     dem_source: str
     dem_sha256: str
     seed: int
+    origin: tuple = (0, 0)
+    landuse_source: str = "sintético"
+    tank_xy: tuple | None = None     # (x, y) de la depresión urbana más honda (solo MDT real)
 
 
 def channel_center(rows: np.ndarray) -> np.ndarray:
@@ -100,5 +112,42 @@ def _load_real() -> Terrain | None:  # pragma: no cover - rama opcional no proba
     return Terrain(dem, landuse, cell, str(REAL_DEM).replace("\\", "/"), sha256_array(dem), 42)
 
 
+def _load_asc(seed: int) -> Terrain | None:
+    """MDT real del ICGC. Usos del suelo derivados del propio MDT (supuesto declarado)."""
+    if not REAL_ASC.exists():
+        return None
+    from landlab import RasterModelGrid
+    from landlab.components import FlowAccumulator, SinkFillerBarnes
+
+    raw = np.loadtxt(REAL_ASC, skiprows=6)
+    sea = raw < -1000.0
+    dem = np.where(sea, 0.0, raw).astype(np.float32)
+    ny, nx = dem.shape
+    # Área de aportación D8 sobre el MDT con depresiones rellenadas (solo para trazar el eje).
+    g = RasterModelGrid((ny, nx), xy_spacing=CELL_M)
+    g.add_field("topographic__elevation", dem[::-1].astype(float).ravel().copy(), at="node")
+    SinkFillerBarnes(g, method="D8", fill_flat=False).run_one_step()
+    filled = g.at_node["topographic__elevation"].reshape(ny, nx)[::-1].copy()
+    FlowAccumulator(g, flow_director="D8").run_one_step()
+    area = g.at_node["drainage_area"].reshape(ny, nx)[::-1]
+    landuse = np.ones((ny, nx), dtype=np.float32)          # supuesto: todo lo emergido es urbano
+    landuse[(area > AXIS_AREA_M2) & ~sea] = 2.0
+    landuse[sea] = 3.0
+    dep = np.where(landuse == 1.0, filled - dem, 0.0)
+    dep[:8] = 0.0
+    dep[-8:] = 0.0
+    dep[:, :8] = 0.0
+    dep[:, -8:] = 0.0                                      # lejos del borde del recorte
+    ty, tx = np.unravel_index(int(dep.argmax()), dep.shape)
+    # El depósito se centra en el fondo (celda más baja) de esa depresión, donde se acumula el agua.
+    from scipy.ndimage import label
+    comp, _ = label(((filled - dem) > 0.2) & ~sea)
+    inside = comp == comp[ty, tx]
+    ty, tx = np.unravel_index(int(np.where(inside, dem, np.inf).argmin()), dem.shape)
+    sha = hashlib.sha256(REAL_ASC.read_bytes()).hexdigest()
+    return Terrain(dem, landuse, CELL_M, ASC_SOURCE, sha, seed, ASC_ORIGIN,
+                   LANDUSE_SOURCE_REAL, (int(tx), int(ty)))
+
+
 def load_terrain(seed: int = 42) -> Terrain:
-    return _load_real() or make_synthetic(seed)
+    return _load_asc(seed) or _load_real() or make_synthetic(seed)

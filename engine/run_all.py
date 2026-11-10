@@ -18,7 +18,8 @@ os.environ.setdefault("OMP_NUM_THREADS", "1")
 import numpy as np  # noqa: E402
 
 from . import hotspots as hs_mod
-from .solutions import DEFAULT_PARAMS, INFILTRATION_MM_H, SOLUTION_NAMES, apply_solution, resolve_params
+from .solutions import (DEFAULT_PARAMS, INFILTRATION_MM_H, SOLUTION_NAMES, SOLUTION_SOURCES,
+                        apply_solution, resolve_params)
 from .solver import DRAIN_MIN, MANNING_N, MODEL_NAME, simulate
 from .synthetic_terrain import load_terrain
 
@@ -29,6 +30,13 @@ SEED = 42
 ZONE_ID = "comarruga_demo"
 FLOOD_THRESHOLD_M = 0.05     # una celda cuenta como inundada a partir de 5 cm (supuesto)
 SCEN_DIR, RES_DIR = Path("scenarios"), Path("results")
+RAIN_SOURCES = {
+    "30": "lluvia de referencia, supuesto",
+    "60": "~60 mm citados por prensa para el episodio del 02/11/2026 (Diari de Tarragona, 03/11/2026), "
+          "pendiente de contrastar",
+    "100": "100 mm comunicados por el Ayuntamiento de El Vendrell para Coma-ruga el 22/08/2026",
+    "duracion": "sin dato de hietograma; 60 min es un supuesto",
+}
 
 
 def _dump(path: Path, obj: Any) -> None:
@@ -66,6 +74,12 @@ def main() -> None:
     np.save(RES_DIR / "dem.npy", terrain.dem.astype(np.float32))
     np.save(RES_DIR / "landuse.npy", terrain.landuse.astype(np.float32))
     scenarios = write_scenarios()
+    sea = terrain.landuse == 3
+    land = ~sea
+    has_sea = bool(sea.any())
+    boundary = ("mar (celdas -8888 del MDT) abierto a cota fija 0 m, supuesto sin marea; bordes N/E/O "
+                "del recorte abiertos con salida libre; sin aportes desde fuera del recorte"
+                if has_sea else "sur abierto (mar); norte, este y oeste cerrados")
 
     workers = max(1, min(len(scenarios), (os.cpu_count() or 2) - 2))
     with ProcessPoolExecutor(max_workers=workers) as ex:
@@ -78,11 +92,20 @@ def main() -> None:
     best = hs_mod.solver_best(feats, depths, RAINS_MM, SOLUTIONS)
     _dump(RES_DIR / "hotspots.json", {
         "label": LABEL, "dem_source": terrain.dem_source,
+        "landuse_source": terrain.landuse_source, "radius_cells": hs_mod.RADIUS,
+        "depth_metric": "calado máximo temporal en un radio de 3 celdas",
         "source_scenario": f"rain{max(RAINS_MM)}_S0",
         "hotspots": feats, "solver_best": best,
     })
 
-    grid = {"nx": nx, "ny": ny, "cell_m": terrain.cell_m, "origin": [0, 0], "crs": "EPSG:25831"}
+    # Control del artefacto de montículo transitorio: el calado S0 debe crecer con la lluvia.
+    for hs in feats:
+        ds = [hs_mod.depth_at(depths[(mm, "S0")], hs["x"], hs["y"]) for mm in RAINS_MM]
+        if any(b < a for a, b in zip(ds, ds[1:])):
+            print(f"AVISO {hs['id']}: calado S0 no monótono con la lluvia {ds}")
+
+    grid = {"nx": nx, "ny": ny, "cell_m": terrain.cell_m, "origin": list(terrain.origin),
+            "crs": "EPSG:25831"}
     cell_area = terrain.cell_m ** 2
     index_rows = []
     for r in results:
@@ -90,7 +113,7 @@ def main() -> None:
         sid = sc["scenario_id"]
         d = r["depth_max"]
         np.save(RES_DIR / f"{sid}_depth.npy", d.astype(np.float32))
-        flooded = d >= FLOOD_THRESHOLD_M
+        flooded = (d >= FLOOD_THRESHOLD_M) & land      # el mar no cuenta
         m = r["mass"]
         status = "valid" if m["error_pct"] < 5.0 else "invalid"
         out = {
@@ -107,18 +130,21 @@ def main() -> None:
                     "mannings_n": MANNING_N, "infiltration_mm_h": INFILTRATION_MM_H,
                     "rain": sc["rain"], "drain_min": DRAIN_MIN, "sim_time_s": r["sim_time_s"],
                     "steps": r["steps"], "flood_threshold_m": FLOOD_THRESHOLD_M,
-                    "boundary": "sur abierto (mar); norte, este y oeste cerrados",
+                    "boundary": boundary,
                 },
             },
             "data": {"dem_source": terrain.dem_source, "dem_sha256": terrain.dem_sha256,
                      "resolution_m": terrain.cell_m, "dem_file": "results/dem.npy",
-                     "landuse_file": "results/landuse.npy"},
+                     "landuse_file": "results/landuse.npy",
+                     "landuse_source": terrain.landuse_source,
+                     "landuse_values": "0 no urbano, 1 urbano, 2 cauce/eje de drenaje, 3 mar"},
             "grid": grid,
             "kpis": {
-                "max_depth_cm": round(float(d.max()) * 100.0, 1),
+                "max_depth_cm": round(float(d[land].max()) * 100.0, 1),
                 "max_depth_urban_cm": round(float(d[terrain.landuse == 1].max()) * 100.0, 1),
                 "flooded_area_m2": round(float(flooded.sum()) * cell_area, 1),
-                "flooded_area_pct": round(float(flooded.mean()) * 100.0, 2),
+                "flooded_area_pct": round(float(flooded.sum()) / float(land.sum()) * 100.0, 2),
+                "stored_volume_m3": round(float(d[land].sum()) * cell_area, 1),
                 "volume_m3_total": round(m["rain_m3"], 1),
                 "volume_error_pct": round(m["error_pct"], 3),
                 "runtime_s": round(r["runtime_s"], 2),
@@ -133,14 +159,22 @@ def main() -> None:
                            "solution_id": out["solution_id"],
                            "result_file": f"results/{sid}.json", "status": status})
         k = out["kpis"]
+        if sc["solution_id"] == "S2":
+            print(f"  depósito S2: pico {m['tank_peak_m3']:.0f} m3")
         print(f"{sid:12s} {status:7s} max={k['max_depth_cm']:6.1f} cm  urb={k['max_depth_urban_cm']:6.1f} cm  "
               f"inund={k['flooded_area_pct']:5.2f} %  err={k['volume_error_pct']:6.3f} %  t={k['runtime_s']:5.1f} s")
 
     _dump(RES_DIR / "index.json", {
-        "label": LABEL, "dem_source": terrain.dem_source,
+        "label": LABEL, "dem_source": terrain.dem_source, "dem_sha256": terrain.dem_sha256,
         "dem_file": "results/dem.npy", "landuse_file": "results/landuse.npy",
-        "grid": grid, "rains_mm": RAINS_MM,
-        "solutions": [{"id": s, "name": SOLUTION_NAMES[s], "params": DEFAULT_PARAMS[s]} for s in SOLUTIONS],
+        "landuse_source": terrain.landuse_source,
+        "landuse_values": "0 no urbano, 1 urbano, 2 cauce/eje de drenaje, 3 mar",
+        "sea_level": "cota fija 0 m, supuesto sin marea" if has_sea else None,
+        "grid": grid, "rains_mm": RAINS_MM, "rain_sources": RAIN_SOURCES,
+        "solutions": [{"id": s, "name": SOLUTION_NAMES[s], "params": DEFAULT_PARAMS[s],
+                       "source": SOLUTION_SOURCES[s],
+                       **({"tank_xy": list(terrain.tank_xy)} if s == "S2" and terrain.tank_xy else {})}
+                      for s in SOLUTIONS],
         "scenarios": index_rows,
         "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
     })

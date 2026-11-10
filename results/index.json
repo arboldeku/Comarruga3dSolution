@@ -1,15 +1,19 @@
 {
   "label": "estimación preliminar, modelo simplificado",
-  "dem_source": "sintético",
+  "dem_source": "ICGC MDT 5 m (WCS icc:met5), zona Brisamar, Coma-ruga; descargado 2026-11-10",
+  "dem_sha256": "086a51b9825bf052763c7a3a9e53803f18f5ceeadb4d6a64574bb473472434f8",
   "dem_file": "results/dem.npy",
   "landuse_file": "results/landuse.npy",
+  "landuse_source": "derivado del MDT; supuesto, sin dato de usos reales",
+  "landuse_values": "0 no urbano, 1 urbano, 2 cauce/eje de drenaje, 3 mar",
+  "sea_level": "cota fija 0 m, supuesto sin marea",
   "grid": {
     "nx": 200,
     "ny": 200,
     "cell_m": 5.0,
     "origin": [
-      0,
-      0
+      375285,
+      4559465
     ],
     "crs": "EPSG:25831"
   },
@@ -18,11 +22,18 @@
     60,
     100
   ],
+  "rain_sources": {
+    "30": "lluvia de referencia, supuesto",
+    "60": "~60 mm citados por prensa para el episodio del 02/11/2026 (Diari de Tarragona, 03/11/2026), pendiente de contrastar",
+    "100": "100 mm comunicados por el Ayuntamiento de El Vendrell para Coma-ruga el 22/08/2026",
+    "duracion": "sin dato de hietograma; 60 min es un supuesto"
+  },
   "solutions": [
     {
       "id": "S0",
       "name": "Situación actual (línea base)",
-      "params": {}
+      "params": {},
+      "source": "supuesto del modelo"
     },
     {
       "id": "S1",
@@ -30,25 +41,26 @@
       "params": {
         "depth_m": 0.5,
         "width_cells": 1,
-        "rows": [
-          80,
-          200
-        ]
-      }
+        "min_bed_m": 0.05
+      },
+      "source": "supuesto del modelo"
     },
     {
       "id": "S2",
       "name": "Depósito de retención",
       "params": {
-        "capacity_m3": 8000.0,
+        "capacity_m3": 3500.0,
         "max_outflow_m3s": 0.3,
         "max_inflow_m3s": 6.0,
-        "intake_depth_m": 0.35,
-        "rows": [
-          76,
-          82
-        ]
-      }
+        "intake_depth_m": 0.1,
+        "radius_cells": 3,
+        "location": "depresión urbana más honda (supuesto)"
+      },
+      "source": "capacity_m3 = 3500: volumen ANUNCIADO por el Ayuntamiento de El Vendrell el 26/08/2026 para el depósito de Brisamar; es un anuncio, no un volumen hidráulico calibrado; la ubicación exacta es un supuesto (depresión urbana más honda del MDT)",
+      "tank_xy": [
+        82,
+        72
+      ]
     },
     {
       "id": "S3",
@@ -56,19 +68,17 @@
       "params": {
         "area_fraction": 0.4,
         "infiltration_mm_h": 60.0
-      }
+      },
+      "source": "supuesto del modelo"
     },
     {
       "id": "S4",
       "name": "Elevar bordillos / desviar",
       "params": {
         "height_m": 0.5,
-        "offset_cells": 3,
-        "rows": [
-          85,
-          185
-        ]
-      }
+        "offset_cells": 3
+      },
+      "source": "supuesto del modelo"
     }
   ],
   "scenarios": [
@@ -178,5 +188,5 @@
       "status": "valid"
     }
   ],
-  "generated_at": "2026-11-10T18:03:52+00:00"
+  "generated_at": "2026-11-10T18:56:21+00:00"
 }

@@ -9,11 +9,7 @@
   "solution_id": "S4",
   "solution_params": {
     "height_m": 0.5,
-    "offset_cells": 3,
-    "rows": [
-      85,
-      185
-    ]
+    "offset_cells": 3
   },
   "seed": 42
 }

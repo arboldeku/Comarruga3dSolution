@@ -4,14 +4,12 @@
   "rain_mm": 60,
   "solution_id": "S2",
   "solution_params": {
-    "capacity_m3": 8000.0,
+    "capacity_m3": 3500.0,
     "max_outflow_m3s": 0.3,
     "max_inflow_m3s": 6.0,
-    "intake_depth_m": 0.35,
-    "rows": [
-      76,
-      82
-    ]
+    "intake_depth_m": 0.1,
+    "radius_cells": 3,
+    "location": "depresión urbana más honda (supuesto)"
   },
   "seed": 42,
   "model": {
@@ -33,95 +31,98 @@
       },
       "drain_min": 30.0,
       "sim_time_s": 5400.0,
-      "steps": 4112,
+      "steps": 4859,
       "flood_threshold_m": 0.05,
-      "boundary": "sur abierto (mar); norte, este y oeste cerrados"
+      "boundary": "mar (celdas -8888 del MDT) abierto a cota fija 0 m, supuesto sin marea; bordes N/E/O del recorte abiertos con salida libre; sin aportes desde fuera del recorte"
     }
   },
   "data": {
-    "dem_source": "sintético",
-    "dem_sha256": "92867db8fd13d39443cecef432a2d73d077a4aa8714ea1a3d1fa6f075cf9cfc8",
+    "dem_source": "ICGC MDT 5 m (WCS icc:met5), zona Brisamar, Coma-ruga; descargado 2026-11-10",
+    "dem_sha256": "086a51b9825bf052763c7a3a9e53803f18f5ceeadb4d6a64574bb473472434f8",
     "resolution_m": 5.0,
     "dem_file": "results/dem.npy",
-    "landuse_file": "results/landuse.npy"
+    "landuse_file": "results/landuse.npy",
+    "landuse_source": "derivado del MDT; supuesto, sin dato de usos reales",
+    "landuse_values": "0 no urbano, 1 urbano, 2 cauce/eje de drenaje, 3 mar"
   },
   "grid": {
     "nx": 200,
     "ny": 200,
     "cell_m": 5.0,
     "origin": [
-      0,
-      0
+      375285,
+      4559465
     ],
     "crs": "EPSG:25831"
   },
   "kpis": {
-    "max_depth_cm": 107.4,
-    "max_depth_urban_cm": 81.5,
-    "flooded_area_m2": 28675.0,
-    "flooded_area_pct": 2.87,
-    "volume_m3_total": 59997.5,
-    "volume_error_pct": 1.053,
-    "runtime_s": 95.85
+    "max_depth_cm": 153.5,
+    "max_depth_urban_cm": 153.5,
+    "flooded_area_m2": 148150.0,
+    "flooded_area_pct": 17.47,
+    "stored_volume_m3": 45288.3,
+    "volume_m3_total": 50892.4,
+    "volume_error_pct": 0.379,
+    "runtime_s": 152.43
   },
   "mass_balance_m3": {
-    "rain_m3": 59997.5,
-    "stored_m3": 3805.9,
-    "infiltrated_m3": 16487.3,
-    "outflow_m3": 40222.0,
-    "tank_stored_m3": 114.0,
-    "tank_peak_m3": 638.4,
-    "error_m3": -631.7
+    "rain_m3": 50892.4,
+    "stored_m3": 38047.8,
+    "infiltrated_m3": 3446.2,
+    "outflow_m3": 9205.3,
+    "tank_stored_m3": 0.0,
+    "tank_peak_m3": 0.0,
+    "error_m3": 193.0
   },
   "depth_file": "results/rain60_S2_depth.npy",
   "hotspots": [
     {
       "id": "H1",
-      "x": 56,
-      "y": 103,
-      "max_depth_cm": 10.9
+      "x": 87,
+      "y": 17,
+      "max_depth_cm": 79.3
     },
     {
       "id": "H2",
-      "x": 106,
-      "y": 105,
-      "max_depth_cm": 81.5
+      "x": 46,
+      "y": 24,
+      "max_depth_cm": 54.5
     },
     {
       "id": "H3",
-      "x": 137,
-      "y": 126,
-      "max_depth_cm": 34.7
+      "x": 88,
+      "y": 53,
+      "max_depth_cm": 92.1
     },
     {
       "id": "H4",
-      "x": 75,
-      "y": 136,
-      "max_depth_cm": 35.0
+      "x": 118,
+      "y": 107,
+      "max_depth_cm": 51.3
     },
     {
       "id": "H5",
-      "x": 109,
-      "y": 144,
-      "max_depth_cm": 10.4
+      "x": 102,
+      "y": 110,
+      "max_depth_cm": 65.8
     },
     {
       "id": "H6",
-      "x": 28,
-      "y": 151,
-      "max_depth_cm": 12.7
+      "x": 85,
+      "y": 112,
+      "max_depth_cm": 47.6
     },
     {
       "id": "H7",
-      "x": 93,
-      "y": 168,
-      "max_depth_cm": 24.5
+      "x": 63,
+      "y": 125,
+      "max_depth_cm": 68.0
     },
     {
       "id": "H8",
-      "x": 131,
-      "y": 178,
-      "max_depth_cm": 9.4
+      "x": 47,
+      "y": 156,
+      "max_depth_cm": 77.7
     }
   ]
 }

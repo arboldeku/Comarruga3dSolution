@@ -1,17 +1,17 @@
 [
  {
   "decision_id": "d001",
-  "run_id": "shadow_20261110T180551Z",
+  "run_id": "shadow_20261110T185908Z",
   "hotspot_id": "H1",
   "rain_mm": 30,
   "primitive": "choice",
   "input": {
-   "elevation_m": 7.98,
-   "slope": 0.01,
-   "catchment_m2": 61450,
-   "dist_to_channel_m": 185.6,
+   "elevation_m": 10.33,
+   "slope": 0.1954,
+   "catchment_m2": 11700,
+   "dist_to_channel_m": 173.3,
    "urban_fraction": 1.0,
-   "depression_depth_m": 0.0,
+   "depression_depth_m": 1.37,
    "rain_total_mm": 30,
    "rain_duration_min": 60,
    "options": [
@@ -24,312 +24,12 @@
   "jev_output": {
    "choice": "S2",
    "probabilities": {
-    "S1": 0.17,
-    "S2": 0.41,
-    "S3": 0.27,
-    "S4": 0.15
+    "S1": 0.09,
+    "S2": 0.52,
+    "S3": 0.28,
+    "S4": 0.11
    },
-   "confidence": 0.21
-  },
-  "jev_live": true,
-  "jev_error": null,
-  "fallback_output": {
-   "choice": "S3",
-   "rule": "R3: urban_fraction >= 0.6 y lluvia <= 40 mm -> pavimento permeable"
-  },
-  "fallback_used": false,
-  "effective_choice": "S2",
-  "solver_best": "S3",
-  "solver_depth_cm": {
-   "S0": 6.4,
-   "S1": 6.4,
-   "S2": 6.4,
-   "S3": 5.6,
-   "S4": 6.4
-  },
-  "solver_margin_cm": 0.8,
-  "agree": false,
-  "fallback_agree": true,
-  "latency_ms": 935.2,
-  "cost_usd": 3.406200000000001e-05,
-  "cost_note": "coste estimado a partir de tokens",
-  "input_tokens": 811,
-  "mode": "shadow",
-  "model_id": "typesafe/jev-1.14",
-  "model_snapshot": "typesafe/jev-1.14-20261014",
-  "timestamp": "2026-11-10T18:05:52Z"
- },
- {
-  "decision_id": "d002",
-  "run_id": "shadow_20261110T180551Z",
-  "hotspot_id": "H1",
-  "rain_mm": 60,
-  "primitive": "choice",
-  "input": {
-   "elevation_m": 7.98,
-   "slope": 0.01,
-   "catchment_m2": 61450,
-   "dist_to_channel_m": 185.6,
-   "urban_fraction": 1.0,
-   "depression_depth_m": 0.0,
-   "rain_total_mm": 60,
-   "rain_duration_min": 60,
-   "options": [
-    "S1",
-    "S2",
-    "S3",
-    "S4"
-   ]
-  },
-  "jev_output": {
-   "choice": "S2",
-   "probabilities": {
-    "S1": 0.17,
-    "S2": 0.35,
-    "S3": 0.33,
-    "S4": 0.15
-   },
-   "confidence": 0.13
-  },
-  "jev_live": true,
-  "jev_error": null,
-  "fallback_output": {
-   "choice": "S2",
-   "rule": "R5: caso por defecto -> depósito de retención"
-  },
-  "fallback_used": false,
-  "effective_choice": "S2",
-  "solver_best": "S3",
-  "solver_depth_cm": {
-   "S0": 10.9,
-   "S1": 10.8,
-   "S2": 10.9,
-   "S3": 10.5,
-   "S4": 10.8
-  },
-  "solver_margin_cm": 0.3,
-  "agree": false,
-  "fallback_agree": false,
-  "latency_ms": 254.9,
-  "cost_usd": 3.406200000000001e-05,
-  "cost_note": "coste estimado a partir de tokens",
-  "input_tokens": 811,
-  "mode": "shadow",
-  "model_id": "typesafe/jev-1.14",
-  "model_snapshot": "typesafe/jev-1.14-20261014",
-  "timestamp": "2026-11-10T18:05:52Z"
- },
- {
-  "decision_id": "d003",
-  "run_id": "shadow_20261110T180551Z",
-  "hotspot_id": "H1",
-  "rain_mm": 100,
-  "primitive": "choice",
-  "input": {
-   "elevation_m": 7.98,
-   "slope": 0.01,
-   "catchment_m2": 61450,
-   "dist_to_channel_m": 185.6,
-   "urban_fraction": 1.0,
-   "depression_depth_m": 0.0,
-   "rain_total_mm": 100,
-   "rain_duration_min": 60,
-   "options": [
-    "S1",
-    "S2",
-    "S3",
-    "S4"
-   ]
-  },
-  "jev_output": {
-   "choice": "S2",
-   "probabilities": {
-    "S1": 0.21,
-    "S2": 0.38,
-    "S3": 0.25,
-    "S4": 0.16
-   },
-   "confidence": 0.17
-  },
-  "jev_live": true,
-  "jev_error": null,
-  "fallback_output": {
-   "choice": "S2",
-   "rule": "R5: caso por defecto -> depósito de retención"
-  },
-  "fallback_used": false,
-  "effective_choice": "S2",
-  "solver_best": "S3",
-  "solver_depth_cm": {
-   "S0": 14.3,
-   "S1": 14.3,
-   "S2": 14.3,
-   "S3": 14.0,
-   "S4": 14.3
-  },
-  "solver_margin_cm": 0.3,
-  "agree": false,
-  "fallback_agree": false,
-  "latency_ms": 299.8,
-  "cost_usd": 3.4104000000000004e-05,
-  "cost_note": "coste estimado a partir de tokens",
-  "input_tokens": 812,
-  "mode": "shadow",
-  "model_id": "typesafe/jev-1.14",
-  "model_snapshot": "typesafe/jev-1.14-20261014",
-  "timestamp": "2026-11-10T18:05:52Z"
- },
- {
-  "decision_id": "d004",
-  "run_id": "shadow_20261110T180551Z",
-  "hotspot_id": "H2",
-  "rain_mm": 30,
-  "primitive": "choice",
-  "input": {
-   "elevation_m": 6.13,
-   "slope": 0.0266,
-   "catchment_m2": 107500,
-   "dist_to_channel_m": 33.5,
-   "urban_fraction": 0.931,
-   "depression_depth_m": 0.49,
-   "rain_total_mm": 30,
-   "rain_duration_min": 60,
-   "options": [
-    "S1",
-    "S2",
-    "S3",
-    "S4"
-   ]
-  },
-  "jev_output": {
-   "choice": "S3",
-   "probabilities": {
-    "S1": 0.12,
-    "S2": 0.28,
-    "S3": 0.34,
-    "S4": 0.26
-   },
-   "confidence": 0.12
-  },
-  "jev_live": true,
-  "jev_error": null,
-  "fallback_output": {
-   "choice": "S2",
-   "rule": "R2: depression_depth_m >= 0.3 -> depósito de retención"
-  },
-  "fallback_used": false,
-  "effective_choice": "S3",
-  "solver_best": "S3",
-  "solver_depth_cm": {
-   "S0": 76.0,
-   "S1": 75.1,
-   "S2": 76.0,
-   "S3": 64.9,
-   "S4": 82.3
-  },
-  "solver_margin_cm": 10.2,
-  "agree": true,
-  "fallback_agree": false,
-  "latency_ms": 364.2,
-  "cost_usd": 3.444e-05,
-  "cost_note": "coste estimado a partir de tokens",
-  "input_tokens": 820,
-  "mode": "shadow",
-  "model_id": "typesafe/jev-1.14",
-  "model_snapshot": "typesafe/jev-1.14-20261014",
-  "timestamp": "2026-11-10T18:05:53Z"
- },
- {
-  "decision_id": "d005",
-  "run_id": "shadow_20261110T180551Z",
-  "hotspot_id": "H2",
-  "rain_mm": 60,
-  "primitive": "choice",
-  "input": {
-   "elevation_m": 6.13,
-   "slope": 0.0266,
-   "catchment_m2": 107500,
-   "dist_to_channel_m": 33.5,
-   "urban_fraction": 0.931,
-   "depression_depth_m": 0.49,
-   "rain_total_mm": 60,
-   "rain_duration_min": 60,
-   "options": [
-    "S1",
-    "S2",
-    "S3",
-    "S4"
-   ]
-  },
-  "jev_output": {
-   "choice": "S2",
-   "probabilities": {
-    "S1": 0.14,
-    "S2": 0.3,
-    "S3": 0.3,
-    "S4": 0.26
-   },
-   "confidence": 0.07
-  },
-  "jev_live": true,
-  "jev_error": null,
-  "fallback_output": {
-   "choice": "S2",
-   "rule": "R2: depression_depth_m >= 0.3 -> depósito de retención"
-  },
-  "fallback_used": false,
-  "effective_choice": "S2",
-  "solver_best": "S3",
-  "solver_depth_cm": {
-   "S0": 81.5,
-   "S1": 81.0,
-   "S2": 81.5,
-   "S3": 58.7,
-   "S4": 89.4
-  },
-  "solver_margin_cm": 22.3,
-  "agree": false,
-  "fallback_agree": false,
-  "latency_ms": 350.1,
-  "cost_usd": 3.444e-05,
-  "cost_note": "coste estimado a partir de tokens",
-  "input_tokens": 820,
-  "mode": "shadow",
-  "model_id": "typesafe/jev-1.14",
-  "model_snapshot": "typesafe/jev-1.14-20261014",
-  "timestamp": "2026-11-10T18:05:53Z"
- },
- {
-  "decision_id": "d006",
-  "run_id": "shadow_20261110T180551Z",
-  "hotspot_id": "H2",
-  "rain_mm": 100,
-  "primitive": "choice",
-  "input": {
-   "elevation_m": 6.13,
-   "slope": 0.0266,
-   "catchment_m2": 107500,
-   "dist_to_channel_m": 33.5,
-   "urban_fraction": 0.931,
-   "depression_depth_m": 0.49,
-   "rain_total_mm": 100,
-   "rain_duration_min": 60,
-   "options": [
-    "S1",
-    "S2",
-    "S3",
-    "S4"
-   ]
-  },
-  "jev_output": {
-   "choice": "S2",
-   "probabilities": {
-    "S1": 0.13,
-    "S2": 0.35,
-    "S3": 0.24,
-    "S4": 0.28
-   },
-   "confidence": 0.13
+   "confidence": 0.36
   },
   "jev_live": true,
   "jev_error": null,
@@ -341,1102 +41,1402 @@
   "effective_choice": "S2",
   "solver_best": "S2",
   "solver_depth_cm": {
-   "S0": 63.1,
-   "S1": 85.1,
-   "S2": 62.3,
-   "S3": 62.7,
-   "S4": 96.4
+   "S0": 58.4,
+   "S1": 58.5,
+   "S2": 58.4,
+   "S3": 58.4,
+   "S4": 58.4
   },
-  "solver_margin_cm": 0.4,
+  "solver_margin_cm": 0.0,
   "agree": true,
   "fallback_agree": true,
-  "latency_ms": 358.6,
-  "cost_usd": 3.4482000000000006e-05,
-  "cost_note": "coste estimado a partir de tokens",
-  "input_tokens": 821,
-  "mode": "shadow",
-  "model_id": "typesafe/jev-1.14",
-  "model_snapshot": "typesafe/jev-1.14-20261014",
-  "timestamp": "2026-11-10T18:05:53Z"
- },
- {
-  "decision_id": "d007",
-  "run_id": "shadow_20261110T180551Z",
-  "hotspot_id": "H3",
-  "rain_mm": 30,
-  "primitive": "choice",
-  "input": {
-   "elevation_m": 6.9,
-   "slope": 0.0152,
-   "catchment_m2": 78150,
-   "dist_to_channel_m": 219.5,
-   "urban_fraction": 1.0,
-   "depression_depth_m": 0.25,
-   "rain_total_mm": 30,
-   "rain_duration_min": 60,
-   "options": [
-    "S1",
-    "S2",
-    "S3",
-    "S4"
-   ]
-  },
-  "jev_output": {
-   "choice": "S2",
-   "probabilities": {
-    "S1": 0.13,
-    "S2": 0.39,
-    "S3": 0.3,
-    "S4": 0.18
-   },
-   "confidence": 0.19
-  },
-  "jev_live": true,
-  "jev_error": null,
-  "fallback_output": {
-   "choice": "S3",
-   "rule": "R3: urban_fraction >= 0.6 y lluvia <= 40 mm -> pavimento permeable"
-  },
-  "fallback_used": false,
-  "effective_choice": "S2",
-  "solver_best": "S3",
-  "solver_depth_cm": {
-   "S0": 31.3,
-   "S1": 31.3,
-   "S2": 31.3,
-   "S3": 28.4,
-   "S4": 31.3
-  },
-  "solver_margin_cm": 2.9,
-  "agree": false,
-  "fallback_agree": true,
-  "latency_ms": 359.4,
-  "cost_usd": 3.423e-05,
-  "cost_note": "coste estimado a partir de tokens",
-  "input_tokens": 815,
-  "mode": "shadow",
-  "model_id": "typesafe/jev-1.14",
-  "model_snapshot": "typesafe/jev-1.14-20261014",
-  "timestamp": "2026-11-10T18:05:54Z"
- },
- {
-  "decision_id": "d008",
-  "run_id": "shadow_20261110T180551Z",
-  "hotspot_id": "H3",
-  "rain_mm": 60,
-  "primitive": "choice",
-  "input": {
-   "elevation_m": 6.9,
-   "slope": 0.0152,
-   "catchment_m2": 78150,
-   "dist_to_channel_m": 219.5,
-   "urban_fraction": 1.0,
-   "depression_depth_m": 0.25,
-   "rain_total_mm": 60,
-   "rain_duration_min": 60,
-   "options": [
-    "S1",
-    "S2",
-    "S3",
-    "S4"
-   ]
-  },
-  "jev_output": {
-   "choice": "S2",
-   "probabilities": {
-    "S1": 0.18,
-    "S2": 0.4,
-    "S3": 0.28,
-    "S4": 0.14
-   },
-   "confidence": 0.2
-  },
-  "jev_live": true,
-  "jev_error": null,
-  "fallback_output": {
-   "choice": "S2",
-   "rule": "R5: caso por defecto -> depósito de retención"
-  },
-  "fallback_used": false,
-  "effective_choice": "S2",
-  "solver_best": "S3",
-  "solver_depth_cm": {
-   "S0": 34.7,
-   "S1": 34.7,
-   "S2": 34.7,
-   "S3": 33.9,
-   "S4": 34.7
-  },
-  "solver_margin_cm": 0.8,
-  "agree": false,
-  "fallback_agree": false,
-  "latency_ms": 355.6,
-  "cost_usd": 3.423e-05,
-  "cost_note": "coste estimado a partir de tokens",
-  "input_tokens": 815,
-  "mode": "shadow",
-  "model_id": "typesafe/jev-1.14",
-  "model_snapshot": "typesafe/jev-1.14-20261014",
-  "timestamp": "2026-11-10T18:05:54Z"
- },
- {
-  "decision_id": "d009",
-  "run_id": "shadow_20261110T180551Z",
-  "hotspot_id": "H3",
-  "rain_mm": 100,
-  "primitive": "choice",
-  "input": {
-   "elevation_m": 6.9,
-   "slope": 0.0152,
-   "catchment_m2": 78150,
-   "dist_to_channel_m": 219.5,
-   "urban_fraction": 1.0,
-   "depression_depth_m": 0.25,
-   "rain_total_mm": 100,
-   "rain_duration_min": 60,
-   "options": [
-    "S1",
-    "S2",
-    "S3",
-    "S4"
-   ]
-  },
-  "jev_output": {
-   "choice": "S2",
-   "probabilities": {
-    "S1": 0.17,
-    "S2": 0.43,
-    "S3": 0.25,
-    "S4": 0.15
-   },
-   "confidence": 0.24
-  },
-  "jev_live": true,
-  "jev_error": null,
-  "fallback_output": {
-   "choice": "S2",
-   "rule": "R5: caso por defecto -> depósito de retención"
-  },
-  "fallback_used": false,
-  "effective_choice": "S2",
-  "solver_best": "S3",
-  "solver_depth_cm": {
-   "S0": 37.5,
-   "S1": 37.5,
-   "S2": 37.5,
-   "S3": 37.0,
-   "S4": 37.5
-  },
-  "solver_margin_cm": 0.5,
-  "agree": false,
-  "fallback_agree": false,
-  "latency_ms": 344.1,
-  "cost_usd": 3.427200000000001e-05,
-  "cost_note": "coste estimado a partir de tokens",
-  "input_tokens": 816,
-  "mode": "shadow",
-  "model_id": "typesafe/jev-1.14",
-  "model_snapshot": "typesafe/jev-1.14-20261014",
-  "timestamp": "2026-11-10T18:05:54Z"
- },
- {
-  "decision_id": "d010",
-  "run_id": "shadow_20261110T180551Z",
-  "hotspot_id": "H4",
-  "rain_mm": 30,
-  "primitive": "choice",
-  "input": {
-   "elevation_m": 4.5,
-   "slope": 0.0228,
-   "catchment_m2": 85475,
-   "dist_to_channel_m": 40.0,
-   "urban_fraction": 0.943,
-   "depression_depth_m": 0.2,
-   "rain_total_mm": 30,
-   "rain_duration_min": 60,
-   "options": [
-    "S1",
-    "S2",
-    "S3",
-    "S4"
-   ]
-  },
-  "jev_output": {
-   "choice": "S3",
-   "probabilities": {
-    "S1": 0.15,
-    "S2": 0.34,
-    "S3": 0.34,
-    "S4": 0.17
-   },
-   "confidence": 0.12
-  },
-  "jev_live": true,
-  "jev_error": null,
-  "fallback_output": {
-   "choice": "S3",
-   "rule": "R3: urban_fraction >= 0.6 y lluvia <= 40 mm -> pavimento permeable"
-  },
-  "fallback_used": false,
-  "effective_choice": "S3",
-  "solver_best": "S3",
-  "solver_depth_cm": {
-   "S0": 29.7,
-   "S1": 29.7,
-   "S2": 29.7,
-   "S3": 27.2,
-   "S4": 38.2
-  },
-  "solver_margin_cm": 2.5,
-  "agree": true,
-  "fallback_agree": true,
-  "latency_ms": 287.2,
-  "cost_usd": 3.423e-05,
-  "cost_note": "coste estimado a partir de tokens",
-  "input_tokens": 815,
-  "mode": "shadow",
-  "model_id": "typesafe/jev-1.14",
-  "model_snapshot": "typesafe/jev-1.14-20261014",
-  "timestamp": "2026-11-10T18:05:55Z"
- },
- {
-  "decision_id": "d011",
-  "run_id": "shadow_20261110T180551Z",
-  "hotspot_id": "H4",
-  "rain_mm": 60,
-  "primitive": "choice",
-  "input": {
-   "elevation_m": 4.5,
-   "slope": 0.0228,
-   "catchment_m2": 85475,
-   "dist_to_channel_m": 40.0,
-   "urban_fraction": 0.943,
-   "depression_depth_m": 0.2,
-   "rain_total_mm": 60,
-   "rain_duration_min": 60,
-   "options": [
-    "S1",
-    "S2",
-    "S3",
-    "S4"
-   ]
-  },
-  "jev_output": {
-   "choice": "S2",
-   "probabilities": {
-    "S1": 0.14,
-    "S2": 0.41,
-    "S3": 0.27,
-    "S4": 0.18
-   },
-   "confidence": 0.21
-  },
-  "jev_live": true,
-  "jev_error": null,
-  "fallback_output": {
-   "choice": "S2",
-   "rule": "R5: caso por defecto -> depósito de retención"
-  },
-  "fallback_used": false,
-  "effective_choice": "S2",
-  "solver_best": "S3",
-  "solver_depth_cm": {
-   "S0": 35.2,
-   "S1": 34.5,
-   "S2": 35.0,
-   "S3": 33.9,
-   "S4": 48.3
-  },
-  "solver_margin_cm": 0.6,
-  "agree": false,
-  "fallback_agree": false,
-  "latency_ms": 389.1,
-  "cost_usd": 3.423e-05,
-  "cost_note": "coste estimado a partir de tokens",
-  "input_tokens": 815,
-  "mode": "shadow",
-  "model_id": "typesafe/jev-1.14",
-  "model_snapshot": "typesafe/jev-1.14-20261014",
-  "timestamp": "2026-11-10T18:05:55Z"
- },
- {
-  "decision_id": "d012",
-  "run_id": "shadow_20261110T180551Z",
-  "hotspot_id": "H4",
-  "rain_mm": 100,
-  "primitive": "choice",
-  "input": {
-   "elevation_m": 4.5,
-   "slope": 0.0228,
-   "catchment_m2": 85475,
-   "dist_to_channel_m": 40.0,
-   "urban_fraction": 0.943,
-   "depression_depth_m": 0.2,
-   "rain_total_mm": 100,
-   "rain_duration_min": 60,
-   "options": [
-    "S1",
-    "S2",
-    "S3",
-    "S4"
-   ]
-  },
-  "jev_output": {
-   "choice": "S2",
-   "probabilities": {
-    "S1": 0.15,
-    "S2": 0.38,
-    "S3": 0.3,
-    "S4": 0.17
-   },
-   "confidence": 0.17
-  },
-  "jev_live": true,
-  "jev_error": null,
-  "fallback_output": {
-   "choice": "S2",
-   "rule": "R5: caso por defecto -> depósito de retención"
-  },
-  "fallback_used": false,
-  "effective_choice": "S2",
-  "solver_best": "S1",
-  "solver_depth_cm": {
-   "S0": 42.8,
-   "S1": 38.5,
-   "S2": 40.4,
-   "S3": 41.9,
-   "S4": 56.7
-  },
-  "solver_margin_cm": 1.9,
-  "agree": false,
-  "fallback_agree": false,
-  "latency_ms": 320.0,
-  "cost_usd": 3.427200000000001e-05,
-  "cost_note": "coste estimado a partir de tokens",
-  "input_tokens": 816,
-  "mode": "shadow",
-  "model_id": "typesafe/jev-1.14",
-  "model_snapshot": "typesafe/jev-1.14-20261014",
-  "timestamp": "2026-11-10T18:05:55Z"
- },
- {
-  "decision_id": "d013",
-  "run_id": "shadow_20261110T180551Z",
-  "hotspot_id": "H5",
-  "rain_mm": 30,
-  "primitive": "choice",
-  "input": {
-   "elevation_m": 5.2,
-   "slope": 0.0131,
-   "catchment_m2": 41075,
-   "dist_to_channel_m": 126.6,
-   "urban_fraction": 1.0,
-   "depression_depth_m": 0.01,
-   "rain_total_mm": 30,
-   "rain_duration_min": 60,
-   "options": [
-    "S1",
-    "S2",
-    "S3",
-    "S4"
-   ]
-  },
-  "jev_output": {
-   "choice": "S2",
-   "probabilities": {
-    "S1": 0.17,
-    "S2": 0.35,
-    "S3": 0.34,
-    "S4": 0.14
-   },
-   "confidence": 0.13
-  },
-  "jev_live": true,
-  "jev_error": null,
-  "fallback_output": {
-   "choice": "S3",
-   "rule": "R3: urban_fraction >= 0.6 y lluvia <= 40 mm -> pavimento permeable"
-  },
-  "fallback_used": false,
-  "effective_choice": "S2",
-  "solver_best": "S3",
-  "solver_depth_cm": {
-   "S0": 7.3,
-   "S1": 7.3,
-   "S2": 7.3,
-   "S3": 4.2,
-   "S4": 7.3
-  },
-  "solver_margin_cm": 3.1,
-  "agree": false,
-  "fallback_agree": true,
-  "latency_ms": 313.2,
-  "cost_usd": 3.423e-05,
-  "cost_note": "coste estimado a partir de tokens",
-  "input_tokens": 815,
-  "mode": "shadow",
-  "model_id": "typesafe/jev-1.14",
-  "model_snapshot": "typesafe/jev-1.14-20261014",
-  "timestamp": "2026-11-10T18:05:56Z"
- },
- {
-  "decision_id": "d014",
-  "run_id": "shadow_20261110T180551Z",
-  "hotspot_id": "H5",
-  "rain_mm": 60,
-  "primitive": "choice",
-  "input": {
-   "elevation_m": 5.2,
-   "slope": 0.0131,
-   "catchment_m2": 41075,
-   "dist_to_channel_m": 126.6,
-   "urban_fraction": 1.0,
-   "depression_depth_m": 0.01,
-   "rain_total_mm": 60,
-   "rain_duration_min": 60,
-   "options": [
-    "S1",
-    "S2",
-    "S3",
-    "S4"
-   ]
-  },
-  "jev_output": {
-   "choice": "S2",
-   "probabilities": {
-    "S1": 0.18,
-    "S2": 0.36,
-    "S3": 0.31,
-    "S4": 0.15
-   },
-   "confidence": 0.15
-  },
-  "jev_live": true,
-  "jev_error": null,
-  "fallback_output": {
-   "choice": "S2",
-   "rule": "R5: caso por defecto -> depósito de retención"
-  },
-  "fallback_used": false,
-  "effective_choice": "S2",
-  "solver_best": "S3",
-  "solver_depth_cm": {
-   "S0": 10.4,
-   "S1": 10.4,
-   "S2": 10.4,
-   "S3": 9.3,
-   "S4": 10.4
-  },
-  "solver_margin_cm": 1.1,
-  "agree": false,
-  "fallback_agree": false,
-  "latency_ms": 300.5,
-  "cost_usd": 3.423e-05,
-  "cost_note": "coste estimado a partir de tokens",
-  "input_tokens": 815,
-  "mode": "shadow",
-  "model_id": "typesafe/jev-1.14",
-  "model_snapshot": "typesafe/jev-1.14-20261014",
-  "timestamp": "2026-11-10T18:05:56Z"
- },
- {
-  "decision_id": "d015",
-  "run_id": "shadow_20261110T180551Z",
-  "hotspot_id": "H5",
-  "rain_mm": 100,
-  "primitive": "choice",
-  "input": {
-   "elevation_m": 5.2,
-   "slope": 0.0131,
-   "catchment_m2": 41075,
-   "dist_to_channel_m": 126.6,
-   "urban_fraction": 1.0,
-   "depression_depth_m": 0.01,
-   "rain_total_mm": 100,
-   "rain_duration_min": 60,
-   "options": [
-    "S1",
-    "S2",
-    "S3",
-    "S4"
-   ]
-  },
-  "jev_output": {
-   "choice": "S2",
-   "probabilities": {
-    "S1": 0.17,
-    "S2": 0.4,
-    "S3": 0.29,
-    "S4": 0.14
-   },
-   "confidence": 0.2
-  },
-  "jev_live": true,
-  "jev_error": null,
-  "fallback_output": {
-   "choice": "S2",
-   "rule": "R5: caso por defecto -> depósito de retención"
-  },
-  "fallback_used": false,
-  "effective_choice": "S2",
-  "solver_best": "S3",
-  "solver_depth_cm": {
-   "S0": 13.1,
-   "S1": 13.1,
-   "S2": 13.1,
-   "S3": 12.4,
-   "S4": 13.1
-  },
-  "solver_margin_cm": 0.7,
-  "agree": false,
-  "fallback_agree": false,
-  "latency_ms": 304.0,
-  "cost_usd": 3.427200000000001e-05,
-  "cost_note": "coste estimado a partir de tokens",
-  "input_tokens": 816,
-  "mode": "shadow",
-  "model_id": "typesafe/jev-1.14",
-  "model_snapshot": "typesafe/jev-1.14-20261014",
-  "timestamp": "2026-11-10T18:05:56Z"
- },
- {
-  "decision_id": "d016",
-  "run_id": "shadow_20261110T180551Z",
-  "hotspot_id": "H6",
-  "rain_mm": 30,
-  "primitive": "choice",
-  "input": {
-   "elevation_m": 5.76,
-   "slope": 0.0156,
-   "catchment_m2": 34900,
-   "dist_to_channel_m": 270.0,
-   "urban_fraction": 0.713,
-   "depression_depth_m": 0.04,
-   "rain_total_mm": 30,
-   "rain_duration_min": 60,
-   "options": [
-    "S1",
-    "S2",
-    "S3",
-    "S4"
-   ]
-  },
-  "jev_output": {
-   "choice": "S2",
-   "probabilities": {
-    "S1": 0.13,
-    "S2": 0.41,
-    "S3": 0.3,
-    "S4": 0.16
-   },
-   "confidence": 0.21
-  },
-  "jev_live": true,
-  "jev_error": null,
-  "fallback_output": {
-   "choice": "S3",
-   "rule": "R3: urban_fraction >= 0.6 y lluvia <= 40 mm -> pavimento permeable"
-  },
-  "fallback_used": false,
-  "effective_choice": "S2",
-  "solver_best": "S3",
-  "solver_depth_cm": {
-   "S0": 9.5,
-   "S1": 9.5,
-   "S2": 9.5,
-   "S3": 8.8,
-   "S4": 9.5
-  },
-  "solver_margin_cm": 0.7,
-  "agree": false,
-  "fallback_agree": true,
-  "latency_ms": 548.5,
-  "cost_usd": 3.435600000000001e-05,
-  "cost_note": "coste estimado a partir de tokens",
-  "input_tokens": 818,
-  "mode": "shadow",
-  "model_id": "typesafe/jev-1.14",
-  "model_snapshot": "typesafe/jev-1.14-20261014",
-  "timestamp": "2026-11-10T18:05:57Z"
- },
- {
-  "decision_id": "d017",
-  "run_id": "shadow_20261110T180551Z",
-  "hotspot_id": "H6",
-  "rain_mm": 60,
-  "primitive": "choice",
-  "input": {
-   "elevation_m": 5.76,
-   "slope": 0.0156,
-   "catchment_m2": 34900,
-   "dist_to_channel_m": 270.0,
-   "urban_fraction": 0.713,
-   "depression_depth_m": 0.04,
-   "rain_total_mm": 60,
-   "rain_duration_min": 60,
-   "options": [
-    "S1",
-    "S2",
-    "S3",
-    "S4"
-   ]
-  },
-  "jev_output": {
-   "choice": "S2",
-   "probabilities": {
-    "S1": 0.13,
-    "S2": 0.41,
-    "S3": 0.3,
-    "S4": 0.16
-   },
-   "confidence": 0.21
-  },
-  "jev_live": true,
-  "jev_error": null,
-  "fallback_output": {
-   "choice": "S2",
-   "rule": "R5: caso por defecto -> depósito de retención"
-  },
-  "fallback_used": false,
-  "effective_choice": "S2",
-  "solver_best": "S3",
-  "solver_depth_cm": {
-   "S0": 12.7,
-   "S1": 12.7,
-   "S2": 12.7,
-   "S3": 12.4,
-   "S4": 12.7
-  },
-  "solver_margin_cm": 0.3,
-  "agree": false,
-  "fallback_agree": false,
-  "latency_ms": 312.6,
-  "cost_usd": 3.435600000000001e-05,
-  "cost_note": "coste estimado a partir de tokens",
-  "input_tokens": 818,
-  "mode": "shadow",
-  "model_id": "typesafe/jev-1.14",
-  "model_snapshot": "typesafe/jev-1.14-20261014",
-  "timestamp": "2026-11-10T18:05:57Z"
- },
- {
-  "decision_id": "d018",
-  "run_id": "shadow_20261110T180551Z",
-  "hotspot_id": "H6",
-  "rain_mm": 100,
-  "primitive": "choice",
-  "input": {
-   "elevation_m": 5.76,
-   "slope": 0.0156,
-   "catchment_m2": 34900,
-   "dist_to_channel_m": 270.0,
-   "urban_fraction": 0.713,
-   "depression_depth_m": 0.04,
-   "rain_total_mm": 100,
-   "rain_duration_min": 60,
-   "options": [
-    "S1",
-    "S2",
-    "S3",
-    "S4"
-   ]
-  },
-  "jev_output": {
-   "choice": "S2",
-   "probabilities": {
-    "S1": 0.16,
-    "S2": 0.39,
-    "S3": 0.28,
-    "S4": 0.17
-   },
-   "confidence": 0.19
-  },
-  "jev_live": true,
-  "jev_error": null,
-  "fallback_output": {
-   "choice": "S2",
-   "rule": "R5: caso por defecto -> depósito de retención"
-  },
-  "fallback_used": false,
-  "effective_choice": "S2",
-  "solver_best": "S3",
-  "solver_depth_cm": {
-   "S0": 15.2,
-   "S1": 15.2,
-   "S2": 15.2,
-   "S3": 15.0,
-   "S4": 15.1
-  },
-  "solver_margin_cm": 0.1,
-  "agree": false,
-  "fallback_agree": false,
-  "latency_ms": 348.3,
-  "cost_usd": 3.4398000000000005e-05,
-  "cost_note": "coste estimado a partir de tokens",
-  "input_tokens": 819,
-  "mode": "shadow",
-  "model_id": "typesafe/jev-1.14",
-  "model_snapshot": "typesafe/jev-1.14-20261014",
-  "timestamp": "2026-11-10T18:05:58Z"
- },
- {
-  "decision_id": "d019",
-  "run_id": "shadow_20261110T180551Z",
-  "hotspot_id": "H7",
-  "rain_mm": 30,
-  "primitive": "choice",
-  "input": {
-   "elevation_m": 3.03,
-   "slope": 0.0107,
-   "catchment_m2": 18150,
-   "dist_to_channel_m": 36.4,
-   "urban_fraction": 0.927,
-   "depression_depth_m": 0.08,
-   "rain_total_mm": 30,
-   "rain_duration_min": 60,
-   "options": [
-    "S1",
-    "S2",
-    "S3",
-    "S4"
-   ]
-  },
-  "jev_output": {
-   "choice": "S3",
-   "probabilities": {
-    "S1": 0.13,
-    "S2": 0.33,
-    "S3": 0.37,
-    "S4": 0.17
-   },
-   "confidence": 0.16
-  },
-  "jev_live": true,
-  "jev_error": null,
-  "fallback_output": {
-   "choice": "S3",
-   "rule": "R3: urban_fraction >= 0.6 y lluvia <= 40 mm -> pavimento permeable"
-  },
-  "fallback_used": false,
-  "effective_choice": "S3",
-  "solver_best": "S3",
-  "solver_depth_cm": {
-   "S0": 16.2,
-   "S1": 16.1,
-   "S2": 16.2,
-   "S3": 10.8,
-   "S4": 27.0
-  },
-  "solver_margin_cm": 5.3,
-  "agree": true,
-  "fallback_agree": true,
-  "latency_ms": 384.4,
-  "cost_usd": 3.4398000000000005e-05,
-  "cost_note": "coste estimado a partir de tokens",
-  "input_tokens": 819,
-  "mode": "shadow",
-  "model_id": "typesafe/jev-1.14",
-  "model_snapshot": "typesafe/jev-1.14-20261014",
-  "timestamp": "2026-11-10T18:05:58Z"
- },
- {
-  "decision_id": "d020",
-  "run_id": "shadow_20261110T180551Z",
-  "hotspot_id": "H7",
-  "rain_mm": 60,
-  "primitive": "choice",
-  "input": {
-   "elevation_m": 3.03,
-   "slope": 0.0107,
-   "catchment_m2": 18150,
-   "dist_to_channel_m": 36.4,
-   "urban_fraction": 0.927,
-   "depression_depth_m": 0.08,
-   "rain_total_mm": 60,
-   "rain_duration_min": 60,
-   "options": [
-    "S1",
-    "S2",
-    "S3",
-    "S4"
-   ]
-  },
-  "jev_output": {
-   "choice": "S2",
-   "probabilities": {
-    "S1": 0.14,
-    "S2": 0.38,
-    "S3": 0.31,
-    "S4": 0.17
-   },
-   "confidence": 0.17
-  },
-  "jev_live": true,
-  "jev_error": null,
-  "fallback_output": {
-   "choice": "S2",
-   "rule": "R5: caso por defecto -> depósito de retención"
-  },
-  "fallback_used": false,
-  "effective_choice": "S2",
-  "solver_best": "S1",
-  "solver_depth_cm": {
-   "S0": 24.9,
-   "S1": 19.6,
-   "S2": 24.5,
-   "S3": 22.8,
-   "S4": 37.4
-  },
-  "solver_margin_cm": 3.2,
-  "agree": false,
-  "fallback_agree": false,
-  "latency_ms": 407.8,
-  "cost_usd": 3.4398000000000005e-05,
-  "cost_note": "coste estimado a partir de tokens",
-  "input_tokens": 819,
-  "mode": "shadow",
-  "model_id": "typesafe/jev-1.14",
-  "model_snapshot": "typesafe/jev-1.14-20261014",
-  "timestamp": "2026-11-10T18:05:58Z"
- },
- {
-  "decision_id": "d021",
-  "run_id": "shadow_20261110T180551Z",
-  "hotspot_id": "H7",
-  "rain_mm": 100,
-  "primitive": "choice",
-  "input": {
-   "elevation_m": 3.03,
-   "slope": 0.0107,
-   "catchment_m2": 18150,
-   "dist_to_channel_m": 36.4,
-   "urban_fraction": 0.927,
-   "depression_depth_m": 0.08,
-   "rain_total_mm": 100,
-   "rain_duration_min": 60,
-   "options": [
-    "S1",
-    "S2",
-    "S3",
-    "S4"
-   ]
-  },
-  "jev_output": {
-   "choice": "S2",
-   "probabilities": {
-    "S1": 0.14,
-    "S2": 0.4,
-    "S3": 0.3,
-    "S4": 0.16
-   },
-   "confidence": 0.2
-  },
-  "jev_live": true,
-  "jev_error": null,
-  "fallback_output": {
-   "choice": "S2",
-   "rule": "R5: caso por defecto -> depósito de retención"
-  },
-  "fallback_used": false,
-  "effective_choice": "S2",
-  "solver_best": "S1",
-  "solver_depth_cm": {
-   "S0": 35.5,
-   "S1": 22.9,
-   "S2": 32.7,
-   "S3": 33.9,
-   "S4": 45.6
-  },
-  "solver_margin_cm": 9.8,
-  "agree": false,
-  "fallback_agree": false,
-  "latency_ms": 346.4,
-  "cost_usd": 3.444e-05,
-  "cost_note": "coste estimado a partir de tokens",
-  "input_tokens": 820,
-  "mode": "shadow",
-  "model_id": "typesafe/jev-1.14",
-  "model_snapshot": "typesafe/jev-1.14-20261014",
-  "timestamp": "2026-11-10T18:05:59Z"
- },
- {
-  "decision_id": "d022",
-  "run_id": "shadow_20261110T180551Z",
-  "hotspot_id": "H8",
-  "rain_mm": 30,
-  "primitive": "choice",
-  "input": {
-   "elevation_m": 3.83,
-   "slope": 0.0109,
-   "catchment_m2": 47475,
-   "dist_to_channel_m": 185.6,
-   "urban_fraction": 1.0,
-   "depression_depth_m": 0.0,
-   "rain_total_mm": 30,
-   "rain_duration_min": 60,
-   "options": [
-    "S1",
-    "S2",
-    "S3",
-    "S4"
-   ]
-  },
-  "jev_output": {
-   "choice": "S2",
-   "probabilities": {
-    "S1": 0.19,
-    "S2": 0.35,
-    "S3": 0.31,
-    "S4": 0.15
-   },
-   "confidence": 0.13
-  },
-  "jev_live": true,
-  "jev_error": null,
-  "fallback_output": {
-   "choice": "S3",
-   "rule": "R3: urban_fraction >= 0.6 y lluvia <= 40 mm -> pavimento permeable"
-  },
-  "fallback_used": false,
-  "effective_choice": "S2",
-  "solver_best": "S3",
-  "solver_depth_cm": {
-   "S0": 6.5,
-   "S1": 6.5,
-   "S2": 6.5,
-   "S3": 3.7,
-   "S4": 6.5
-  },
-  "solver_margin_cm": 2.8,
-  "agree": false,
-  "fallback_agree": true,
-  "latency_ms": 339.6,
-  "cost_usd": 3.4146e-05,
-  "cost_note": "coste estimado a partir de tokens",
-  "input_tokens": 813,
-  "mode": "shadow",
-  "model_id": "typesafe/jev-1.14",
-  "model_snapshot": "typesafe/jev-1.14-20261014",
-  "timestamp": "2026-11-10T18:05:59Z"
- },
- {
-  "decision_id": "d023",
-  "run_id": "shadow_20261110T180551Z",
-  "hotspot_id": "H8",
-  "rain_mm": 60,
-  "primitive": "choice",
-  "input": {
-   "elevation_m": 3.83,
-   "slope": 0.0109,
-   "catchment_m2": 47475,
-   "dist_to_channel_m": 185.6,
-   "urban_fraction": 1.0,
-   "depression_depth_m": 0.0,
-   "rain_total_mm": 60,
-   "rain_duration_min": 60,
-   "options": [
-    "S1",
-    "S2",
-    "S3",
-    "S4"
-   ]
-  },
-  "jev_output": {
-   "choice": "S2",
-   "probabilities": {
-    "S1": 0.18,
-    "S2": 0.36,
-    "S3": 0.34,
-    "S4": 0.12
-   },
-   "confidence": 0.15
-  },
-  "jev_live": true,
-  "jev_error": null,
-  "fallback_output": {
-   "choice": "S2",
-   "rule": "R5: caso por defecto -> depósito de retención"
-  },
-  "fallback_used": false,
-  "effective_choice": "S2",
-  "solver_best": "S3",
-  "solver_depth_cm": {
-   "S0": 9.4,
-   "S1": 9.4,
-   "S2": 9.4,
-   "S3": 8.1,
-   "S4": 9.4
-  },
-  "solver_margin_cm": 1.3,
-  "agree": false,
-  "fallback_agree": false,
-  "latency_ms": 414.6,
-  "cost_usd": 3.4146e-05,
-  "cost_note": "coste estimado a partir de tokens",
-  "input_tokens": 813,
-  "mode": "shadow",
-  "model_id": "typesafe/jev-1.14",
-  "model_snapshot": "typesafe/jev-1.14-20261014",
-  "timestamp": "2026-11-10T18:06:00Z"
- },
- {
-  "decision_id": "d024",
-  "run_id": "shadow_20261110T180551Z",
-  "hotspot_id": "H8",
-  "rain_mm": 100,
-  "primitive": "choice",
-  "input": {
-   "elevation_m": 3.83,
-   "slope": 0.0109,
-   "catchment_m2": 47475,
-   "dist_to_channel_m": 185.6,
-   "urban_fraction": 1.0,
-   "depression_depth_m": 0.0,
-   "rain_total_mm": 100,
-   "rain_duration_min": 60,
-   "options": [
-    "S1",
-    "S2",
-    "S3",
-    "S4"
-   ]
-  },
-  "jev_output": {
-   "choice": "S2",
-   "probabilities": {
-    "S1": 0.17,
-    "S2": 0.44,
-    "S3": 0.27,
-    "S4": 0.12
-   },
-   "confidence": 0.25
-  },
-  "jev_live": true,
-  "jev_error": null,
-  "fallback_output": {
-   "choice": "S2",
-   "rule": "R5: caso por defecto -> depósito de retención"
-  },
-  "fallback_used": false,
-  "effective_choice": "S2",
-  "solver_best": "S3",
-  "solver_depth_cm": {
-   "S0": 12.0,
-   "S1": 12.0,
-   "S2": 12.0,
-   "S3": 11.1,
-   "S4": 11.9
-  },
-  "solver_margin_cm": 0.8,
-  "agree": false,
-  "fallback_agree": false,
-  "latency_ms": 320.1,
+  "latency_ms": 1328.3,
   "cost_usd": 3.4188000000000005e-05,
   "cost_note": "coste estimado a partir de tokens",
   "input_tokens": 814,
   "mode": "shadow",
   "model_id": "typesafe/jev-1.14",
   "model_snapshot": "typesafe/jev-1.14-20261014",
-  "timestamp": "2026-11-10T18:06:00Z"
+  "timestamp": "2026-11-10T18:59:10Z"
+ },
+ {
+  "decision_id": "d002",
+  "run_id": "shadow_20261110T185908Z",
+  "hotspot_id": "H1",
+  "rain_mm": 60,
+  "primitive": "choice",
+  "input": {
+   "elevation_m": 10.33,
+   "slope": 0.1954,
+   "catchment_m2": 11700,
+   "dist_to_channel_m": 173.3,
+   "urban_fraction": 1.0,
+   "depression_depth_m": 1.37,
+   "rain_total_mm": 60,
+   "rain_duration_min": 60,
+   "options": [
+    "S1",
+    "S2",
+    "S3",
+    "S4"
+   ]
+  },
+  "jev_output": {
+   "choice": "S2",
+   "probabilities": {
+    "S1": 0.09,
+    "S2": 0.55,
+    "S3": 0.27,
+    "S4": 0.09
+   },
+   "confidence": 0.4
+  },
+  "jev_live": true,
+  "jev_error": null,
+  "fallback_output": {
+   "choice": "S2",
+   "rule": "R2: depression_depth_m >= 0.3 -> depósito de retención"
+  },
+  "fallback_used": false,
+  "effective_choice": "S2",
+  "solver_best": "S1",
+  "solver_depth_cm": {
+   "S0": 79.3,
+   "S1": 79.3,
+   "S2": 79.3,
+   "S3": 79.3,
+   "S4": 79.3
+  },
+  "solver_margin_cm": 0.0,
+  "agree": false,
+  "fallback_agree": false,
+  "latency_ms": 437.5,
+  "cost_usd": 3.4188000000000005e-05,
+  "cost_note": "coste estimado a partir de tokens",
+  "input_tokens": 814,
+  "mode": "shadow",
+  "model_id": "typesafe/jev-1.14",
+  "model_snapshot": "typesafe/jev-1.14-20261014",
+  "timestamp": "2026-11-10T18:59:10Z"
+ },
+ {
+  "decision_id": "d003",
+  "run_id": "shadow_20261110T185908Z",
+  "hotspot_id": "H1",
+  "rain_mm": 100,
+  "primitive": "choice",
+  "input": {
+   "elevation_m": 10.33,
+   "slope": 0.1954,
+   "catchment_m2": 11700,
+   "dist_to_channel_m": 173.3,
+   "urban_fraction": 1.0,
+   "depression_depth_m": 1.37,
+   "rain_total_mm": 100,
+   "rain_duration_min": 60,
+   "options": [
+    "S1",
+    "S2",
+    "S3",
+    "S4"
+   ]
+  },
+  "jev_output": {
+   "choice": "S2",
+   "probabilities": {
+    "S1": 0.1,
+    "S2": 0.55,
+    "S3": 0.24,
+    "S4": 0.11
+   },
+   "confidence": 0.4
+  },
+  "jev_live": true,
+  "jev_error": null,
+  "fallback_output": {
+   "choice": "S2",
+   "rule": "R2: depression_depth_m >= 0.3 -> depósito de retención"
+  },
+  "fallback_used": false,
+  "effective_choice": "S2",
+  "solver_best": "S1",
+  "solver_depth_cm": {
+   "S0": 98.0,
+   "S1": 98.0,
+   "S2": 98.0,
+   "S3": 98.0,
+   "S4": 98.0
+  },
+  "solver_margin_cm": 0.0,
+  "agree": false,
+  "fallback_agree": false,
+  "latency_ms": 509.3,
+  "cost_usd": 3.423e-05,
+  "cost_note": "coste estimado a partir de tokens",
+  "input_tokens": 815,
+  "mode": "shadow",
+  "model_id": "typesafe/jev-1.14",
+  "model_snapshot": "typesafe/jev-1.14-20261014",
+  "timestamp": "2026-11-10T18:59:11Z"
+ },
+ {
+  "decision_id": "d004",
+  "run_id": "shadow_20261110T185908Z",
+  "hotspot_id": "H2",
+  "rain_mm": 30,
+  "primitive": "choice",
+  "input": {
+   "elevation_m": 11.39,
+   "slope": 0.2351,
+   "catchment_m2": 10475,
+   "dist_to_channel_m": 76.5,
+   "urban_fraction": 1.0,
+   "depression_depth_m": 0.03,
+   "rain_total_mm": 30,
+   "rain_duration_min": 60,
+   "options": [
+    "S1",
+    "S2",
+    "S3",
+    "S4"
+   ]
+  },
+  "jev_output": {
+   "choice": "S2",
+   "probabilities": {
+    "S1": 0.12,
+    "S2": 0.42,
+    "S3": 0.28,
+    "S4": 0.18
+   },
+   "confidence": 0.23
+  },
+  "jev_live": true,
+  "jev_error": null,
+  "fallback_output": {
+   "choice": "S3",
+   "rule": "R3: urban_fraction >= 0.6 y lluvia <= 40 mm -> pavimento permeable"
+  },
+  "fallback_used": false,
+  "effective_choice": "S2",
+  "solver_best": "S1",
+  "solver_depth_cm": {
+   "S0": 51.6,
+   "S1": 51.6,
+   "S2": 51.6,
+   "S3": 51.6,
+   "S4": 51.7
+  },
+  "solver_margin_cm": 0.0,
+  "agree": false,
+  "fallback_agree": false,
+  "latency_ms": 569.6,
+  "cost_usd": 3.4146e-05,
+  "cost_note": "coste estimado a partir de tokens",
+  "input_tokens": 813,
+  "mode": "shadow",
+  "model_id": "typesafe/jev-1.14",
+  "model_snapshot": "typesafe/jev-1.14-20261014",
+  "timestamp": "2026-11-10T18:59:11Z"
+ },
+ {
+  "decision_id": "d005",
+  "run_id": "shadow_20261110T185908Z",
+  "hotspot_id": "H2",
+  "rain_mm": 60,
+  "primitive": "choice",
+  "input": {
+   "elevation_m": 11.39,
+   "slope": 0.2351,
+   "catchment_m2": 10475,
+   "dist_to_channel_m": 76.5,
+   "urban_fraction": 1.0,
+   "depression_depth_m": 0.03,
+   "rain_total_mm": 60,
+   "rain_duration_min": 60,
+   "options": [
+    "S1",
+    "S2",
+    "S3",
+    "S4"
+   ]
+  },
+  "jev_output": {
+   "choice": "S2",
+   "probabilities": {
+    "S1": 0.12,
+    "S2": 0.46,
+    "S3": 0.25,
+    "S4": 0.17
+   },
+   "confidence": 0.28
+  },
+  "jev_live": true,
+  "jev_error": null,
+  "fallback_output": {
+   "choice": "S4",
+   "rule": "R4: slope >= 0.03 y catchment_m2 < 20000 -> bordillos / desvío"
+  },
+  "fallback_used": false,
+  "effective_choice": "S2",
+  "solver_best": "S4",
+  "solver_depth_cm": {
+   "S0": 54.5,
+   "S1": 54.6,
+   "S2": 54.5,
+   "S3": 54.5,
+   "S4": 54.4
+  },
+  "solver_margin_cm": 0.1,
+  "agree": false,
+  "fallback_agree": true,
+  "latency_ms": 516.0,
+  "cost_usd": 3.4146e-05,
+  "cost_note": "coste estimado a partir de tokens",
+  "input_tokens": 813,
+  "mode": "shadow",
+  "model_id": "typesafe/jev-1.14",
+  "model_snapshot": "typesafe/jev-1.14-20261014",
+  "timestamp": "2026-11-10T18:59:12Z"
+ },
+ {
+  "decision_id": "d006",
+  "run_id": "shadow_20261110T185908Z",
+  "hotspot_id": "H2",
+  "rain_mm": 100,
+  "primitive": "choice",
+  "input": {
+   "elevation_m": 11.39,
+   "slope": 0.2351,
+   "catchment_m2": 10475,
+   "dist_to_channel_m": 76.5,
+   "urban_fraction": 1.0,
+   "depression_depth_m": 0.03,
+   "rain_total_mm": 100,
+   "rain_duration_min": 60,
+   "options": [
+    "S1",
+    "S2",
+    "S3",
+    "S4"
+   ]
+  },
+  "jev_output": {
+   "choice": "S2",
+   "probabilities": {
+    "S1": 0.12,
+    "S2": 0.46,
+    "S3": 0.24,
+    "S4": 0.18
+   },
+   "confidence": 0.28
+  },
+  "jev_live": true,
+  "jev_error": null,
+  "fallback_output": {
+   "choice": "S4",
+   "rule": "R4: slope >= 0.03 y catchment_m2 < 20000 -> bordillos / desvío"
+  },
+  "fallback_used": false,
+  "effective_choice": "S2",
+  "solver_best": "S1",
+  "solver_depth_cm": {
+   "S0": 57.3,
+   "S1": 57.3,
+   "S2": 57.3,
+   "S3": 57.3,
+   "S4": 57.3
+  },
+  "solver_margin_cm": 0.0,
+  "agree": false,
+  "fallback_agree": false,
+  "latency_ms": 933.5,
+  "cost_usd": 3.4188000000000005e-05,
+  "cost_note": "coste estimado a partir de tokens",
+  "input_tokens": 814,
+  "mode": "shadow",
+  "model_id": "typesafe/jev-1.14",
+  "model_snapshot": "typesafe/jev-1.14-20261014",
+  "timestamp": "2026-11-10T18:59:13Z"
+ },
+ {
+  "decision_id": "d007",
+  "run_id": "shadow_20261110T185908Z",
+  "hotspot_id": "H3",
+  "rain_mm": 30,
+  "primitive": "choice",
+  "input": {
+   "elevation_m": 5.18,
+   "slope": 0.0436,
+   "catchment_m2": 4575,
+   "dist_to_channel_m": 68.0,
+   "urban_fraction": 1.0,
+   "depression_depth_m": 1.37,
+   "rain_total_mm": 30,
+   "rain_duration_min": 60,
+   "options": [
+    "S1",
+    "S2",
+    "S3",
+    "S4"
+   ]
+  },
+  "jev_output": {
+   "choice": "S2",
+   "probabilities": {
+    "S1": 0.12,
+    "S2": 0.5,
+    "S3": 0.25,
+    "S4": 0.13
+   },
+   "confidence": 0.33
+  },
+  "jev_live": true,
+  "jev_error": null,
+  "fallback_output": {
+   "choice": "S2",
+   "rule": "R2: depression_depth_m >= 0.3 -> depósito de retención"
+  },
+  "fallback_used": false,
+  "effective_choice": "S2",
+  "solver_best": "S2",
+  "solver_depth_cm": {
+   "S0": 50.7,
+   "S1": 60.4,
+   "S2": 50.7,
+   "S3": 50.7,
+   "S4": 55.8
+  },
+  "solver_margin_cm": 0.0,
+  "agree": true,
+  "fallback_agree": true,
+  "latency_ms": 423.7,
+  "cost_usd": 3.3978000000000006e-05,
+  "cost_note": "coste estimado a partir de tokens",
+  "input_tokens": 809,
+  "mode": "shadow",
+  "model_id": "typesafe/jev-1.14",
+  "model_snapshot": "typesafe/jev-1.14-20261014",
+  "timestamp": "2026-11-10T18:59:13Z"
+ },
+ {
+  "decision_id": "d008",
+  "run_id": "shadow_20261110T185908Z",
+  "hotspot_id": "H3",
+  "rain_mm": 60,
+  "primitive": "choice",
+  "input": {
+   "elevation_m": 5.18,
+   "slope": 0.0436,
+   "catchment_m2": 4575,
+   "dist_to_channel_m": 68.0,
+   "urban_fraction": 1.0,
+   "depression_depth_m": 1.37,
+   "rain_total_mm": 60,
+   "rain_duration_min": 60,
+   "options": [
+    "S1",
+    "S2",
+    "S3",
+    "S4"
+   ]
+  },
+  "jev_output": {
+   "choice": "S2",
+   "probabilities": {
+    "S1": 0.09,
+    "S2": 0.57,
+    "S3": 0.23,
+    "S4": 0.11
+   },
+   "confidence": 0.43
+  },
+  "jev_live": true,
+  "jev_error": null,
+  "fallback_output": {
+   "choice": "S2",
+   "rule": "R2: depression_depth_m >= 0.3 -> depósito de retención"
+  },
+  "fallback_used": false,
+  "effective_choice": "S2",
+  "solver_best": "S2",
+  "solver_depth_cm": {
+   "S0": 92.1,
+   "S1": 93.1,
+   "S2": 92.1,
+   "S3": 92.1,
+   "S4": 99.6
+  },
+  "solver_margin_cm": 0.0,
+  "agree": true,
+  "fallback_agree": true,
+  "latency_ms": 402.5,
+  "cost_usd": 3.3978000000000006e-05,
+  "cost_note": "coste estimado a partir de tokens",
+  "input_tokens": 809,
+  "mode": "shadow",
+  "model_id": "typesafe/jev-1.14",
+  "model_snapshot": "typesafe/jev-1.14-20261014",
+  "timestamp": "2026-11-10T18:59:14Z"
+ },
+ {
+  "decision_id": "d009",
+  "run_id": "shadow_20261110T185908Z",
+  "hotspot_id": "H3",
+  "rain_mm": 100,
+  "primitive": "choice",
+  "input": {
+   "elevation_m": 5.18,
+   "slope": 0.0436,
+   "catchment_m2": 4575,
+   "dist_to_channel_m": 68.0,
+   "urban_fraction": 1.0,
+   "depression_depth_m": 1.37,
+   "rain_total_mm": 100,
+   "rain_duration_min": 60,
+   "options": [
+    "S1",
+    "S2",
+    "S3",
+    "S4"
+   ]
+  },
+  "jev_output": {
+   "choice": "S2",
+   "probabilities": {
+    "S1": 0.11,
+    "S2": 0.56,
+    "S3": 0.21,
+    "S4": 0.12
+   },
+   "confidence": 0.41
+  },
+  "jev_live": true,
+  "jev_error": null,
+  "fallback_output": {
+   "choice": "S2",
+   "rule": "R2: depression_depth_m >= 0.3 -> depósito de retención"
+  },
+  "fallback_used": false,
+  "effective_choice": "S2",
+  "solver_best": "S1",
+  "solver_depth_cm": {
+   "S0": 129.1,
+   "S1": 115.5,
+   "S2": 129.2,
+   "S3": 129.1,
+   "S4": 135.8
+  },
+  "solver_margin_cm": 13.6,
+  "agree": false,
+  "fallback_agree": false,
+  "latency_ms": 394.4,
+  "cost_usd": 3.402e-05,
+  "cost_note": "coste estimado a partir de tokens",
+  "input_tokens": 810,
+  "mode": "shadow",
+  "model_id": "typesafe/jev-1.14",
+  "model_snapshot": "typesafe/jev-1.14-20261014",
+  "timestamp": "2026-11-10T18:59:14Z"
+ },
+ {
+  "decision_id": "d010",
+  "run_id": "shadow_20261110T185908Z",
+  "hotspot_id": "H4",
+  "rain_mm": 30,
+  "primitive": "choice",
+  "input": {
+   "elevation_m": 1.48,
+   "slope": 0.0087,
+   "catchment_m2": 6375,
+   "dist_to_channel_m": 46.1,
+   "urban_fraction": 0.981,
+   "depression_depth_m": 0.49,
+   "rain_total_mm": 30,
+   "rain_duration_min": 60,
+   "options": [
+    "S1",
+    "S2",
+    "S3",
+    "S4"
+   ]
+  },
+  "jev_output": {
+   "choice": "S2",
+   "probabilities": {
+    "S1": 0.09,
+    "S2": 0.35,
+    "S3": 0.3,
+    "S4": 0.26
+   },
+   "confidence": 0.13
+  },
+  "jev_live": true,
+  "jev_error": null,
+  "fallback_output": {
+   "choice": "S2",
+   "rule": "R2: depression_depth_m >= 0.3 -> depósito de retención"
+  },
+  "fallback_used": false,
+  "effective_choice": "S2",
+  "solver_best": "S1",
+  "solver_depth_cm": {
+   "S0": 36.2,
+   "S1": 27.2,
+   "S2": 36.2,
+   "S3": 36.2,
+   "S4": 34.3
+  },
+  "solver_margin_cm": 7.1,
+  "agree": false,
+  "fallback_agree": false,
+  "latency_ms": 345.6,
+  "cost_usd": 3.423e-05,
+  "cost_note": "coste estimado a partir de tokens",
+  "input_tokens": 815,
+  "mode": "shadow",
+  "model_id": "typesafe/jev-1.14",
+  "model_snapshot": "typesafe/jev-1.14-20261014",
+  "timestamp": "2026-11-10T18:59:14Z"
+ },
+ {
+  "decision_id": "d011",
+  "run_id": "shadow_20261110T185908Z",
+  "hotspot_id": "H4",
+  "rain_mm": 60,
+  "primitive": "choice",
+  "input": {
+   "elevation_m": 1.48,
+   "slope": 0.0087,
+   "catchment_m2": 6375,
+   "dist_to_channel_m": 46.1,
+   "urban_fraction": 0.981,
+   "depression_depth_m": 0.49,
+   "rain_total_mm": 60,
+   "rain_duration_min": 60,
+   "options": [
+    "S1",
+    "S2",
+    "S3",
+    "S4"
+   ]
+  },
+  "jev_output": {
+   "choice": "S2",
+   "probabilities": {
+    "S1": 0.11,
+    "S2": 0.37,
+    "S3": 0.25,
+    "S4": 0.27
+   },
+   "confidence": 0.16
+  },
+  "jev_live": true,
+  "jev_error": null,
+  "fallback_output": {
+   "choice": "S2",
+   "rule": "R2: depression_depth_m >= 0.3 -> depósito de retención"
+  },
+  "fallback_used": false,
+  "effective_choice": "S2",
+  "solver_best": "S1",
+  "solver_depth_cm": {
+   "S0": 51.3,
+   "S1": 39.0,
+   "S2": 51.3,
+   "S3": 51.3,
+   "S4": 52.1
+  },
+  "solver_margin_cm": 12.3,
+  "agree": false,
+  "fallback_agree": false,
+  "latency_ms": 358.5,
+  "cost_usd": 3.423e-05,
+  "cost_note": "coste estimado a partir de tokens",
+  "input_tokens": 815,
+  "mode": "shadow",
+  "model_id": "typesafe/jev-1.14",
+  "model_snapshot": "typesafe/jev-1.14-20261014",
+  "timestamp": "2026-11-10T18:59:15Z"
+ },
+ {
+  "decision_id": "d012",
+  "run_id": "shadow_20261110T185908Z",
+  "hotspot_id": "H4",
+  "rain_mm": 100,
+  "primitive": "choice",
+  "input": {
+   "elevation_m": 1.48,
+   "slope": 0.0087,
+   "catchment_m2": 6375,
+   "dist_to_channel_m": 46.1,
+   "urban_fraction": 0.981,
+   "depression_depth_m": 0.49,
+   "rain_total_mm": 100,
+   "rain_duration_min": 60,
+   "options": [
+    "S1",
+    "S2",
+    "S3",
+    "S4"
+   ]
+  },
+  "jev_output": {
+   "choice": "S2",
+   "probabilities": {
+    "S1": 0.1,
+    "S2": 0.39,
+    "S3": 0.21,
+    "S4": 0.3
+   },
+   "confidence": 0.19
+  },
+  "jev_live": true,
+  "jev_error": null,
+  "fallback_output": {
+   "choice": "S2",
+   "rule": "R2: depression_depth_m >= 0.3 -> depósito de retención"
+  },
+  "fallback_used": false,
+  "effective_choice": "S2",
+  "solver_best": "S1",
+  "solver_depth_cm": {
+   "S0": 65.2,
+   "S1": 52.5,
+   "S2": 65.2,
+   "S3": 65.2,
+   "S4": 69.8
+  },
+  "solver_margin_cm": 12.7,
+  "agree": false,
+  "fallback_agree": false,
+  "latency_ms": 371.4,
+  "cost_usd": 3.427200000000001e-05,
+  "cost_note": "coste estimado a partir de tokens",
+  "input_tokens": 816,
+  "mode": "shadow",
+  "model_id": "typesafe/jev-1.14",
+  "model_snapshot": "typesafe/jev-1.14-20261014",
+  "timestamp": "2026-11-10T18:59:15Z"
+ },
+ {
+  "decision_id": "d013",
+  "run_id": "shadow_20261110T185908Z",
+  "hotspot_id": "H5",
+  "rain_mm": 30,
+  "primitive": "choice",
+  "input": {
+   "elevation_m": 1.33,
+   "slope": 0.0061,
+   "catchment_m2": 35400,
+   "dist_to_channel_m": 50.0,
+   "urban_fraction": 0.997,
+   "depression_depth_m": 0.64,
+   "rain_total_mm": 30,
+   "rain_duration_min": 60,
+   "options": [
+    "S1",
+    "S2",
+    "S3",
+    "S4"
+   ]
+  },
+  "jev_output": {
+   "choice": "S2",
+   "probabilities": {
+    "S1": 0.12,
+    "S2": 0.49,
+    "S3": 0.22,
+    "S4": 0.17
+   },
+   "confidence": 0.32
+  },
+  "jev_live": true,
+  "jev_error": null,
+  "fallback_output": {
+   "choice": "S2",
+   "rule": "R2: depression_depth_m >= 0.3 -> depósito de retención"
+  },
+  "fallback_used": false,
+  "effective_choice": "S2",
+  "solver_best": "S1",
+  "solver_depth_cm": {
+   "S0": 50.7,
+   "S1": 41.7,
+   "S2": 50.7,
+   "S3": 50.7,
+   "S4": 48.8
+  },
+  "solver_margin_cm": 7.1,
+  "agree": false,
+  "fallback_agree": false,
+  "latency_ms": 668.1,
+  "cost_usd": 3.4188000000000005e-05,
+  "cost_note": "coste estimado a partir de tokens",
+  "input_tokens": 814,
+  "mode": "shadow",
+  "model_id": "typesafe/jev-1.14",
+  "model_snapshot": "typesafe/jev-1.14-20261014",
+  "timestamp": "2026-11-10T18:59:16Z"
+ },
+ {
+  "decision_id": "d014",
+  "run_id": "shadow_20261110T185908Z",
+  "hotspot_id": "H5",
+  "rain_mm": 60,
+  "primitive": "choice",
+  "input": {
+   "elevation_m": 1.33,
+   "slope": 0.0061,
+   "catchment_m2": 35400,
+   "dist_to_channel_m": 50.0,
+   "urban_fraction": 0.997,
+   "depression_depth_m": 0.64,
+   "rain_total_mm": 60,
+   "rain_duration_min": 60,
+   "options": [
+    "S1",
+    "S2",
+    "S3",
+    "S4"
+   ]
+  },
+  "jev_output": {
+   "choice": "S2",
+   "probabilities": {
+    "S1": 0.12,
+    "S2": 0.42,
+    "S3": 0.26,
+    "S4": 0.2
+   },
+   "confidence": 0.23
+  },
+  "jev_live": true,
+  "jev_error": null,
+  "fallback_output": {
+   "choice": "S2",
+   "rule": "R2: depression_depth_m >= 0.3 -> depósito de retención"
+  },
+  "fallback_used": false,
+  "effective_choice": "S2",
+  "solver_best": "S1",
+  "solver_depth_cm": {
+   "S0": 65.8,
+   "S1": 53.7,
+   "S2": 65.8,
+   "S3": 65.8,
+   "S4": 66.6
+  },
+  "solver_margin_cm": 12.1,
+  "agree": false,
+  "fallback_agree": false,
+  "latency_ms": 287.4,
+  "cost_usd": 3.4188000000000005e-05,
+  "cost_note": "coste estimado a partir de tokens",
+  "input_tokens": 814,
+  "mode": "shadow",
+  "model_id": "typesafe/jev-1.14",
+  "model_snapshot": "typesafe/jev-1.14-20261014",
+  "timestamp": "2026-11-10T18:59:16Z"
+ },
+ {
+  "decision_id": "d015",
+  "run_id": "shadow_20261110T185908Z",
+  "hotspot_id": "H5",
+  "rain_mm": 100,
+  "primitive": "choice",
+  "input": {
+   "elevation_m": 1.33,
+   "slope": 0.0061,
+   "catchment_m2": 35400,
+   "dist_to_channel_m": 50.0,
+   "urban_fraction": 0.997,
+   "depression_depth_m": 0.64,
+   "rain_total_mm": 100,
+   "rain_duration_min": 60,
+   "options": [
+    "S1",
+    "S2",
+    "S3",
+    "S4"
+   ]
+  },
+  "jev_output": {
+   "choice": "S2",
+   "probabilities": {
+    "S1": 0.13,
+    "S2": 0.47,
+    "S3": 0.21,
+    "S4": 0.19
+   },
+   "confidence": 0.29
+  },
+  "jev_live": true,
+  "jev_error": null,
+  "fallback_output": {
+   "choice": "S2",
+   "rule": "R2: depression_depth_m >= 0.3 -> depósito de retención"
+  },
+  "fallback_used": false,
+  "effective_choice": "S2",
+  "solver_best": "S1",
+  "solver_depth_cm": {
+   "S0": 79.7,
+   "S1": 67.3,
+   "S2": 79.7,
+   "S3": 79.7,
+   "S4": 84.3
+  },
+  "solver_margin_cm": 12.4,
+  "agree": false,
+  "fallback_agree": false,
+  "latency_ms": 532.0,
+  "cost_usd": 3.423e-05,
+  "cost_note": "coste estimado a partir de tokens",
+  "input_tokens": 815,
+  "mode": "shadow",
+  "model_id": "typesafe/jev-1.14",
+  "model_snapshot": "typesafe/jev-1.14-20261014",
+  "timestamp": "2026-11-10T18:59:17Z"
+ },
+ {
+  "decision_id": "d016",
+  "run_id": "shadow_20261110T185908Z",
+  "hotspot_id": "H6",
+  "rain_mm": 30,
+  "primitive": "choice",
+  "input": {
+   "elevation_m": 1.51,
+   "slope": 0.0109,
+   "catchment_m2": 5750,
+   "dist_to_channel_m": 61.8,
+   "urban_fraction": 1.0,
+   "depression_depth_m": 0.46,
+   "rain_total_mm": 30,
+   "rain_duration_min": 60,
+   "options": [
+    "S1",
+    "S2",
+    "S3",
+    "S4"
+   ]
+  },
+  "jev_output": {
+   "choice": "S2",
+   "probabilities": {
+    "S1": 0.08,
+    "S2": 0.4,
+    "S3": 0.26,
+    "S4": 0.26
+   },
+   "confidence": 0.2
+  },
+  "jev_live": true,
+  "jev_error": null,
+  "fallback_output": {
+   "choice": "S2",
+   "rule": "R2: depression_depth_m >= 0.3 -> depósito de retención"
+  },
+  "fallback_used": false,
+  "effective_choice": "S2",
+  "solver_best": "S1",
+  "solver_depth_cm": {
+   "S0": 32.5,
+   "S1": 23.5,
+   "S2": 32.5,
+   "S3": 32.5,
+   "S4": 30.6
+  },
+  "solver_margin_cm": 7.1,
+  "agree": false,
+  "fallback_agree": false,
+  "latency_ms": 407.9,
+  "cost_usd": 3.406200000000001e-05,
+  "cost_note": "coste estimado a partir de tokens",
+  "input_tokens": 811,
+  "mode": "shadow",
+  "model_id": "typesafe/jev-1.14",
+  "model_snapshot": "typesafe/jev-1.14-20261014",
+  "timestamp": "2026-11-10T18:59:17Z"
+ },
+ {
+  "decision_id": "d017",
+  "run_id": "shadow_20261110T185908Z",
+  "hotspot_id": "H6",
+  "rain_mm": 60,
+  "primitive": "choice",
+  "input": {
+   "elevation_m": 1.51,
+   "slope": 0.0109,
+   "catchment_m2": 5750,
+   "dist_to_channel_m": 61.8,
+   "urban_fraction": 1.0,
+   "depression_depth_m": 0.46,
+   "rain_total_mm": 60,
+   "rain_duration_min": 60,
+   "options": [
+    "S1",
+    "S2",
+    "S3",
+    "S4"
+   ]
+  },
+  "jev_output": {
+   "choice": "S2",
+   "probabilities": {
+    "S1": 0.07,
+    "S2": 0.41,
+    "S3": 0.22,
+    "S4": 0.3
+   },
+   "confidence": 0.21
+  },
+  "jev_live": true,
+  "jev_error": null,
+  "fallback_output": {
+   "choice": "S2",
+   "rule": "R2: depression_depth_m >= 0.3 -> depósito de retención"
+  },
+  "fallback_used": false,
+  "effective_choice": "S2",
+  "solver_best": "S1",
+  "solver_depth_cm": {
+   "S0": 47.6,
+   "S1": 36.0,
+   "S2": 47.6,
+   "S3": 47.6,
+   "S4": 48.4
+  },
+  "solver_margin_cm": 11.6,
+  "agree": false,
+  "fallback_agree": false,
+  "latency_ms": 402.2,
+  "cost_usd": 3.406200000000001e-05,
+  "cost_note": "coste estimado a partir de tokens",
+  "input_tokens": 811,
+  "mode": "shadow",
+  "model_id": "typesafe/jev-1.14",
+  "model_snapshot": "typesafe/jev-1.14-20261014",
+  "timestamp": "2026-11-10T18:59:17Z"
+ },
+ {
+  "decision_id": "d018",
+  "run_id": "shadow_20261110T185908Z",
+  "hotspot_id": "H6",
+  "rain_mm": 100,
+  "primitive": "choice",
+  "input": {
+   "elevation_m": 1.51,
+   "slope": 0.0109,
+   "catchment_m2": 5750,
+   "dist_to_channel_m": 61.8,
+   "urban_fraction": 1.0,
+   "depression_depth_m": 0.46,
+   "rain_total_mm": 100,
+   "rain_duration_min": 60,
+   "options": [
+    "S1",
+    "S2",
+    "S3",
+    "S4"
+   ]
+  },
+  "jev_output": {
+   "choice": "S2",
+   "probabilities": {
+    "S1": 0.08,
+    "S2": 0.39,
+    "S3": 0.2,
+    "S4": 0.33
+   },
+   "confidence": 0.19
+  },
+  "jev_live": true,
+  "jev_error": null,
+  "fallback_output": {
+   "choice": "S2",
+   "rule": "R2: depression_depth_m >= 0.3 -> depósito de retención"
+  },
+  "fallback_used": false,
+  "effective_choice": "S2",
+  "solver_best": "S1",
+  "solver_depth_cm": {
+   "S0": 61.5,
+   "S1": 49.8,
+   "S2": 61.5,
+   "S3": 61.5,
+   "S4": 66.1
+  },
+  "solver_margin_cm": 11.7,
+  "agree": false,
+  "fallback_agree": false,
+  "latency_ms": 417.8,
+  "cost_usd": 3.4104000000000004e-05,
+  "cost_note": "coste estimado a partir de tokens",
+  "input_tokens": 812,
+  "mode": "shadow",
+  "model_id": "typesafe/jev-1.14",
+  "model_snapshot": "typesafe/jev-1.14-20261014",
+  "timestamp": "2026-11-10T18:59:18Z"
+ },
+ {
+  "decision_id": "d019",
+  "run_id": "shadow_20261110T185908Z",
+  "hotspot_id": "H7",
+  "rain_mm": 30,
+  "primitive": "choice",
+  "input": {
+   "elevation_m": 1.31,
+   "slope": 0.0175,
+   "catchment_m2": 16650,
+   "dist_to_channel_m": 50.0,
+   "urban_fraction": 0.997,
+   "depression_depth_m": 0.66,
+   "rain_total_mm": 30,
+   "rain_duration_min": 60,
+   "options": [
+    "S1",
+    "S2",
+    "S3",
+    "S4"
+   ]
+  },
+  "jev_output": {
+   "choice": "S2",
+   "probabilities": {
+    "S1": 0.11,
+    "S2": 0.48,
+    "S3": 0.22,
+    "S4": 0.19
+   },
+   "confidence": 0.31
+  },
+  "jev_live": true,
+  "jev_error": null,
+  "fallback_output": {
+   "choice": "S2",
+   "rule": "R2: depression_depth_m >= 0.3 -> depósito de retención"
+  },
+  "fallback_used": false,
+  "effective_choice": "S2",
+  "solver_best": "S1",
+  "solver_depth_cm": {
+   "S0": 52.9,
+   "S1": 38.6,
+   "S2": 52.9,
+   "S3": 52.9,
+   "S4": 51.0
+  },
+  "solver_margin_cm": 12.4,
+  "agree": false,
+  "fallback_agree": false,
+  "latency_ms": 404.9,
+  "cost_usd": 3.4188000000000005e-05,
+  "cost_note": "coste estimado a partir de tokens",
+  "input_tokens": 814,
+  "mode": "shadow",
+  "model_id": "typesafe/jev-1.14",
+  "model_snapshot": "typesafe/jev-1.14-20261014",
+  "timestamp": "2026-11-10T18:59:18Z"
+ },
+ {
+  "decision_id": "d020",
+  "run_id": "shadow_20261110T185908Z",
+  "hotspot_id": "H7",
+  "rain_mm": 60,
+  "primitive": "choice",
+  "input": {
+   "elevation_m": 1.31,
+   "slope": 0.0175,
+   "catchment_m2": 16650,
+   "dist_to_channel_m": 50.0,
+   "urban_fraction": 0.997,
+   "depression_depth_m": 0.66,
+   "rain_total_mm": 60,
+   "rain_duration_min": 60,
+   "options": [
+    "S1",
+    "S2",
+    "S3",
+    "S4"
+   ]
+  },
+  "jev_output": {
+   "choice": "S2",
+   "probabilities": {
+    "S1": 0.11,
+    "S2": 0.5,
+    "S3": 0.19,
+    "S4": 0.2
+   },
+   "confidence": 0.33
+  },
+  "jev_live": true,
+  "jev_error": null,
+  "fallback_output": {
+   "choice": "S2",
+   "rule": "R2: depression_depth_m >= 0.3 -> depósito de retención"
+  },
+  "fallback_used": false,
+  "effective_choice": "S2",
+  "solver_best": "S1",
+  "solver_depth_cm": {
+   "S0": 68.0,
+   "S1": 57.2,
+   "S2": 68.0,
+   "S3": 68.0,
+   "S4": 68.8
+  },
+  "solver_margin_cm": 10.8,
+  "agree": false,
+  "fallback_agree": false,
+  "latency_ms": 401.9,
+  "cost_usd": 3.4188000000000005e-05,
+  "cost_note": "coste estimado a partir de tokens",
+  "input_tokens": 814,
+  "mode": "shadow",
+  "model_id": "typesafe/jev-1.14",
+  "model_snapshot": "typesafe/jev-1.14-20261014",
+  "timestamp": "2026-11-10T18:59:19Z"
+ },
+ {
+  "decision_id": "d021",
+  "run_id": "shadow_20261110T185908Z",
+  "hotspot_id": "H7",
+  "rain_mm": 100,
+  "primitive": "choice",
+  "input": {
+   "elevation_m": 1.31,
+   "slope": 0.0175,
+   "catchment_m2": 16650,
+   "dist_to_channel_m": 50.0,
+   "urban_fraction": 0.997,
+   "depression_depth_m": 0.66,
+   "rain_total_mm": 100,
+   "rain_duration_min": 60,
+   "options": [
+    "S1",
+    "S2",
+    "S3",
+    "S4"
+   ]
+  },
+  "jev_output": {
+   "choice": "S2",
+   "probabilities": {
+    "S1": 0.11,
+    "S2": 0.47,
+    "S3": 0.19,
+    "S4": 0.23
+   },
+   "confidence": 0.29
+  },
+  "jev_live": true,
+  "jev_error": null,
+  "fallback_output": {
+   "choice": "S2",
+   "rule": "R2: depression_depth_m >= 0.3 -> depósito de retención"
+  },
+  "fallback_used": false,
+  "effective_choice": "S2",
+  "solver_best": "S1",
+  "solver_depth_cm": {
+   "S0": 81.9,
+   "S1": 71.3,
+   "S2": 81.9,
+   "S3": 81.9,
+   "S4": 86.5
+  },
+  "solver_margin_cm": 10.6,
+  "agree": false,
+  "fallback_agree": false,
+  "latency_ms": 367.4,
+  "cost_usd": 3.423e-05,
+  "cost_note": "coste estimado a partir de tokens",
+  "input_tokens": 815,
+  "mode": "shadow",
+  "model_id": "typesafe/jev-1.14",
+  "model_snapshot": "typesafe/jev-1.14-20261014",
+  "timestamp": "2026-11-10T18:59:19Z"
+ },
+ {
+  "decision_id": "d022",
+  "run_id": "shadow_20261110T185908Z",
+  "hotspot_id": "H8",
+  "rain_mm": 30,
+  "primitive": "choice",
+  "input": {
+   "elevation_m": 1.21,
+   "slope": 0.0583,
+   "catchment_m2": 7075,
+   "dist_to_channel_m": 50.0,
+   "urban_fraction": 0.997,
+   "depression_depth_m": 0.76,
+   "rain_total_mm": 30,
+   "rain_duration_min": 60,
+   "options": [
+    "S1",
+    "S2",
+    "S3",
+    "S4"
+   ]
+  },
+  "jev_output": {
+   "choice": "S2",
+   "probabilities": {
+    "S1": 0.1,
+    "S2": 0.48,
+    "S3": 0.25,
+    "S4": 0.17
+   },
+   "confidence": 0.31
+  },
+  "jev_live": true,
+  "jev_error": null,
+  "fallback_output": {
+   "choice": "S2",
+   "rule": "R2: depression_depth_m >= 0.3 -> depósito de retención"
+  },
+  "fallback_used": false,
+  "effective_choice": "S2",
+  "solver_best": "S4",
+  "solver_depth_cm": {
+   "S0": 60.3,
+   "S1": 50.0,
+   "S2": 60.3,
+   "S3": 60.3,
+   "S4": 47.4
+  },
+  "solver_margin_cm": 2.6,
+  "agree": false,
+  "fallback_agree": false,
+  "latency_ms": 290.6,
+  "cost_usd": 3.4146e-05,
+  "cost_note": "coste estimado a partir de tokens",
+  "input_tokens": 813,
+  "mode": "shadow",
+  "model_id": "typesafe/jev-1.14",
+  "model_snapshot": "typesafe/jev-1.14-20261014",
+  "timestamp": "2026-11-10T18:59:19Z"
+ },
+ {
+  "decision_id": "d023",
+  "run_id": "shadow_20261110T185908Z",
+  "hotspot_id": "H8",
+  "rain_mm": 60,
+  "primitive": "choice",
+  "input": {
+   "elevation_m": 1.21,
+   "slope": 0.0583,
+   "catchment_m2": 7075,
+   "dist_to_channel_m": 50.0,
+   "urban_fraction": 0.997,
+   "depression_depth_m": 0.76,
+   "rain_total_mm": 60,
+   "rain_duration_min": 60,
+   "options": [
+    "S1",
+    "S2",
+    "S3",
+    "S4"
+   ]
+  },
+  "jev_output": {
+   "choice": "S2",
+   "probabilities": {
+    "S1": 0.1,
+    "S2": 0.54,
+    "S3": 0.2,
+    "S4": 0.16
+   },
+   "confidence": 0.39
+  },
+  "jev_live": true,
+  "jev_error": null,
+  "fallback_output": {
+   "choice": "S2",
+   "rule": "R2: depression_depth_m >= 0.3 -> depósito de retención"
+  },
+  "fallback_used": false,
+  "effective_choice": "S2",
+  "solver_best": "S1",
+  "solver_depth_cm": {
+   "S0": 77.7,
+   "S1": 73.5,
+   "S2": 77.7,
+   "S3": 77.7,
+   "S4": 86.5
+  },
+  "solver_margin_cm": 4.2,
+  "agree": false,
+  "fallback_agree": false,
+  "latency_ms": 676.4,
+  "cost_usd": 3.4146e-05,
+  "cost_note": "coste estimado a partir de tokens",
+  "input_tokens": 813,
+  "mode": "shadow",
+  "model_id": "typesafe/jev-1.14",
+  "model_snapshot": "typesafe/jev-1.14-20261014",
+  "timestamp": "2026-11-10T18:59:20Z"
+ },
+ {
+  "decision_id": "d024",
+  "run_id": "shadow_20261110T185908Z",
+  "hotspot_id": "H8",
+  "rain_mm": 100,
+  "primitive": "choice",
+  "input": {
+   "elevation_m": 1.21,
+   "slope": 0.0583,
+   "catchment_m2": 7075,
+   "dist_to_channel_m": 50.0,
+   "urban_fraction": 0.997,
+   "depression_depth_m": 0.76,
+   "rain_total_mm": 100,
+   "rain_duration_min": 60,
+   "options": [
+    "S1",
+    "S2",
+    "S3",
+    "S4"
+   ]
+  },
+  "jev_output": {
+   "choice": "S2",
+   "probabilities": {
+    "S1": 0.09,
+    "S2": 0.53,
+    "S3": 0.22,
+    "S4": 0.16
+   },
+   "confidence": 0.37
+  },
+  "jev_live": true,
+  "jev_error": null,
+  "fallback_output": {
+   "choice": "S2",
+   "rule": "R2: depression_depth_m >= 0.3 -> depósito de retención"
+  },
+  "fallback_used": false,
+  "effective_choice": "S2",
+  "solver_best": "S1",
+  "solver_depth_cm": {
+   "S0": 91.7,
+   "S1": 84.4,
+   "S2": 91.7,
+   "S3": 91.7,
+   "S4": 97.5
+  },
+  "solver_margin_cm": 7.3,
+  "agree": false,
+  "fallback_agree": false,
+  "latency_ms": 410.2,
+  "cost_usd": 3.4188000000000005e-05,
+  "cost_note": "coste estimado a partir de tokens",
+  "input_tokens": 814,
+  "mode": "shadow",
+  "model_id": "typesafe/jev-1.14",
+  "model_snapshot": "typesafe/jev-1.14-20261014",
+  "timestamp": "2026-11-10T18:59:20Z"
  }
 ]

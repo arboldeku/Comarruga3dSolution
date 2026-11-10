@@ -10,10 +10,7 @@
   "solution_params": {
     "depth_m": 0.5,
     "width_cells": 1,
-    "rows": [
-      80,
-      200
-    ]
+    "min_bed_m": 0.05
   },
   "seed": 42
 }

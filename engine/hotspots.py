@@ -8,7 +8,7 @@ from scipy.ndimage import distance_transform_edt, maximum_filter
 
 RADIUS = 3            # celdas (contrato 6.1)
 MIN_SEP = 14          # separación mínima entre puntos negros (celdas)
-MIN_CHANNEL_DIST = 6  # celdas; evita que el radio de 3 pise el cauce o su ensanche (S1)
+MIN_CHANNEL_DIST = 8  # celdas; evita que el radio de 3 pise el cauce o su ensanche (S1)
 MIN_DEPTH_M = 0.10
 MAX_HOTSPOTS = 8
 
@@ -28,6 +28,10 @@ def find_hotspots(depth_s0: np.ndarray, landuse: np.ndarray) -> list[tuple[int, 
     dist_ch = distance_transform_edt(landuse != 2)
     ok = (landuse == 1) & (dist_ch >= MIN_CHANNEL_DIST) & (depth_s0 >= MIN_DEPTH_M)
     ok &= depth_s0 == maximum_filter(depth_s0, size=2 * RADIUS + 1)
+    if (landuse == 3).any():      # MDT real: lejos del mar y del borde del recorte
+        ok &= distance_transform_edt(landuse != 3) >= MIN_CHANNEL_DIST
+        ok[:MIN_CHANNEL_DIST] = ok[-MIN_CHANNEL_DIST:] = False
+        ok[:, :MIN_CHANNEL_DIST] = ok[:, -MIN_CHANNEL_DIST:] = False
     ys, xs = np.nonzero(ok)
     order = np.argsort(-depth_s0[ys, xs], kind="stable")
     chosen: list[tuple[int, int]] = []

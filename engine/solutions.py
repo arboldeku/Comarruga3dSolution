@@ -10,10 +10,19 @@ from typing import Any
 
 import numpy as np
 
-from .synthetic_terrain import URBAN_ROWS, Terrain
+from scipy.ndimage import binary_dilation, distance_transform_cdt, distance_transform_edt, minimum_filter
+
+from .synthetic_terrain import REAL_ASC, URBAN_ROWS, Terrain
 
 # Infiltración base (mm/h). Supuestos genéricos, sin calibrar.
 INFILTRATION_MM_H = {"non_urban": 20.0, "urban": 3.0, "channel": 5.0}
+REAL = REAL_ASC.exists()
+S2_SOURCE = ("capacity_m3 = 3500: volumen ANUNCIADO por el Ayuntamiento de El Vendrell el 26/08/2026 "
+             "para el depósito de Brisamar; es un anuncio, no un volumen hidráulico calibrado; la "
+             "ubicación exacta es un supuesto (depresión urbana más honda del MDT)")
+SOLUTION_SOURCES = {"S0": "supuesto del modelo", "S1": "supuesto del modelo",
+                    "S2": S2_SOURCE if REAL else "supuesto del modelo",
+                    "S3": "supuesto del modelo", "S4": "supuesto del modelo"}
 
 SOLUTION_NAMES = {
     "S0": "Situación actual (línea base)",
@@ -41,6 +50,21 @@ DEFAULT_PARAMS: dict[str, dict[str, Any]] = {
 }
 
 
+if REAL:
+    # MDT real: el "cauce" es el eje de drenaje derivado del MDT (landuse 2), en todo el recorte.
+    DEFAULT_PARAMS["S1"] = {"depth_m": 0.5, "width_cells": 1, "min_bed_m": 0.05}
+    # Depósito: capta en un disco de `radius_cells` sobre la depresión urbana más honda y
+    # devuelve a la celda del eje de drenaje más cercana. Umbral de toma bajo para que se use.
+    DEFAULT_PARAMS["S2"] = {"capacity_m3": 3500.0, "max_outflow_m3s": 0.3, "max_inflow_m3s": 6.0,
+                            "intake_depth_m": 0.10, "radius_cells": 3,
+                            # vaciado solo tras la lluvia (supuesto de operación): si no, el
+                            # caudal devuelto vuelve a la misma depresión y el depósito no se llena
+                            "release_after_rain": True,
+                            "location": "depresión urbana más honda (supuesto)"}
+    # Barreras a `offset_cells` celdas (distancia de tablero) a ambos lados del eje, 2 de ancho.
+    DEFAULT_PARAMS["S4"] = {"height_m": 0.5, "offset_cells": 3}
+
+
 @dataclass
 class Setup:
     """Entradas del solver ya modificadas por la solución."""
@@ -49,6 +73,7 @@ class Setup:
     tank_cells: np.ndarray | None = None         # máscara bool de captación
     tank_release: np.ndarray | None = None       # máscara bool de devolución al cauce
     tank: dict[str, float] = field(default_factory=dict)
+    sea: np.ndarray | None = None                # máscara bool de mar (contorno abierto a cota 0)
 
 
 def resolve_params(solution_id: str, params: dict[str, Any] | None) -> dict[str, Any]:
@@ -65,8 +90,36 @@ def apply_solution(t: Terrain, solution_id: str, params: dict[str, Any] | None, 
     infil[lu == 2] = INFILTRATION_MM_H["channel"]
     setup = Setup(z=z, infil_m_s=infil)
     chan = lu == 2
+    sea = lu == 3
+    if sea.any():
+        setup.sea = sea
+        infil[sea] = 0.0
 
-    if solution_id == "S1":
+    if sea.any() and solution_id == "S1":
+        w = int(p["width_cells"])
+        k = np.ones((2 * w + 1, 2 * w + 1), bool)
+        dil = binary_dilation(chan, structure=k) & ~sea
+        bed = minimum_filter(np.where(chan, z, np.inf), footprint=k)
+        new = np.minimum(z, bed) - p["depth_m"]
+        new = np.maximum(new, np.minimum(z, p["min_bed_m"]))   # no excavar por debajo del mar
+        z[dil] = new[dil]
+    elif sea.any() and solution_id == "S2":
+        tx, ty = t.tank_xy
+        yy, xx = np.ogrid[:ny, :nx]
+        setup.tank_cells = ((yy - ty) ** 2 + (xx - tx) ** 2 <= int(p["radius_cells"]) ** 2) & ~sea
+        _, (iy, ix) = distance_transform_edt(~chan, return_indices=True)
+        setup.tank_release = np.zeros_like(chan)
+        setup.tank_release[iy[ty, tx], ix[ty, tx]] = True
+        setup.tank = {k_: float(p[k_]) for k_ in
+                      ("capacity_m3", "max_outflow_m3s", "max_inflow_m3s", "intake_depth_m",
+                       "release_after_rain")}
+    elif sea.any() and solution_id == "S4":
+        k = int(p["offset_cells"])
+        d = distance_transform_cdt(~chan, metric="chessboard")
+        z[((d == k) | (d == k + 1)) & ~sea] += p["height_m"]
+    elif sea.any() or solution_id in ("S0", "S3"):
+        pass                                       # S3 se aplica más abajo; S0 no cambia nada
+    elif solution_id == "S1":
         r0, r1 = p["rows"]
         w = int(p["width_cells"])
         for r in range(max(r0, 0), min(r1, ny)):
@@ -86,7 +139,7 @@ def apply_solution(t: Terrain, solution_id: str, params: dict[str, Any] | None, 
         setup.tank_release[rr] = chan[rr]          # devolución repartida en la sección del cauce
         setup.tank = {k: float(p[k]) for k in
                       ("capacity_m3", "max_outflow_m3s", "max_inflow_m3s", "intake_depth_m")}
-    elif solution_id == "S3":
+    if solution_id == "S3":
         rng = np.random.default_rng(seed)
         urban = np.flatnonzero(lu.ravel() == 1)
         pick = rng.choice(urban, size=int(round(p["area_fraction"] * urban.size)), replace=False)

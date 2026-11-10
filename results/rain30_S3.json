@@ -27,95 +27,98 @@
       },
       "drain_min": 30.0,
       "sim_time_s": 5400.0,
-      "steps": 2565,
+      "steps": 3963,
       "flood_threshold_m": 0.05,
-      "boundary": "sur abierto (mar); norte, este y oeste cerrados"
+      "boundary": "mar (celdas -8888 del MDT) abierto a cota fija 0 m, supuesto sin marea; bordes N/E/O del recorte abiertos con salida libre; sin aportes desde fuera del recorte"
     }
   },
   "data": {
-    "dem_source": "sintético",
-    "dem_sha256": "92867db8fd13d39443cecef432a2d73d077a4aa8714ea1a3d1fa6f075cf9cfc8",
+    "dem_source": "ICGC MDT 5 m (WCS icc:met5), zona Brisamar, Coma-ruga; descargado 2026-11-10",
+    "dem_sha256": "086a51b9825bf052763c7a3a9e53803f18f5ceeadb4d6a64574bb473472434f8",
     "resolution_m": 5.0,
     "dem_file": "results/dem.npy",
-    "landuse_file": "results/landuse.npy"
+    "landuse_file": "results/landuse.npy",
+    "landuse_source": "derivado del MDT; supuesto, sin dato de usos reales",
+    "landuse_values": "0 no urbano, 1 urbano, 2 cauce/eje de drenaje, 3 mar"
   },
   "grid": {
     "nx": 200,
     "ny": 200,
     "cell_m": 5.0,
     "origin": [
-      0,
-      0
+      375285,
+      4559465
     ],
     "crs": "EPSG:25831"
   },
   "kpis": {
-    "max_depth_cm": 64.9,
-    "max_depth_urban_cm": 64.9,
-    "flooded_area_m2": 10925.0,
-    "flooded_area_pct": 1.09,
-    "volume_m3_total": 29995.2,
-    "volume_error_pct": 0.087,
-    "runtime_s": 52.07
+    "max_depth_cm": 101.5,
+    "max_depth_urban_cm": 101.5,
+    "flooded_area_m2": 88175.0,
+    "flooded_area_pct": 10.4,
+    "stored_volume_m3": 22588.8,
+    "volume_m3_total": 25444.4,
+    "volume_error_pct": 0.335,
+    "runtime_s": 136.81
   },
   "mass_balance_m3": {
-    "rain_m3": 29995.2,
-    "stored_m3": 821.0,
-    "infiltrated_m3": 25843.2,
-    "outflow_m3": 3304.9,
+    "rain_m3": 25444.4,
+    "stored_m3": 17872.0,
+    "infiltrated_m3": 3400.7,
+    "outflow_m3": 4086.5,
     "tank_stored_m3": 0.0,
     "tank_peak_m3": 0.0,
-    "error_m3": 26.2
+    "error_m3": 85.2
   },
   "depth_file": "results/rain30_S3_depth.npy",
   "hotspots": [
     {
       "id": "H1",
-      "x": 56,
-      "y": 103,
-      "max_depth_cm": 5.6
+      "x": 87,
+      "y": 17,
+      "max_depth_cm": 58.4
     },
     {
       "id": "H2",
-      "x": 106,
-      "y": 105,
-      "max_depth_cm": 64.9
+      "x": 46,
+      "y": 24,
+      "max_depth_cm": 51.6
     },
     {
       "id": "H3",
-      "x": 137,
-      "y": 126,
-      "max_depth_cm": 28.4
+      "x": 88,
+      "y": 53,
+      "max_depth_cm": 50.7
     },
     {
       "id": "H4",
-      "x": 75,
-      "y": 136,
-      "max_depth_cm": 27.2
+      "x": 118,
+      "y": 107,
+      "max_depth_cm": 36.2
     },
     {
       "id": "H5",
-      "x": 109,
-      "y": 144,
-      "max_depth_cm": 4.2
+      "x": 102,
+      "y": 110,
+      "max_depth_cm": 50.7
     },
     {
       "id": "H6",
-      "x": 28,
-      "y": 151,
-      "max_depth_cm": 8.8
+      "x": 85,
+      "y": 112,
+      "max_depth_cm": 32.5
     },
     {
       "id": "H7",
-      "x": 93,
-      "y": 168,
-      "max_depth_cm": 10.8
+      "x": 63,
+      "y": 125,
+      "max_depth_cm": 52.9
     },
     {
       "id": "H8",
-      "x": 131,
-      "y": 178,
-      "max_depth_cm": 3.7
+      "x": 47,
+      "y": 156,
+      "max_depth_cm": 60.3
     }
   ]
 }
