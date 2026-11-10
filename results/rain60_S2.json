@@ -1,0 +1,127 @@
+{
+  "scenario_id": "rain60_S2",
+  "status": "valid",
+  "rain_mm": 60,
+  "solution_id": "S2",
+  "solution_params": {
+    "capacity_m3": 8000.0,
+    "max_outflow_m3s": 0.3,
+    "max_inflow_m3s": 6.0,
+    "intake_depth_m": 0.35,
+    "rows": [
+      76,
+      82
+    ]
+  },
+  "seed": 42,
+  "model": {
+    "name": "landlab.OverlandFlow (de Almeida 2012) + envoltorio comarruga-engine 0.1.0",
+    "version": "2.11.0",
+    "label": "estimación preliminar, modelo simplificado",
+    "numpy_version": "1.26.4",
+    "params": {
+      "mannings_n": 0.035,
+      "infiltration_mm_h": {
+        "non_urban": 20.0,
+        "urban": 3.0,
+        "channel": 5.0
+      },
+      "rain": {
+        "total_mm": 60,
+        "duration_min": 60,
+        "profile": "constant"
+      },
+      "drain_min": 30.0,
+      "sim_time_s": 5400.0,
+      "steps": 4039,
+      "flood_threshold_m": 0.05,
+      "boundary": "sur abierto (mar); norte, este y oeste cerrados"
+    }
+  },
+  "data": {
+    "dem_source": "sintético",
+    "dem_sha256": "4c673a2e1131ba183402a732ef569a5a0aab8666dcb7091070ff09959b2ecee6",
+    "resolution_m": 5.0,
+    "dem_file": "results/dem.npy",
+    "landuse_file": "results/landuse.npy"
+  },
+  "grid": {
+    "nx": 200,
+    "ny": 200,
+    "cell_m": 5.0,
+    "origin": [
+      0,
+      0
+    ],
+    "crs": "EPSG:25831"
+  },
+  "kpis": {
+    "max_depth_cm": 103.8,
+    "max_depth_urban_cm": 59.2,
+    "flooded_area_m2": 25700.0,
+    "flooded_area_pct": 2.57,
+    "volume_m3_total": 60008.3,
+    "volume_error_pct": 0.756,
+    "runtime_s": 298.72
+  },
+  "mass_balance_m3": {
+    "rain_m3": 60008.3,
+    "stored_m3": 3459.8,
+    "infiltrated_m3": 16489.4,
+    "outflow_m3": 36972.4,
+    "tank_stored_m3": 3540.3,
+    "tank_peak_m3": 3540.3,
+    "error_m3": -453.6
+  },
+  "depth_file": "results/rain60_S2_depth.npy",
+  "hotspots": [
+    {
+      "id": "H1",
+      "x": 56,
+      "y": 103,
+      "max_depth_cm": 10.9
+    },
+    {
+      "id": "H2",
+      "x": 106,
+      "y": 105,
+      "max_depth_cm": 59.2
+    },
+    {
+      "id": "H3",
+      "x": 137,
+      "y": 126,
+      "max_depth_cm": 34.7
+    },
+    {
+      "id": "H4",
+      "x": 75,
+      "y": 136,
+      "max_depth_cm": 34.7
+    },
+    {
+      "id": "H5",
+      "x": 109,
+      "y": 144,
+      "max_depth_cm": 10.4
+    },
+    {
+      "id": "H6",
+      "x": 28,
+      "y": 151,
+      "max_depth_cm": 12.7
+    },
+    {
+      "id": "H7",
+      "x": 93,
+      "y": 168,
+      "max_depth_cm": 23.1
+    },
+    {
+      "id": "H8",
+      "x": 131,
+      "y": 178,
+      "max_depth_cm": 9.4
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 ---
 name: jev-evaluator
 description: Capa de decisión con Jev. Úsalo para implementar el cliente de Jev vía OpenRouter, definir las preguntas (Choice, Score, clasificación de reportes), ejecutar en modo sombra y calcular el acierto frente al solver, latencia y coste. Úsalo proactivamente cuando haya resultados del solver para comparar.
+model: haiku
 tools: Read, Write, Edit, Bash, Glob, Grep, WebSearch, WebFetch
 ---
 

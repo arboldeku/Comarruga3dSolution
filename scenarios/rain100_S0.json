@@ -1,0 +1,12 @@
+{
+  "scenario_id": "rain100_S0",
+  "zone_id": "comarruga_demo",
+  "rain": {
+    "total_mm": 100,
+    "duration_min": 60,
+    "profile": "constant"
+  },
+  "solution_id": "S0",
+  "solution_params": {},
+  "seed": 42
+}

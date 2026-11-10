@@ -1,0 +1,21 @@
+{
+  "scenario_id": "rain30_S2",
+  "zone_id": "comarruga_demo",
+  "rain": {
+    "total_mm": 30,
+    "duration_min": 60,
+    "profile": "constant"
+  },
+  "solution_id": "S2",
+  "solution_params": {
+    "capacity_m3": 8000.0,
+    "max_outflow_m3s": 0.3,
+    "max_inflow_m3s": 6.0,
+    "intake_depth_m": 0.35,
+    "rows": [
+      76,
+      82
+    ]
+  },
+  "seed": 42
+}

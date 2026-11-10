@@ -1,0 +1,19 @@
+{
+  "scenario_id": "rain60_S4",
+  "zone_id": "comarruga_demo",
+  "rain": {
+    "total_mm": 60,
+    "duration_min": 60,
+    "profile": "constant"
+  },
+  "solution_id": "S4",
+  "solution_params": {
+    "height_m": 0.5,
+    "offset_cells": 3,
+    "rows": [
+      85,
+      185
+    ]
+  },
+  "seed": 42
+}

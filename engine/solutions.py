@@ -1,0 +1,105 @@
+"""Soluciones candidatas S0-S4 (contrato 2) y sus parámetros por defecto.
+
+TODOS los parámetros son SUPUESTOS DEL MODELO para la demo, no proyectos reales
+ni dimensionamientos de ingeniería. Etiqueta: estimación preliminar, modelo simplificado.
+"""
+from __future__ import annotations
+
+from dataclasses import dataclass, field
+from typing import Any
+
+import numpy as np
+
+from .synthetic_terrain import URBAN_ROWS, Terrain
+
+# Infiltración base (mm/h). Supuestos genéricos, sin calibrar.
+INFILTRATION_MM_H = {"non_urban": 20.0, "urban": 3.0, "channel": 5.0}
+
+SOLUTION_NAMES = {
+    "S0": "Situación actual (línea base)",
+    "S1": "Ampliar sección del cauce",
+    "S2": "Depósito de retención",
+    "S3": "Pavimento permeable (SUDS)",
+    "S4": "Elevar bordillos / desviar",
+}
+
+DEFAULT_PARAMS: dict[str, dict[str, Any]] = {
+    "S0": {},
+    # Rebaja el lecho `depth_m` y ensancha `width_cells` celdas a cada lado, en el tramo urbano.
+    "S1": {"depth_m": 0.5, "width_cells": 1, "rows": [URBAN_ROWS[0] - 5, 200]},
+    # Depósito en línea sobre el cauce, aguas arriba del tramo urbano: capta el agua que
+    # supera `intake_depth_m` (hasta `max_inflow_m3s`) y la devuelve al cauce aguas abajo
+    # de la toma a `max_outflow_m3s` como máximo (caudal máximo de vaciado).
+    "S2": {"capacity_m3": 8000.0, "max_outflow_m3s": 0.3, "max_inflow_m3s": 6.0,
+           "intake_depth_m": 0.35, "rows": [76, 82]},
+    # Fracción de celdas urbanas (elegidas al azar con la semilla) con infiltración aumentada.
+    "S3": {"area_fraction": 0.4, "infiltration_mm_h": 60.0},
+    # Barreras continuas en ambas márgenes del cauce en el tramo urbano. El contrato habla de
+    # aristas de celda; aquí se aproximan elevando celdas (2 celdas de ancho por margen para
+    # que la barrera sea estanca en una malla de 4 vecinos).
+    "S4": {"height_m": 0.5, "offset_cells": 3, "rows": [URBAN_ROWS[0], URBAN_ROWS[1] - 5]},
+}
+
+
+@dataclass
+class Setup:
+    """Entradas del solver ya modificadas por la solución."""
+    z: np.ndarray                                # (ny, nx) float64
+    infil_m_s: np.ndarray                        # (ny, nx)
+    tank_cells: np.ndarray | None = None         # máscara bool de captación
+    tank_release: np.ndarray | None = None       # máscara bool de devolución al cauce
+    tank: dict[str, float] = field(default_factory=dict)
+
+
+def resolve_params(solution_id: str, params: dict[str, Any] | None) -> dict[str, Any]:
+    return {**DEFAULT_PARAMS[solution_id], **(params or {})}
+
+
+def apply_solution(t: Terrain, solution_id: str, params: dict[str, Any] | None, seed: int) -> Setup:
+    p = resolve_params(solution_id, params)
+    z = t.dem.astype(np.float64).copy()
+    lu = t.landuse
+    ny, nx = z.shape
+    infil = np.full(z.shape, INFILTRATION_MM_H["non_urban"])
+    infil[lu == 1] = INFILTRATION_MM_H["urban"]
+    infil[lu == 2] = INFILTRATION_MM_H["channel"]
+    setup = Setup(z=z, infil_m_s=infil)
+    chan = lu == 2
+
+    if solution_id == "S1":
+        r0, r1 = p["rows"]
+        w = int(p["width_cells"])
+        for r in range(max(r0, 0), min(r1, ny)):
+            cols = np.flatnonzero(chan[r])
+            if cols.size == 0:
+                continue
+            bed = z[r, cols].min()
+            a, b = max(cols.min() - w, 0), min(cols.max() + w, nx - 1)
+            z[r, a:b + 1] = np.minimum(z[r, a:b + 1], bed) - p["depth_m"]
+    elif solution_id == "S2":
+        r0, r1 = p["rows"]
+        mask = np.zeros_like(chan)
+        mask[r0:r1] = chan[r0:r1]
+        setup.tank_cells = mask
+        rr = r1 + 2
+        setup.tank_release = np.zeros_like(chan)
+        setup.tank_release[rr] = chan[rr]          # devolución repartida en la sección del cauce
+        setup.tank = {k: float(p[k]) for k in
+                      ("capacity_m3", "max_outflow_m3s", "max_inflow_m3s", "intake_depth_m")}
+    elif solution_id == "S3":
+        rng = np.random.default_rng(seed)
+        urban = np.flatnonzero(lu.ravel() == 1)
+        pick = rng.choice(urban, size=int(round(p["area_fraction"] * urban.size)), replace=False)
+        infil.ravel()[pick] = p["infiltration_mm_h"]
+    elif solution_id == "S4":
+        r0, r1 = p["rows"]
+        k = int(p["offset_cells"])
+        for r in range(r0, r1):
+            cols = np.flatnonzero(chan[r])
+            if cols.size == 0:
+                continue
+            for cb in (cols.min() - k, cols.min() - k - 1, cols.max() + k, cols.max() + k + 1):
+                if 0 <= cb < nx:
+                    z[r, cb] += p["height_m"]
+    setup.infil_m_s = infil / 1000.0 / 3600.0
+    return setup

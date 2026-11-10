@@ -1,0 +1,182 @@
+{
+  "label": "estimación preliminar, modelo simplificado",
+  "dem_source": "sintético",
+  "dem_file": "results/dem.npy",
+  "landuse_file": "results/landuse.npy",
+  "grid": {
+    "nx": 200,
+    "ny": 200,
+    "cell_m": 5.0,
+    "origin": [
+      0,
+      0
+    ],
+    "crs": "EPSG:25831"
+  },
+  "rains_mm": [
+    30,
+    60,
+    100
+  ],
+  "solutions": [
+    {
+      "id": "S0",
+      "name": "Situación actual (línea base)",
+      "params": {}
+    },
+    {
+      "id": "S1",
+      "name": "Ampliar sección del cauce",
+      "params": {
+        "depth_m": 0.5,
+        "width_cells": 1,
+        "rows": [
+          80,
+          200
+        ]
+      }
+    },
+    {
+      "id": "S2",
+      "name": "Depósito de retención",
+      "params": {
+        "capacity_m3": 8000.0,
+        "max_outflow_m3s": 0.3,
+        "max_inflow_m3s": 6.0,
+        "intake_depth_m": 0.35,
+        "rows": [
+          76,
+          82
+        ]
+      }
+    },
+    {
+      "id": "S3",
+      "name": "Pavimento permeable (SUDS)",
+      "params": {
+        "area_fraction": 0.4,
+        "infiltration_mm_h": 60.0
+      }
+    },
+    {
+      "id": "S4",
+      "name": "Elevar bordillos / desviar",
+      "params": {
+        "height_m": 0.5,
+        "offset_cells": 3,
+        "rows": [
+          85,
+          185
+        ]
+      }
+    }
+  ],
+  "scenarios": [
+    {
+      "scenario_id": "rain30_S0",
+      "rain_mm": 30,
+      "solution_id": "S0",
+      "result_file": "results/rain30_S0.json",
+      "status": "valid"
+    },
+    {
+      "scenario_id": "rain30_S1",
+      "rain_mm": 30,
+      "solution_id": "S1",
+      "result_file": "results/rain30_S1.json",
+      "status": "valid"
+    },
+    {
+      "scenario_id": "rain30_S2",
+      "rain_mm": 30,
+      "solution_id": "S2",
+      "result_file": "results/rain30_S2.json",
+      "status": "valid"
+    },
+    {
+      "scenario_id": "rain30_S3",
+      "rain_mm": 30,
+      "solution_id": "S3",
+      "result_file": "results/rain30_S3.json",
+      "status": "valid"
+    },
+    {
+      "scenario_id": "rain30_S4",
+      "rain_mm": 30,
+      "solution_id": "S4",
+      "result_file": "results/rain30_S4.json",
+      "status": "valid"
+    },
+    {
+      "scenario_id": "rain60_S0",
+      "rain_mm": 60,
+      "solution_id": "S0",
+      "result_file": "results/rain60_S0.json",
+      "status": "valid"
+    },
+    {
+      "scenario_id": "rain60_S1",
+      "rain_mm": 60,
+      "solution_id": "S1",
+      "result_file": "results/rain60_S1.json",
+      "status": "valid"
+    },
+    {
+      "scenario_id": "rain60_S2",
+      "rain_mm": 60,
+      "solution_id": "S2",
+      "result_file": "results/rain60_S2.json",
+      "status": "valid"
+    },
+    {
+      "scenario_id": "rain60_S3",
+      "rain_mm": 60,
+      "solution_id": "S3",
+      "result_file": "results/rain60_S3.json",
+      "status": "valid"
+    },
+    {
+      "scenario_id": "rain60_S4",
+      "rain_mm": 60,
+      "solution_id": "S4",
+      "result_file": "results/rain60_S4.json",
+      "status": "valid"
+    },
+    {
+      "scenario_id": "rain100_S0",
+      "rain_mm": 100,
+      "solution_id": "S0",
+      "result_file": "results/rain100_S0.json",
+      "status": "valid"
+    },
+    {
+      "scenario_id": "rain100_S1",
+      "rain_mm": 100,
+      "solution_id": "S1",
+      "result_file": "results/rain100_S1.json",
+      "status": "valid"
+    },
+    {
+      "scenario_id": "rain100_S2",
+      "rain_mm": 100,
+      "solution_id": "S2",
+      "result_file": "results/rain100_S2.json",
+      "status": "valid"
+    },
+    {
+      "scenario_id": "rain100_S3",
+      "rain_mm": 100,
+      "solution_id": "S3",
+      "result_file": "results/rain100_S3.json",
+      "status": "valid"
+    },
+    {
+      "scenario_id": "rain100_S4",
+      "rain_mm": 100,
+      "solution_id": "S4",
+      "result_file": "results/rain100_S4.json",
+      "status": "valid"
+    }
+  ],
+  "generated_at": "2026-11-10T18:00:26+00:00"
+}

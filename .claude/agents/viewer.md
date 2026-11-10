@@ -1,6 +1,7 @@
 ---
 name: viewer
 description: Visualización 3D. Úsalo para construir el visor web (terreno, agua, controles de lluvia y solución, comparación antes/después, panel de decisiones de Jev). Úsalo proactivamente cuando haya resultados nuevos que mostrar.
+model: sonnet
 tools: Read, Write, Edit, Bash, Glob, Grep, WebSearch, WebFetch
 ---
 

@@ -1,6 +1,7 @@
 ---
 name: auditor
 description: Abogado del diablo y control de calidad. Úsalo antes de dar por buena cualquier conclusión, cifra de KPI, diapositiva o texto para el jurado o un ayuntamiento. Úsalo proactivamente al cerrar cada bloque de trabajo.
+model: sonnet
 tools: Read, Grep, Glob, Bash
 ---
 

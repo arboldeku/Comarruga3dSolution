@@ -1,0 +1,1 @@
+{"scenario_id": "rain30_S3", "rain_mm": 30, "solution_id": "S3", "status": "valid", "model": {"name": "fixture", "version": "0", "label": "estimaci\u00f3n preliminar, modelo simplificado"}, "data": {"dem_source": "sint\u00e9tico"}, "kpis": {"max_depth_cm": 15.0, "flooded_area_m2": 700.0, "flooded_area_pct": 1.0, "volume_m3_total": 1.0, "volume_error_pct": 0.5, "runtime_s": 1.5}}

@@ -1,0 +1,15 @@
+{
+  "scenario_id": "rain60_S3",
+  "zone_id": "comarruga_demo",
+  "rain": {
+    "total_mm": 60,
+    "duration_min": 60,
+    "profile": "constant"
+  },
+  "solution_id": "S3",
+  "solution_params": {
+    "area_fraction": 0.4,
+    "infiltration_mm_h": 60.0
+  },
+  "seed": 42
+}
