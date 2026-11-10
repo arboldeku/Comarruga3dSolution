@@ -1,1 +1,27 @@
-{"files": []}
+{
+ "files": [
+  {
+   "file": "dem_brisamar_icgc_met5.asc",
+   "source": "ICGC, servicio WCS https://geoserveis.icgc.cat/icc_mdt/wcs/service , cobertura icc:met5 (MDT 5 m), GetCoverage WCS 1.0.0, formato ArcGrid",
+   "bbox_epsg25831": [
+    375285,
+    4559465,
+    376285,
+    4560465
+   ],
+   "cell_m": 5,
+   "crs": "EPSG:25831",
+   "downloaded_at": "2026-11-10",
+   "sha256": "086a51b9825bf052763c7a3a9e53803f18f5ceeadb4d6a64574bb473472434f8",
+   "license": "ICGC, CC BY 4.0 (comprobar en la ficha del producto)",
+   "note": "Zona Brisamar / Coma-ruga (El Vendrell), 1 km x 1 km centrado cerca de Av. Brisamar. Fecha de la campaña del MDT: sin dato en la respuesta del servicio."
+  },
+  {
+   "file": "Informe_Coma_ruga_Inundaciones_Gemelo_Digital_Hackathon.pdf",
+   "source": "Dossier de fuentes aportado por el autor (elaborado con otro asistente), corte 2026-11-10",
+   "downloaded_at": "2026-11-10",
+   "sha256": "1d0b5b22ba7d15bb15fcca05ed8529aa68e3a306776fa2525bd1316b446512ec",
+   "license": "sin dato"
+  }
+ ]
+}
